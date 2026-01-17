@@ -26,7 +26,6 @@ add_executable(${PROJECT_NAME}_tests)
 target_sources(${PROJECT_NAME}_tests PRIVATE ${SOURCES})
 target_link_libraries(${LIBRARY_NAME}_tests
         PRIVATE
-            $<TARGET_OBJECTS:PROJECT_OBJECTS>
             gtest_main
             gmock_main
 )
