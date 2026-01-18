@@ -60,4 +60,3 @@ elseif(CREATE_HEADER)
             "#ifndef ${SOURCE_NAME_UPPER}_H\n#define ${SOURCE_NAME_UPPER}_H\n\n#ifdef __cplusplus\nextern \"C\" {\n#endif // #ifdef __cplusplus\n\n#ifdef __cplusplus\n}\n#endif // #ifdef __cplusplus\n\n#endif // #ifndef ${SOURCE_NAME_UPPER}_H\n"
     )
 endif()
-
