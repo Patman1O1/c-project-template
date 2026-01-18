@@ -5,6 +5,9 @@
 set(PROJECT_NAME "" CACHE STRING "PROJECT_NAME") # Required
 set(HEADER_NAME "" CACHE STRING "HEADER_NAME") # Required
 
+# Variables
+string(TOUPPER "${HEADER_NAME}" HEADER_NAME_UPPER)
+
 # Ensure arguments are passed to required parameters
 if(NOT PROJECT_NAME)
     message(FATAL_ERROR "\"PROJECT_NAME\" was not specified")
@@ -28,4 +31,4 @@ file(WRITE "${CMAKE_SOURCE_DIR}/include/${PROJECT_NAME}/${HEADER_NAME}.h"
 )
 
 # Let the user know the header file was successfully created
-message("${HEADER_NAME} successfully created")
+message("${HEADER_NAME}.h successfully created")
