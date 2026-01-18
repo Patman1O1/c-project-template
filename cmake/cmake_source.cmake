@@ -12,8 +12,6 @@ string(TOUPPER "${SOURCE_NAME}" SOURCE_NAME_UPPER)
 # Make sure the characters in CREATE_HEADER are all uppercase
 string(TOUPPER "${CREATE_HEADER}" CREATE_HEADER)
 
-set(CMAKE_SOURCE_DIR "/home/patman101/c-project-template") # temporary
-
 # Ensure arguments are passed to required parameters
 if(NOT PROJECT_NAME)
     message(FATAL_ERROR "\"PROJECT_NAME\" was not specified")
