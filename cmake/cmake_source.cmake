@@ -39,18 +39,14 @@ endif()
 # Create the source file
 file(TOUCH "${CMAKE_SOURCE_DIR}/src/${SOURCE_NAME}.c")
 
-# Check if the header file doesn't already exist
-if(NOT EXISTS "${CMAKE_SOURCE_DIR}/include/${PROJECT_NAME}/${SOURCE_NAME}.h")
-    # Check if CREATE_HEADER is ON
-    if(CREATE_HEADER MATCHES "ON")
-        # Create the associated header file
-        execute_process(COMMAND "${CMAKE_COMMAND} -D PROJECT_NAME=${PROJECT_NAME} -D HEADER_NAME=${SOURCE_NAME} -P ${CMAKE_SOURCE_DIR}/cmake/cmake_header.cmake")
-    endif()
-
-    # Include the header file in the source file
-    file(WRITE "${CMAKE_SOURCE_DIR}/src/${SOURCE_NAME}.c" "#include <${PROJECT_NAME}/${SOURCE_NAME}.h>\n\n")
+# Create the associated header file if it doesn't already exist and CREATE_HEADER is ON
+if(NOT EXISTS "${CMAKE_SOURCE_DIR}/include/${PROJECT_NAME}/${SOURCE_NAME}.h" AND CREATE_HEADER MATCHES "ON")
+    # Create the associated header file
+    execute_process(COMMAND "${CMAKE_COMMAND} -D PROJECT_NAME=${PROJECT_NAME} -D HEADER_NAME=${SOURCE_NAME} -P ${CMAKE_SOURCE_DIR}/cmake/cmake_header.cmake")
 endif()
 
+# Include the header file in the source file
+file(WRITE "${CMAKE_SOURCE_DIR}/src/${SOURCE_NAME}.c" "#include <${PROJECT_NAME}/${SOURCE_NAME}.h>\n\n")
 
 file(APPEND "${CMAKE_SOURCE_DIR}/src/${SOURCE_NAME}.c"
         "#ifdef __cplusplus\nextern \"C\" {\n#endif // #ifdef __cplusplus\n\n#ifdef __cplusplus\n}\n#endif // #ifdef __cplusplus\n"
