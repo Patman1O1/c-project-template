@@ -3,7 +3,7 @@
 
 namespace dummy_suit {
 
-    class dummy_tests : public testing::Test {
+    class DummyTestFixture : public testing::Test {
     protected:
         /* ------------------------------------------------Methods--------------------------------------------------- */
         void SetUp() override {
@@ -16,7 +16,7 @@ namespace dummy_suit {
 
     };
 
-    TEST_F(dummy_tests, dummy_test) {
+    TEST_F(DummyTestFixture, DummyTest) {
         EXPECT_TRUE(true);
     }
 
