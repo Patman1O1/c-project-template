@@ -13,5 +13,13 @@ endif()
 # Create the header file
 file(TOUCH "${CMAKE_SOURCE_DIR}/include/${PROJECT_NAME}/${TARGET_NAME}.h")
 file(APPEND "${CMAKE_SOURCE_DIR}/include/${PROJECT_NAME}/${TARGET_NAME}.h"
-        "#ifndef TEST_H\n#define TEST_H\n\n#ifdef __cplusplus\nextern {\n\#endif // #ifdef __cplusplus\n\n#ifdef __cplusplus\n}\n#endif // #ifdef __cplusplus\n\n#endif // #ifndef TEST_H\n"
+        "#ifndef ${TARGET_NAME_UPPER}_H\n#define ${TARGET_NAME_UPPER}_H\n\n#ifdef __cplusplus\nextern \"C\" {\n\#endif // #ifdef __cplusplus\n\n#ifdef __cplusplus\n}\n#endif // #ifdef __cplusplus\n\n#endif // #ifndef TEST_H\n"
 )
+
+# Create a corresponding source file if the target is not a interface library
+if(NOT TARGET_TYPE MATCHES "^(INTERFACE)")
+    file(TOUCH "${CMAKE_SOURCE_DIR}/src/${TARGET_NAME}.cpp")
+    file(APPEND "${CMAKE_SOURCE_DIR}/src/${TARGET_NAME}.cpp"
+            "#include <${PROJECT_NAME}/${TARGET_NAME}>\n\n#ifdef __cplusplus\nextern \"C\" {\n#endif // #ifdef __cplusplus\n\n#ifdef __cplusplus\n}\n#endif // #ifdef __cplusplus\n"
+    )
+endif()
