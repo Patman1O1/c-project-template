@@ -41,7 +41,7 @@ file(TOUCH "${CMAKE_SOURCE_DIR}/src/${SOURCE_NAME}.c")
 
 # Check if the header file doesn't already exist
 if(NOT EXISTS "${CMAKE_SOURCE_DIR}/include/${PROJECT_NAME}/${SOURCE_NAME}.h")
-    # Check if the CREATE_HEADER is ON
+    # Check if CREATE_HEADER is ON
     if(CREATE_HEADER MATCHES "ON")
         # Create the associated header file
         execute_process(COMMAND "${CMAKE_COMMAND} -D PROJECT_NAME=${PROJECT_NAME} -D HEADER_NAME=${SOURCE_NAME} -P ${CMAKE_SOURCE_DIR}/cmake/cmake_header.cmake")
