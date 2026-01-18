@@ -40,7 +40,7 @@ endif()
 file(TOUCH "${CMAKE_SOURCE_DIR}/src/${SOURCE_NAME}.c")
 
 # Check if the header file doesn't already exist
-if(NOT EXISTS "${CMAKE_SOURCE_DIR}/include/${PROJECT_NAME}/${SOURCE_NAME}.h" AND CREATE_HEADER MATCHES "ON")
+if(NOT EXISTS "${CMAKE_SOURCE_DIR}/include/${PROJECT_NAME}/${SOURCE_NAME}.h")
     # Check if the CREATE_HEADER is ON
     if(CREATE_HEADER MATCHES "ON")
         # Create the associated header file
