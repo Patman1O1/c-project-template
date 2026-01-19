@@ -19,7 +19,6 @@ jobs:
 
       - name: Configure CMake files
         run: |
-          # Extract repository information
           REPO_NAME="${{ github.event.repository.name }}"
           REPO_OWNER="${{ github.repository_owner }}"
           REPO_DESCRIPTION="${{ github.event.repository.description }}"
