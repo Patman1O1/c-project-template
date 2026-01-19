@@ -1,4 +1,4 @@
-name: Initialize
+name: Configure
 
 on:
   push:
@@ -17,21 +17,14 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Initialize CMake files
+      - name: Configure CMake files
         run: |
           # Extract repository information
           REPO_NAME="${{ github.event.repository.name }}"
           REPO_OWNER="${{ github.repository_owner }}"
-          REPO_URL="${{ github.event.repository.html_url }}"
+          REPO_DESCRIPTION="${{ github.event.repository.description }}"
           
-          # Configure .in files
-          sed -i "s/@PROJECT_NAME@/${REPO_NAME}/g" CMakeLists.txt.in
-          sed -i "s/@REPO_OWNER@/${REPO_OWNER}/g" config.h.in
-          sed -i "s|@REPO_URL@|${REPO_URL}|g" config.h.in
-          
-          # Rename files (remove .in extension)
-          mv CMakeLists.txt.in CMakeLists.txt
-          mv config.h.in config.h
+          touch test.txt
 
       - name: Commit changes
         run: |
@@ -39,11 +32,4 @@ jobs:
           git config --local user.name "github-actions[bot]"
           git add .
           git commit -m "Configure template for ${GITHUB_REPOSITORY}" || echo "No changes to commit"
-          git push
-
-      - name: Clean up workflow
-        run: |
-          # Optionally remove this workflow file after it runs once
-          git rm .github/workflows/configure-template.yml
-          git commit -m "Remove template configuration workflow"
           git push
