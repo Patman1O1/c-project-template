@@ -1,6 +1,6 @@
 name: Configure Repository
 on:
-  push:
+  create:
     branches:
       - main
 jobs:
