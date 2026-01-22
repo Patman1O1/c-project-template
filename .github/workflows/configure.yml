@@ -30,7 +30,7 @@ jobs:
         run: |
           cmake \
           -D PROJECT_NAME="${{ github.event.repository.name }}" \
-          -D PROJECT_DESCRIPTION=${{ github.event.repository.description }}" \
+          -D PROJECT_DESCRIPTION="${{ github.event.repository.description }}" \
           -D PROJECT_TYPE="${{ github.event.inputs.project_type }}" \
           -P "$GITHUB_WORKSPACE/.github/cmake/cmake_project.cmake"
 
