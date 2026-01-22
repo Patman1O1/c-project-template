@@ -2,6 +2,15 @@ name: Configure
 
 on:
   workflow_dispatch:
+    inputs:
+      project_type:
+        description: "Project type"
+        required: true
+        type: choice
+        options:
+          - Executable
+          - Library
+          - Interface
 
 permissions:
   contents: write
