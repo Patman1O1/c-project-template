@@ -8,9 +8,10 @@ on:
         required: true
         type: choice
         options:
-          - Executable
-          - Library
-          - Interface
+          - "Executable"
+          - "Static Library"
+          - "Shared Library"
+          - "Interface Library"
 
 permissions:
   contents: write
@@ -28,9 +29,10 @@ jobs:
       - name: Configure CMake files
         run: |
           cmake \
-          -D NAME="${{ github.event.repository.name }}" \
-          -D DESCRIPTION=${{ github.event.repository.description }}" \
-          -P cmake/configure.cmake
+          -D PROJECT_NAME="${{ github.event.repository.name }}" \
+          -D PROJECT_DESCRIPTION=${{ github.event.repository.description }}" \
+          -D PROJECT_TYPE="${{ github.event.inputs.project_type }}" \
+          -P "$GITHUB_WORKSPACE/.github/cmake/cmake_project.cmake"
 
       - name: Commit changes
         run: |
