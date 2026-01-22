@@ -19,9 +19,11 @@ if(NOT PROJECT_NAME)
     return()
 endif()
 
+# Make sure all characters are uppercase when validating the project type
+string(TOUPPER "${PROJECT_TYPE}" PROJECT_TYPE)
+
 if (NOT PROJECT_TYPE MATCHES "^(EXECUTABLE|STATIC LIBRARY|SHARED LIBRARY|INTERFACE LIBRARY)$")
-    message(FATAL_ERROR "${PROJECT_TYPE}")
-    #message(FATAL_ERROR "PROJECT_TYPE was not specified as EXECUTABLE, STATIC LIBRARY, SHARED LIBRARY, or INTERFACE LIBRARY")
+    message(FATAL_ERROR "PROJECT_TYPE was not specified as EXECUTABLE, STATIC LIBRARY, SHARED LIBRARY, or INTERFACE LIBRARY")
     return()
 endif()
 
