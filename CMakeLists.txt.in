@@ -66,6 +66,22 @@ else()
 endif()
 
 #-----------------------------------------------------------------------------------------------------------------------
+# CPack
+#-----------------------------------------------------------------------------------------------------------------------
+include(CPack)
+set(CPACK_PROJECT_NAME "${PROJECT_NAME}")
+set(CPACK_PROJECT_VERSION ${PROJECT_VERSION})
+set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_SOURCE_DIR}/LICENSE")
+set(CPACK_RESOURCE_FILE_README "${CMAKE_SOURCE_DIR}/README.md")
+set(CPACK_SOURCE_IGNORE_FILES
+        /.git
+        /.vscode
+        /.*build.*
+        /\\\\.gitignore
+        /\\\\.DS_Store
+)
+
+#-----------------------------------------------------------------------------------------------------------------------
 # Subdirectories
 #-----------------------------------------------------------------------------------------------------------------------
 add_subdirectory("src")
