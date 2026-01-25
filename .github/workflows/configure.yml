@@ -26,6 +26,23 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Configure Bot With GitHub
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+
+      - name: Rename Directories
+        run: |
+          mv "$GITHUB_WORKSPACE/src/template" "$GITHUB_WORKSPACE/src/${{ github.event.repository.name }}"
+          git add "$GITHUB_WORKSPACE/src/${{ github.event.repository.name }}"
+          git commit -m "Configure src"
+          
+          mv "$GITHUB_WORKSPACE/test/template" "$GITHUB_WORKSPACE/test/${{ github.event.repository.name }}"
+          git add "$GITHUB_WORKSPACE/test/${{ github.event.repository.name }}"
+          git commit -m "Configure test"
+          
+          git push
+
       - name: Configure CMake files
         run: |
           cmake \
@@ -36,8 +53,6 @@ jobs:
 
       - name: Commit changes
         run: |
-          git config --local user.email "github-actions[bot]@users.noreply.github.com"
-          git config --local user.name "github-actions[bot]"
           git add .
           git commit -m "Configure template for ${GITHUB_REPOSITORY}" || echo "No changes to commit"
           git push
