@@ -62,6 +62,11 @@ configure_file("${CMAKE_SOURCE_DIR}/CMakeLists.txt.in"
 file(REMOVE "${CMAKE_SOURCE_DIR}/CMakeLists.txt.in")
 
 #-----------------------------------------------------------------------------------------------------------------------
+# Project Configuration (cmake)
+#-----------------------------------------------------------------------------------------------------------------------
+file(RENAME "${CMAKE_SOURCE_DIR}/cmake/TemplateConfig.cmake.in" "${CMAKE_SOURCE_DIR}/cmake/${PROJECT_NAME}Config.cmake.in")
+
+#-----------------------------------------------------------------------------------------------------------------------
 # Project Configuration (${CMAKE_SOURCE_DIR}/src)
 #-----------------------------------------------------------------------------------------------------------------------
 # Rename the src/template to src/${PROJECT_NAME}
