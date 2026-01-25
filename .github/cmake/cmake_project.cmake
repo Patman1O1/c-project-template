@@ -110,22 +110,92 @@ if("${PROJECT_TYPE}" MATCHES "EXECUTABLE")
     file(READ "${CMAKE_SOURCE_DIR}/executable/ProjectInit.cmake" PROJECT_INIT)
     file(READ "${CMAKE_SOURCE_DIR}/executable/ProjectDefinition.cmake" PROJECT_DEFINE)
 
+    # Configure src/${PROJECT_NAME}/CMakeLists.txt
+    configure_file("${CMAKE_SOURCE_DIR}/src/${PROJECT_NAME}/CMakeLists.txt.in"
+                   "${CMAKE_SOURCE_DIR}/src/${PROJECT_NAME}/CMakeLists.txt"
+                   @ONLY)
 
+    # Configure src/${PROJECT_NAME}/${PROJECT_NAME}.c
+    configure_file("${CMAKE_SOURCE_DIR}/src/${PROJECT_NAME}/template.c.in"
+                   "${CMAKE_SOURCE_DIR}/src/${PROJECT_NAME}/${PROJECT_NAME}.c"
+                   @ONLY)
+
+    # Configure src/${PROJECT_NAME}/main.c
+    configure_file("${CMAKE_SOURCE_DIR}/src/${PROJECT_NAME}/main.c.in"
+                   "${CMAKE_SOURCE_DIR}/src/${PROJECT_NAME}/main.c"
+                   @ONLY)
+
+    # Configure src/${PROJECT_NAME}/include/export.h
+    configure_file("${CMAKE_SOURCE_DIR}/src/${PROJECT_NAME}/include/export.h.in"
+                   "${CMAKE_SOURCE_DIR}/src/${PROJECT_NAME}/include/export.h"
+                   @ONLY)
+
+    # Configure src/${PROJECT_NAME}/include/${PROJECT_NAME}.h
+    configure_file("${CMAKE_SOURCE_DIR}/src/${PROJECT_NAME}/include/template.h.in"
+                   "${CMAKE_SOURCE_DIR}/src/${PROJECT_NAME}/include/${PROJECT_NAME}.h"
+                   @ONLY)
 elseif("${PROJECT_TYPE}" MATCHES "STATIC LIBRARY")
     # Read the contents of the project init and definition files and store their contents
     file(READ "${CMAKE_SOURCE_DIR}/.github/cmake/static_library/ProjectInit.cmake" PROJECT_INIT)
     file(READ "${CMAKE_SOURCE_DIR}/.github/cmake/static_library/ProjectDefinition.cmake" PROJECT_DEFINE)
+
+    # Remove src/${PROJECT_NAME}/main.c (libraries don't have entry points)
+    file(REMOVE "${CMAKE_SOURCE_DIR}/src/${PROJECT_NAME}/main.c.in")
+
+    # Configure src/${PROJECT_NAME}/${PROJECT_NAME}.c
+    configure_file("${CMAKE_SOURCE_DIR}/src/${PROJECT_NAME}/template.c.in"
+                   "${CMAKE_SOURCE_DIR}/src/${PROJECT_NAME}/${PROJECT_NAME}.c"
+                   @ONLY)
+
+    # Configure src/${PROJECT_NAME}/include/export.h
+    configure_file("${CMAKE_SOURCE_DIR}/src/${PROJECT_NAME}/include/export.h.in"
+                   "${CMAKE_SOURCE_DIR}/src/${PROJECT_NAME}/include/export.h"
+                   @ONLY)
+
+    # Configure src/${PROJECT_NAME}/include/${PROJECT_NAME}.h
+    configure_file("${CMAKE_SOURCE_DIR}/src/${PROJECT_NAME}/include/template.h.in"
+                   "${CMAKE_SOURCE_DIR}/src/${PROJECT_NAME}/include/${PROJECT_NAME}.h"
+                   @ONLY)
 elseif("${PROJECT_TYPE}" MATCHES "SHARED LIBRARY")
     # Read the contents of the project init and definition files and store their contents
     file(READ "${CMAKE_SOURCE_DIR}/.github/cmake/shared_library/ProjectInit.cmake" PROJECT_INIT)
     file(READ "${CMAKE_SOURCE_DIR}/.github/cmake/shared_library/ProjectDefinition.cmake" PROJECT_DEFINE)
+
+    # Remove src/${PROJECT_NAME}/main.c (libraries don't have entry points)
+    file(REMOVE "${CMAKE_SOURCE_DIR}/src/${PROJECT_NAME}/main.c.in")
+
+    # Configure src/${PROJECT_NAME}/${PROJECT_NAME}.c
+    configure_file("${CMAKE_SOURCE_DIR}/src/${PROJECT_NAME}/template.c.in"
+                   "${CMAKE_SOURCE_DIR}/src/${PROJECT_NAME}/${PROJECT_NAME}.c"
+                   @ONLY)
+
+    # Configure src/${PROJECT_NAME}/include/export.h
+    configure_file("${CMAKE_SOURCE_DIR}/src/${PROJECT_NAME}/include/export.h.in"
+                   "${CMAKE_SOURCE_DIR}/src/${PROJECT_NAME}/include/export.h"
+                   @ONLY)
+
+    # Configure src/${PROJECT_NAME}/include/${PROJECT_NAME}.h
+    configure_file("${CMAKE_SOURCE_DIR}/src/${PROJECT_NAME}/include/template.h.in"
+                   "${CMAKE_SOURCE_DIR}/src/${PROJECT_NAME}/include/${PROJECT_NAME}.h"
+                   @ONLY)
 else()
     # Read the contents of the project init and definition files and store their contents
     file(READ "${CMAKE_SOURCE_DIR}/.github/cmake/interface_library/ProjectInit.cmake" PROJECT_INIT)
     file(READ "${CMAKE_SOURCE_DIR}/.github/cmake/interface_library/ProjectDefinition.cmake" PROJECT_DEFINE)
 
     # Remove all the source files (interface libraries are header only)
-    file(REMOVE_RECURSE "${CMAKE_SOURCE_DIR}/src/")
+    file(REMOVE "${CMAKE_SOURCE_DIR}/src/${PROJECT_NAME}/${PROJECT_NAME}.c.in")
+    file(REMOVE "${CMAKE_SOURCE_DIR}/src/${PROJECT_NAME}/main.c.in")
+
+    # Configure src/${PROJECT_NAME}/include/export.h
+    configure_file("${CMAKE_SOURCE_DIR}/src/${PROJECT_NAME}/include/export.h.in"
+                   "${CMAKE_SOURCE_DIR}/src/${PROJECT_NAME}/include/export.h"
+                   @ONLY)
+
+    # Configure src/${PROJECT_NAME}/include/${PROJECT_NAME}.h
+    configure_file("${CMAKE_SOURCE_DIR}/src/${PROJECT_NAME}/include/template.h.in"
+                   "${CMAKE_SOURCE_DIR}/src/${PROJECT_NAME}/include/${PROJECT_NAME}.h"
+                   @ONLY)
 endif()
 
 
