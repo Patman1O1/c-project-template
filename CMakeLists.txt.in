@@ -2,7 +2,7 @@
 # Information
 #-----------------------------------------------------------------------------------------------------------------------
 cmake_minimum_required_version(VERSION @CMAKE_MINIMUM_REQUIRED_VERSION@)
-project(@PROJECT_NAME_PASCAL_CASE@
+project(@PROJECT_NAME@
         VERSION @PROJECT_VERSION@
         DESCRIPTION @PROJECT_DESCRIPTION@
         LANGUAGES C
