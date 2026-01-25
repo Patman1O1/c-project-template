@@ -9,9 +9,6 @@ include("${CMAKE_SOURCE_DIR}/.github/cmake/functions.cmake")
 set(PROJECT_NAME "" CACHE STRING "The name of the project")
 set(PROJECT_TYPE "" CACHE STRING "The type of the project")
 
-execute_process(COMMAND "ls")
-message("PROJECT_ROOT_DIR: ${PROJECT_ROOT_DIR}")
-
 #-----------------------------------------------------------------------------------------------------------------------
 # Parameters (Optional)
 #-----------------------------------------------------------------------------------------------------------------------
