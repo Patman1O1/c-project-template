@@ -9,6 +9,7 @@ include("${CMAKE_SOURCE_DIR}/.github/cmake/functions.cmake")
 set(PROJECT_NAME "" CACHE STRING "The name of the project")
 set(PROJECT_TYPE "" CACHE STRING "The type of the project")
 
+message("CMAKE_SOURCE_DIR: ${CMAKE_SOURCE_DIR}")
 #-----------------------------------------------------------------------------------------------------------------------
 # Parameters (Optional)
 #-----------------------------------------------------------------------------------------------------------------------
