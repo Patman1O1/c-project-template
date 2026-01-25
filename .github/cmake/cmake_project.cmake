@@ -36,6 +36,21 @@ if(NOT PROJECT_TYPE MATCHES "^(EXECUTABLE|STATIC LIBRARY|SHARED LIBRARY|INTERFAC
 endif()
 
 #-----------------------------------------------------------------------------------------------------------------------
+# Project Configuration
+#-----------------------------------------------------------------------------------------------------------------------
+if(PROJECT_TYPE MATCHES "EXECUTABLE")
+    configure_executable("${PROJECT_NAME}")
+elseif(PROJECT_TYPE MATCHES "STATIC LIBRARY")
+    configure_static_library("${PROJECT_NAME}")
+elseif(PROJECT_TYPE MATCHES "SHARED LIBRARY")
+    configure_shared_library("${PROJECT_NAME}")
+else()
+    configure_interface_library("${PROJECT_NAME}")
+endif()
+
+return() # Temporary
+
+#-----------------------------------------------------------------------------------------------------------------------
 # Formating
 #-----------------------------------------------------------------------------------------------------------------------
 to_pascal_case("${PROJECT_NAME}" PROJECT_NAME_PASCAL_CASE)
