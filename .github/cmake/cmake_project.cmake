@@ -64,13 +64,13 @@ file(REMOVE "${CMAKE_SOURCE_DIR}/CMakeLists.txt.in")
 #-----------------------------------------------------------------------------------------------------------------------
 # Project Configuration (cmake)
 #-----------------------------------------------------------------------------------------------------------------------
-file(RENAME "${CMAKE_SOURCE_DIR}/cmake/TemplateConfig.cmake.in" "${CMAKE_SOURCE_DIR}/cmake/${PROJECT_NAME}Config.cmake.in")
+file(RENAME "${CMAKE_SOURCE_DIR}/cmake/TemplateConfig.cmake.in" "${CMAKE_SOURCE_DIR}/cmake/${PROJECT_NAME_PASCAL_CASE}Config.cmake.in")
 
 #-----------------------------------------------------------------------------------------------------------------------
 # Project Configuration (${CMAKE_SOURCE_DIR}/src)
 #-----------------------------------------------------------------------------------------------------------------------
 # Rename the src/template to src/${PROJECT_NAME}
-file(COPY "${CMAKE_SOURCE_DIR}/src/template" DESTINATION "${CMAKE_SOURCE_DIR}/src/${PROJECT_NAME_SNAKE_CASE}")
+file(COPY "${CMAKE_SOURCE_DIR}/src/template" DESTINATION "${CMAKE_SOURCE_DIR}/src/${PROJECT_NAME}")
 file(REMOVE_RECURSE "${CMAKE_SOURCE_DIR}/src/template")
 
 # Configure src/CMakeLists.txt
@@ -80,16 +80,16 @@ configure_file("${CMAKE_SOURCE_DIR}/src/CMakeLists.txt.in"
 file(REMOVE "${CMAKE_SOURCE_DIR}/src/CMakeLists.txt.in")
 
 # Configure src/${PROJECT_NAME}/CMakeLists.txt
-configure_file("${CMAKE_SOURCE_DIR}/src/${PROJECT_NAME_SNAKE_CASE}/CMakeLists.txt.in"
-               "${CMAKE_SOURCE_DIR}/src/${PROJECT_NAME_SNAKE_CASE}/CMakeLists.txt"
+configure_file("${CMAKE_SOURCE_DIR}/src/${PROJECT_NAME}/CMakeLists.txt.in"
+               "${CMAKE_SOURCE_DIR}/src/${PROJECT_NAME}/CMakeLists.txt"
                @ONLY)
-file(REMOVE "${CMAKE_SOURCE_DIR}/src/${PROJECT_NAME_SNAKE_CASE}/CMakeLists.txt.in")
+file(REMOVE "${CMAKE_SOURCE_DIR}/src/${PROJECT_NAME}/CMakeLists.txt.in")
 
 #-----------------------------------------------------------------------------------------------------------------------
 # Project Configuration (${CMAKE_SOURCE_DIR}/test)
 #-----------------------------------------------------------------------------------------------------------------------
 # Rename the test/template to test/${PROJECT_NAME}
-file(COPY "${CMAKE_SOURCE_DIR}/test/template" DESTINATION "${CMAKE_SOURCE_DIR}/test/${PROJECT_NAME_SNAKE_CASE}")
+file(COPY "${CMAKE_SOURCE_DIR}/test/template" DESTINATION "${CMAKE_SOURCE_DIR}/test/${PROJECT_NAME}")
 file(REMOVE_RECURSE "${CMAKE_SOURCE_DIR}/test/template")
 
 # Configure test/CMakeLists.txt
@@ -99,16 +99,16 @@ configure_file("${CMAKE_SOURCE_DIR}/test/CMakeLists.txt.in"
 file(REMOVE "${CMAKE_SOURCE_DIR}/test/CMakeLists.txt.in")
 
 # Configure test/${PROJECT_NAME}/CMakeLists.txt
-configure_file("${CMAKE_SOURCE_DIR}/test/${PROJECT_NAME_SNAKE_CASE}/CMakeLists.txt.in"
-               "${CMAKE_SOURCE_DIR}/test/${PROJECT_NAME_SNAKE_CASE}/CMakeLists.txt"
+configure_file("${CMAKE_SOURCE_DIR}/test/${PROJECT_NAME}/CMakeLists.txt.in"
+               "${CMAKE_SOURCE_DIR}/test/${PROJECT_NAME}/CMakeLists.txt"
                @ONLY)
-file(REMOVE "${CMAKE_SOURCE_DIR}/test/${PROJECT_NAME_SNAKE_CASE}/CMakeLists.txt.in")
+file(REMOVE "${CMAKE_SOURCE_DIR}/test/${PROJECT_NAME}/CMakeLists.txt.in")
 
 # Configure test/${PROJECT_NAME}/${PROJECT_NAME}_test.cpp
-configure_file("${CMAKE_SOURCE_DIR}/test/${PROJECT_NAME_SNAKE_CASE}/${PROJECT_NAME_SNAKE_CASE}_test.cpp.in"
-               "${CMAKE_SOURCE_DIR}/test/${PROJECT_NAME_SNAKE_CASE}/${PROJECT_NAME_SNAKE_CASE}_test.cpp"
+configure_file("${CMAKE_SOURCE_DIR}/test/${PROJECT_NAME}/template_test.cpp.in"
+               "${CMAKE_SOURCE_DIR}/test/${PROJECT_NAME}/${PROJECT_NAME_SNAKE_CASE}_test.cpp"
                @ONLY)
-file(REMOVE "${CMAKE_SOURCE_DIR}/test/${PROJECT_NAME_SNAKE_CASE}/${PROJECT_NAME_SNAKE_CASE}_test.cpp.in")
+file(REMOVE "${CMAKE_SOURCE_DIR}/test/${PROJECT_NAME}/${PROJECT_NAME_SNAKE_CASE}_test.cpp.in")
 
 #-----------------------------------------------------------------------------------------------------------------------
 # Project Configuration (Project Type)
