@@ -69,10 +69,6 @@ file(RENAME "${CMAKE_SOURCE_DIR}/cmake/TemplateConfig.cmake.in" "${CMAKE_SOURCE_
 #-----------------------------------------------------------------------------------------------------------------------
 # Project Configuration (${CMAKE_SOURCE_DIR}/src)
 #-----------------------------------------------------------------------------------------------------------------------
-# Rename the src/template to src/${PROJECT_NAME}
-file(COPY "${CMAKE_SOURCE_DIR}/src/template" DESTINATION "${CMAKE_SOURCE_DIR}/src/${PROJECT_NAME}")
-file(REMOVE_RECURSE "${CMAKE_SOURCE_DIR}/src/template")
-
 # Configure src/CMakeLists.txt
 configure_file("${CMAKE_SOURCE_DIR}/src/CMakeLists.txt.in"
                "${CMAKE_SOURCE_DIR}/src/CMakeLists.txt"
@@ -88,10 +84,6 @@ file(REMOVE "${CMAKE_SOURCE_DIR}/src/${PROJECT_NAME}/CMakeLists.txt.in")
 #-----------------------------------------------------------------------------------------------------------------------
 # Project Configuration (${CMAKE_SOURCE_DIR}/test)
 #-----------------------------------------------------------------------------------------------------------------------
-# Rename the test/template to test/${PROJECT_NAME}
-file(COPY "${CMAKE_SOURCE_DIR}/test/template" DESTINATION "${CMAKE_SOURCE_DIR}/test/${PROJECT_NAME}")
-file(REMOVE_RECURSE "${CMAKE_SOURCE_DIR}/test/template")
-
 # Configure test/CMakeLists.txt
 configure_file("${CMAKE_SOURCE_DIR}/test/CMakeLists.txt.in"
                "${CMAKE_SOURCE_DIR}/test/CMakeLists.txt"
