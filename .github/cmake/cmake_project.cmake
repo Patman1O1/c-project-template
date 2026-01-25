@@ -117,7 +117,7 @@ if("${PROJECT_TYPE}" MATCHES "EXECUTABLE")
 
     # Configure src/${PROJECT_NAME}/${PROJECT_NAME}.c
     configure_file("${CMAKE_SOURCE_DIR}/src/${PROJECT_NAME}/template.c.in"
-                   "${CMAKE_SOURCE_DIR}/src/${PROJECT_NAME}/${PROJECT_NAME}.c"
+                   "${CMAKE_SOURCE_DIR}/src/${PROJECT_NAME}/${PROJECT_NAME_SNAKE_CASE}.c"
                    @ONLY)
 
     # Configure src/${PROJECT_NAME}/main.c
@@ -132,7 +132,7 @@ if("${PROJECT_TYPE}" MATCHES "EXECUTABLE")
 
     # Configure src/${PROJECT_NAME}/include/${PROJECT_NAME}.h
     configure_file("${CMAKE_SOURCE_DIR}/src/${PROJECT_NAME}/include/template.h.in"
-                   "${CMAKE_SOURCE_DIR}/src/${PROJECT_NAME}/include/${PROJECT_NAME}.h"
+                   "${CMAKE_SOURCE_DIR}/src/${PROJECT_NAME}/include/${PROJECT_NAME_SNAKE_CASE}.h"
                    @ONLY)
 elseif("${PROJECT_TYPE}" MATCHES "STATIC LIBRARY")
     # Read the contents of the project init and definition files and store their contents
@@ -144,7 +144,7 @@ elseif("${PROJECT_TYPE}" MATCHES "STATIC LIBRARY")
 
     # Configure src/${PROJECT_NAME}/${PROJECT_NAME}.c
     configure_file("${CMAKE_SOURCE_DIR}/src/${PROJECT_NAME}/template.c.in"
-                   "${CMAKE_SOURCE_DIR}/src/${PROJECT_NAME}/${PROJECT_NAME}.c"
+                   "${CMAKE_SOURCE_DIR}/src/${PROJECT_NAME}/${PROJECT_NAME_SNAKE_CASE}.c"
                    @ONLY)
 
     # Configure src/${PROJECT_NAME}/include/export.h
@@ -154,7 +154,7 @@ elseif("${PROJECT_TYPE}" MATCHES "STATIC LIBRARY")
 
     # Configure src/${PROJECT_NAME}/include/${PROJECT_NAME}.h
     configure_file("${CMAKE_SOURCE_DIR}/src/${PROJECT_NAME}/include/template.h.in"
-                   "${CMAKE_SOURCE_DIR}/src/${PROJECT_NAME}/include/${PROJECT_NAME}.h"
+                   "${CMAKE_SOURCE_DIR}/src/${PROJECT_NAME}/include/${PROJECT_NAME_SNAKE_CASE}.h"
                    @ONLY)
 elseif("${PROJECT_TYPE}" MATCHES "SHARED LIBRARY")
     # Read the contents of the project init and definition files and store their contents
@@ -166,7 +166,7 @@ elseif("${PROJECT_TYPE}" MATCHES "SHARED LIBRARY")
 
     # Configure src/${PROJECT_NAME}/${PROJECT_NAME}.c
     configure_file("${CMAKE_SOURCE_DIR}/src/${PROJECT_NAME}/template.c.in"
-                   "${CMAKE_SOURCE_DIR}/src/${PROJECT_NAME}/${PROJECT_NAME}.c"
+                   "${CMAKE_SOURCE_DIR}/src/${PROJECT_NAME}/${PROJECT_NAME_SNAKE_CASE}.c"
                    @ONLY)
 
     # Configure src/${PROJECT_NAME}/include/export.h
@@ -176,7 +176,7 @@ elseif("${PROJECT_TYPE}" MATCHES "SHARED LIBRARY")
 
     # Configure src/${PROJECT_NAME}/include/${PROJECT_NAME}.h
     configure_file("${CMAKE_SOURCE_DIR}/src/${PROJECT_NAME}/include/template.h.in"
-                   "${CMAKE_SOURCE_DIR}/src/${PROJECT_NAME}/include/${PROJECT_NAME}.h"
+                   "${CMAKE_SOURCE_DIR}/src/${PROJECT_NAME}/include/${PROJECT_NAME_SNAKE_CASE}.h"
                    @ONLY)
 else()
     # Read the contents of the project init and definition files and store their contents
@@ -184,7 +184,7 @@ else()
     file(READ "${CMAKE_SOURCE_DIR}/.github/cmake/interface_library/ProjectDefinition.cmake" PROJECT_DEFINE)
 
     # Remove all the source files (interface libraries are header only)
-    file(REMOVE "${CMAKE_SOURCE_DIR}/src/${PROJECT_NAME}/${PROJECT_NAME}.c.in")
+    file(REMOVE "${CMAKE_SOURCE_DIR}/src/${PROJECT_NAME}/template.c.in")
     file(REMOVE "${CMAKE_SOURCE_DIR}/src/${PROJECT_NAME}/main.c.in")
 
     # Configure src/${PROJECT_NAME}/include/export.h
@@ -194,7 +194,7 @@ else()
 
     # Configure src/${PROJECT_NAME}/include/${PROJECT_NAME}.h
     configure_file("${CMAKE_SOURCE_DIR}/src/${PROJECT_NAME}/include/template.h.in"
-                   "${CMAKE_SOURCE_DIR}/src/${PROJECT_NAME}/include/${PROJECT_NAME}.h"
+                   "${CMAKE_SOURCE_DIR}/src/${PROJECT_NAME}/include/${PROJECT_NAME_SNAKE_CASE}.h"
                    @ONLY)
 endif()
 
