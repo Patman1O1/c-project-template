@@ -31,18 +31,6 @@ jobs:
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
 
-      - name: Rename Directories
-        run: |
-          mv "$GITHUB_WORKSPACE/src/template" "$GITHUB_WORKSPACE/src/${{ github.event.repository.name }}"
-          git add "$GITHUB_WORKSPACE/src/${{ github.event.repository.name }}"
-          git commit -m "Configure src"
-          
-          mv "$GITHUB_WORKSPACE/test/template" "$GITHUB_WORKSPACE/test/${{ github.event.repository.name }}"
-          git add "$GITHUB_WORKSPACE/test/${{ github.event.repository.name }}"
-          git commit -m "Configure test"
-          
-          git push
-
       - name: Configure CMake files
         run: |
           cmake \
