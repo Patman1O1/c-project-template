@@ -113,16 +113,16 @@ if("${PROJECT_TYPE}" MATCHES "EXECUTABLE")
 
 elseif("${PROJECT_TYPE}" MATCHES "STATIC LIBRARY")
     # Read the contents of the project init and definition files and store their contents
-    file(READ "${CMAKE_SOURCE_DIR}/static_library/ProjectInit.cmake" PROJECT_INIT)
-    file(READ "${CMAKE_SOURCE_DIR}/static_library/ProjectDefinition.cmake" PROJECT_DEFINE)
+    file(READ "${CMAKE_SOURCE_DIR}/.github/cmake/static_library/ProjectInit.cmake" PROJECT_INIT)
+    file(READ "${CMAKE_SOURCE_DIR}/.github/cmake/static_library/ProjectDefinition.cmake" PROJECT_DEFINE)
 elseif("${PROJECT_TYPE}" MATCHES "SHARED LIBRARY")
     # Read the contents of the project init and definition files and store their contents
-    file(READ "${CMAKE_SOURCE_DIR}/shared_library/ProjectInit.cmake" PROJECT_INIT)
-    file(READ "${CMAKE_SOURCE_DIR}/shared_library/ProjectDefinition.cmake" PROJECT_DEFINE)
+    file(READ "${CMAKE_SOURCE_DIR}/.github/cmake/shared_library/ProjectInit.cmake" PROJECT_INIT)
+    file(READ "${CMAKE_SOURCE_DIR}/.github/cmake/shared_library/ProjectDefinition.cmake" PROJECT_DEFINE)
 else()
     # Read the contents of the project init and definition files and store their contents
-    file(READ "${CMAKE_SOURCE_DIR}/interface_library/ProjectInit.cmake" PROJECT_INIT)
-    file(READ "${CMAKE_SOURCE_DIR}/interface_library/ProjectDefinition.cmake" PROJECT_DEFINE)
+    file(READ "${CMAKE_SOURCE_DIR}/.github/cmake/interface_library/ProjectInit.cmake" PROJECT_INIT)
+    file(READ "${CMAKE_SOURCE_DIR}/.github/cmake/interface_library/ProjectDefinition.cmake" PROJECT_DEFINE)
 
     # Remove all the source files (interface libraries are header only)
     file(REMOVE_RECURSE "${CMAKE_SOURCE_DIR}/src/")
