@@ -54,6 +54,18 @@ else()
 endif()
 
 #-----------------------------------------------------------------------------------------------------------------------
+# Interprocedural Optimisation (IPO)
+#-----------------------------------------------------------------------------------------------------------------------
+include(CheckIPOSupported)
+check_ipo_supported(RESULT result OUTPUT output)
+if(result)
+    message(STATUS "IPO is available")
+    set(CMAKE_INTERPROCEDURAL_OPTIMIZATION TRUE)
+else()
+    message(SEND_ERROR "IPO is unavailable: ${output}")
+endif()
+
+#-----------------------------------------------------------------------------------------------------------------------
 # Subdirectories
 #-----------------------------------------------------------------------------------------------------------------------
 add_subdirectory("src")
