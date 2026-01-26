@@ -17,7 +17,6 @@ set(PROJECT_TYPE "" CACHE STRING "The type of the project")
 set(PROJECT_NAMESPACE "${PROJECT_NAME}" CACHE STRING "The namespace of the project")
 set(PROJECT_VERSION 0.1.0 CACHE STRING "The version of the project")
 set(PROJECT_DESCRIPTION "" CACHE STRING "The description of the project")
-set(CMAKE_MINIMUM_REQUIRED_VERSION 3.28.0 CACHE STRING "The minimum required version for CMake")
 
 #-----------------------------------------------------------------------------------------------------------------------
 # Parameter Validation
@@ -36,6 +35,20 @@ if(NOT PROJECT_TYPE MATCHES "^(executable|static_library|shared_library|interfac
     message(FATAL_ERROR "PROJECT_TYPE was not specified as Executable, Static Library, Shared Library, or Interface Library")
     return()
 endif()
+
+#-----------------------------------------------------------------------------------------------------------------------
+# Variables
+#-----------------------------------------------------------------------------------------------------------------------
+# CMake Variables
+set(CMAKE_MINIMUM_REQUIRED_VERSION 3.28.0)
+
+# C Variables
+set(CMAKE_C_STANDARD 23)
+set(CMAKE_C_STANDARD_REQUIRED ON)
+
+# C++ Variables
+set(CMAKE_CXX_STANDARD 26)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 #-----------------------------------------------------------------------------------------------------------------------
 # Formating
