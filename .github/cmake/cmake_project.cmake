@@ -30,8 +30,12 @@ endif()
 # Format the project type in snake_case
 to_snake_case("${PROJECT_TYPE}" PROJECT_TYPE)
 
-# Validate the project type
-if(NOT PROJECT_TYPE MATCHES "^(executable|static_library|shared_library|interface_library)$")
+# Validate the project type and set BUILD_SHARED_LIBS if the project type is a shared library
+if(PROJECT_TYPE MATCHES "shared_library")
+    set(BUILD_SHARED_LIBS ON)
+elseif(PROJECT_TYPE MATCHES "^(executable|static_library|interface_library)$")
+    set(BUILD_SHARED_LIBS OFF)
+else()
     message(FATAL_ERROR "PROJECT_TYPE was not specified as Executable, Static Library, Shared Library, or Interface Library")
     return()
 endif()
