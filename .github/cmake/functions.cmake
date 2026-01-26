@@ -3,7 +3,7 @@
 #-----------------------------------------------------------------------------------------------------------------------
 function(to_pascal_case INPUT_STRING OUTPUT_STRING)
     # Replace common delimiters with spaces
-    string(REGEX REPLACE "[_-.]" " " temp "${INPUT_STRING}")
+    string(REGEX REPLACE "[-_.]" " " temp "${INPUT_STRING}")
 
     # Insert space before uppercase letters in camelCase (but not at start)
     # This regex finds lowercase followed by uppercase and inserts space between
