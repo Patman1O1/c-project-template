@@ -1,14 +1,6 @@
 #-----------------------------------------------------------------------------------------------------------------------
 # Includes
 #-----------------------------------------------------------------------------------------------------------------------
-include("${CMAKE_SOURCE_DIR}/.github/cmake/executable/executable_init.cmake")
-include("${CMAKE_SOURCE_DIR}/.github/cmake/executable/executable_definition.cmake")
-include("${CMAKE_SOURCE_DIR}/.github/cmake/interface_library/interface_library_init.cmake")
-include("${CMAKE_SOURCE_DIR}/.github/cmake/interface_library/interface_library_definition.cmake")
-include("${CMAKE_SOURCE_DIR}/.github/cmake/static_library/static_library_init.cmake")
-include("${CMAKE_SOURCE_DIR}/.github/cmake/static_library/static_library_definition.cmake")
-include("${CMAKE_SOURCE_DIR}/.github/cmake/shared_library/shared_library_init.cmake")
-include("${CMAKE_SOURCE_DIR}/.github/cmake/shared_library/shared_library_definition.cmake")
 include("${CMAKE_SOURCE_DIR}/.github/cmake/functions.cmake")
 
 
@@ -56,21 +48,7 @@ string(TOUPPER "${PROJECT_NAME_SNAKE_CASE}" PROJECT_NAME_SCREAMING_CASE)
 #-----------------------------------------------------------------------------------------------------------------------
 # Project Root Directory Configuration
 #-----------------------------------------------------------------------------------------------------------------------
-file(READ "${CMAKE_SOURCE_DIR}/.github/cmake/${PROJECT_TYPE}/${PROJECT_TYPE}_init.cmake" PROJECT_INIT)
-file(READ "${CMAKE_SOURCE_DIR}/.github/cmake/${PROJECT_TYPE}/${PROJECT_TYPE}_definition.cmake" PROJECT_DEFINE)
-
-# Configure the conanfile.py file
-configure_file("${CMAKE_SOURCE_DIR}/conanfile.py.in"
-        "${CMAKE_SOURCE_DIR}/conanfile.py"
-        @ONLY)
-file(REMOVE "${CMAKE_SOURCE_DIR}/conanfile.py.in")
-
-# Configure the project root CMakeLists.txt file
-configure_file("${CMAKE_SOURCE_DIR}/CMakeLists.txt.in"
-        "${CMAKE_SOURCE_DIR}/CMakeLists.txt"
-        @ONLY)
-file(REMOVE "${CMAKE_SOURCE_DIR}/CMakeLists.txt.in")
-
+configure_root_directory("${PROJECT_NAME}" "${PROJECT_NAMESPACE}" ${PROJECT_VERSION} "${PROJECT_DESCRIPTION}" "${PROJECT_TYPE}")
 
 return() # temporary
 
