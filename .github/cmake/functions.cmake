@@ -47,7 +47,7 @@ endfunction()
 #-----------------------------------------------------------------------------------------------------------------------
 function(to_snake_case INPUT_STRING OUTPUT_STRING)
     # Replace common delimiters with underscores
-    string(REGEX REPLACE "[\\-\\. ]" "_" temp "${INPUT_STRING}")
+    string(REGEX REPLACE "[-. ]" "_" temp "${INPUT_STRING}")
 
     # Insert underscore before uppercase letters in camelCase/PascalCase
     # Match lowercase followed by uppercase: aB -> a_B
