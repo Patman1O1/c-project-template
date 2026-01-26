@@ -2,7 +2,6 @@
 # Includes
 #-----------------------------------------------------------------------------------------------------------------------
 include("${CMAKE_SOURCE_DIR}/.github/cmake/functions.cmake")
-include("${CMAKE_SOURCE_DIR}/.github/cmake/ProjectConfigHelpers.cmake")
 include("${CMAKE_SOURCE_DIR}/.github/cmake/executable/ExecutableInit.cmake")
 include("${CMAKE_SOURCE_DIR}/.github/cmake/executable/ExecutableDefinition.cmake")
 include("${CMAKE_SOURCE_DIR}/.github/cmake/interface_library/InterfaceLibraryInit.cmake")
