@@ -1,14 +1,14 @@
 #-----------------------------------------------------------------------------------------------------------------------
 # Includes
 #-----------------------------------------------------------------------------------------------------------------------
-include("${CMAKE_SOURCE_DIR}/.github/cmake/executable/ExecutableInit.cmake")
-include("${CMAKE_SOURCE_DIR}/.github/cmake/executable/ExecutableDefinition.cmake")
-include("${CMAKE_SOURCE_DIR}/.github/cmake/interface_library/InterfaceLibraryInit.cmake")
-include("${CMAKE_SOURCE_DIR}/.github/cmake/interface_library/InterfaceLibraryDefinition.cmake")
-include("${CMAKE_SOURCE_DIR}/.github/cmake/static_library/StaticLibraryInit.cmake")
-include("${CMAKE_SOURCE_DIR}/.github/cmake/static_library/StaticLibraryDefinition.cmake")
-include("${CMAKE_SOURCE_DIR}/.github/cmake/shared_library/SharedLibraryInit.cmake")
-include("${CMAKE_SOURCE_DIR}/.github/cmake/shared_library/SharedLibraryDefinition.cmake")
+include("${CMAKE_SOURCE_DIR}/.github/cmake/executable/executable_init.cmake")
+include("${CMAKE_SOURCE_DIR}/.github/cmake/executable/executable_definition.cmake")
+include("${CMAKE_SOURCE_DIR}/.github/cmake/interface_library/interface_library_init.cmake")
+include("${CMAKE_SOURCE_DIR}/.github/cmake/interface_library/interface_library_definition.cmake")
+include("${CMAKE_SOURCE_DIR}/.github/cmake/static_library/static_library_init.cmake")
+include("${CMAKE_SOURCE_DIR}/.github/cmake/static_library/static_library_definition.cmake")
+include("${CMAKE_SOURCE_DIR}/.github/cmake/shared_library/shared_library_init.cmake")
+include("${CMAKE_SOURCE_DIR}/.github/cmake/shared_library/shared_library_definition.cmake")
 include("${CMAKE_SOURCE_DIR}/.github/cmake/functions.cmake")
 
 #-----------------------------------------------------------------------------------------------------------------------
