@@ -58,24 +58,23 @@ string(TOUPPER "${PROJECT_NAME_SNAKE_CASE}" PROJECT_NAME_SCREAMING_CASE)
 #-----------------------------------------------------------------------------------------------------------------------
 # Project Root Directory Configuration
 #-----------------------------------------------------------------------------------------------------------------------
-configure_root_directory("${PROJECT_NAME}" "${PROJECT_NAMESPACE}" ${PROJECT_VERSION} "${PROJECT_DESCRIPTION}" "${PROJECT_TYPE}")
+file(READ "${CMAKE_SOURCE_DIR}/.github/cmake/${PROJECT_TYPE}/${PROJECT_TYPE}_init.cmake" PROJECT_INIT)
+file(READ "${CMAKE_SOURCE_DIR}/.github/cmake/${PROJECT_TYPE}/${PROJECT_TYPE}_definition.cmake" PROJECT_DEFINE)
 
-return() # temporary
-
-#-----------------------------------------------------------------------------------------------------------------------
-# Project Configuration (${CMAKE_SOURCE_DIR})
-#-----------------------------------------------------------------------------------------------------------------------
 # Configure the conanfile.py file
 configure_file("${CMAKE_SOURCE_DIR}/conanfile.py.in"
-               "${CMAKE_SOURCE_DIR}/conanfile.py"
-                @ONLY)
+        "${CMAKE_SOURCE_DIR}/conanfile.py"
+        @ONLY)
 file(REMOVE "${CMAKE_SOURCE_DIR}/conanfile.py.in")
 
 # Configure the project root CMakeLists.txt file
 configure_file("${CMAKE_SOURCE_DIR}/CMakeLists.txt.in"
-               "${CMAKE_SOURCE_DIR}/CMakeLists.txt"
-               @ONLY)
+        "${CMAKE_SOURCE_DIR}/CMakeLists.txt"
+        @ONLY)
 file(REMOVE "${CMAKE_SOURCE_DIR}/CMakeLists.txt.in")
+
+
+return() # temporary
 
 #-----------------------------------------------------------------------------------------------------------------------
 # Project Configuration (cmake)
