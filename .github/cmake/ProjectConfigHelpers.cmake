@@ -18,102 +18,19 @@ include("${CMAKE_SOURCE_DIR}/.github/cmake/functions.cmake")
 #-----------------------------------------------------------------------------------------------------------------------
 # Functions
 #-----------------------------------------------------------------------------------------------------------------------
-function(configure_executable PROJECT_NAME)
-    # Format the project name
-    to_pascal_case("${PROJECT_NAME}" PROJECT_NAME_PASCAL_CASE)
-    to_snake_case("${PROJECT_NAME}" PROJECT_NAME_SNAKE_CASE)
-    to_kebab_case("${PROJECT_NAME}" PROJECT_NAME_KEBAB_CASE)
-    string(TOUPPER "${PROJECT_NAME_SNAKE_CASE}" PROJECT_NAME_SCREAMING_CASE)
+function(configure_root_directory PROJECT_NAME PROJECT_NAMESPACE PROJECT_VERSION PROJECT_DESCRIPTION PROJECT_TYPE)
+    file(READ "${CMAKE_SOURCE_DIR}/.github/cmake/${PROJECT_TYPE}/${PROJECT_TYPE}_init.cmake" PROJECT_INIT)
+    file(READ "${CMAKE_SOURCE_DIR}/.github/cmake/${PROJECT_TYPE}/${PROJECT_TYPE}_definition.cmake" PROJECT_DEFINE)
 
-    # Configure the root directory CMakeLists.txt file
-    configure_file("${CMAKE_SOURCE_DIR}/CMakeLists.txt.in"
-                   "${CMAKE_SOURCE_DIR}/CMakeLists.txt"
-                   @ONLY)
-
-    # Configure conanfile.py
-    file(REMOVE "${CMAKE_SOURCE_DIR}/conanfile.py.in")
+    # Configure the conanfile.py file
     configure_file("${CMAKE_SOURCE_DIR}/conanfile.py.in"
                    "${CMAKE_SOURCE_DIR}/conanfile.py"
                    @ONLY)
+    file(REMOVE "${CMAKE_SOURCE_DIR}/conanfile.py.in")
 
-    # Rename directories
-    file(COPY "${CMAKE_SOURCE_DIR}/src/template" DESTINATION "${CMAKE_SOURCE_DIR}/src/${PROJECT_NAME_SNAKE_CASE}")
-    file(REMOVE_RECURSE "${CMAKE_SOURCE_DIR}/src/template")
-    file(COPY "${CMAKE_SOURCE_DIR}/test/template" DESTINATION "${CMAKE_SOURCE_DIR}/test/${PROJECT_NAME_SNAKE_CASE}")
-    file(REMOVE_RECURSE "${CMAKE_SOURCE_DIR}/test/template")
-endfunction()
-
-function(configure_static_library PROJECT_NAME)
-    # Format the project name
-    to_pascal_case("${PROJECT_NAME}" PROJECT_NAME_PASCAL_CASE)
-    to_snake_case("${PROJECT_NAME}" PROJECT_NAME_SNAKE_CASE)
-    to_kebab_case("${PROJECT_NAME}" PROJECT_NAME_KEBAB_CASE)
-    string(TOUPPER "${PROJECT_NAME_SNAKE_CASE}" PROJECT_NAME_SCREAMING_CASE)
-
-    # Configure the root directory CMakeLists.txt file
+    # Configure the project root CMakeLists.txt file
     configure_file("${CMAKE_SOURCE_DIR}/CMakeLists.txt.in"
                    "${CMAKE_SOURCE_DIR}/CMakeLists.txt"
                    @ONLY)
-
-    # Configure conanfile.py
-    file(REMOVE "${CMAKE_SOURCE_DIR}/conanfile.py.in")
-    configure_file("${CMAKE_SOURCE_DIR}/conanfile.py.in"
-                   "${CMAKE_SOURCE_DIR}/conanfile.py"
-                   @ONLY)
-
-    # Rename directories
-    file(COPY "${CMAKE_SOURCE_DIR}/src/template" DESTINATION "${CMAKE_SOURCE_DIR}/src/${PROJECT_NAME_SNAKE_CASE}")
-    file(REMOVE_RECURSE "${CMAKE_SOURCE_DIR}/src/template")
-    file(COPY "${CMAKE_SOURCE_DIR}/test/template" DESTINATION "${CMAKE_SOURCE_DIR}/test/${PROJECT_NAME_SNAKE_CASE}")
-    file(REMOVE_RECURSE "${CMAKE_SOURCE_DIR}/test/template")
-endfunction()
-
-function(configure_shared_library PROJECT_NAME)
-    # Format the project name
-    to_pascal_case("${PROJECT_NAME}" PROJECT_NAME_PASCAL_CASE)
-    to_snake_case("${PROJECT_NAME}" PROJECT_NAME_SNAKE_CASE)
-    to_kebab_case("${PROJECT_NAME}" PROJECT_NAME_KEBAB_CASE)
-    string(TOUPPER "${PROJECT_NAME_SNAKE_CASE}" PROJECT_NAME_SCREAMING_CASE)
-
-    # Configure the root directory CMakeLists.txt file
-    configure_file("${CMAKE_SOURCE_DIR}/CMakeLists.txt.in"
-                   "${CMAKE_SOURCE_DIR}/CMakeLists.txt"
-                   @ONLY)
-
-    # Configure conanfile.py
-    file(REMOVE "${CMAKE_SOURCE_DIR}/conanfile.py.in")
-    configure_file("${CMAKE_SOURCE_DIR}/conanfile.py.in"
-                   "${CMAKE_SOURCE_DIR}/conanfile.py"
-                   @ONLY)
-
-    # Rename directories
-    file(COPY "${CMAKE_SOURCE_DIR}/src/template" DESTINATION "${CMAKE_SOURCE_DIR}/src/${PROJECT_NAME_SNAKE_CASE}")
-    file(REMOVE_RECURSE "${CMAKE_SOURCE_DIR}/src/template")
-    file(COPY "${CMAKE_SOURCE_DIR}/test/template" DESTINATION "${CMAKE_SOURCE_DIR}/test/${PROJECT_NAME_SNAKE_CASE}")
-    file(REMOVE_RECURSE "${CMAKE_SOURCE_DIR}/test/template")
-endfunction()
-
-function(configure_interface_library PROJECT_NAME)
-    # Format the project name
-    to_pascal_case("${PROJECT_NAME}" PROJECT_NAME_PASCAL_CASE)
-    to_snake_case("${PROJECT_NAME}" PROJECT_NAME_SNAKE_CASE)
-    to_kebab_case("${PROJECT_NAME}" PROJECT_NAME_KEBAB_CASE)
-    string(TOUPPER "${PROJECT_NAME_SNAKE_CASE}" PROJECT_NAME_SCREAMING_CASE)
-
-    # Configure the root directory CMakeLists.txt file
-    configure_file("${CMAKE_SOURCE_DIR}/CMakeLists.txt.in"
-                   "${CMAKE_SOURCE_DIR}/CMakeLists.txt"
-                   @ONLY)
-
-    # Configure conanfile.py
-    file(REMOVE "${CMAKE_SOURCE_DIR}/conanfile.py.in")
-    configure_file("${CMAKE_SOURCE_DIR}/conanfile.py.in"
-                   "${CMAKE_SOURCE_DIR}/conanfile.py"
-                   @ONLY)
-
-    # Rename directories
-    file(COPY "${CMAKE_SOURCE_DIR}/src/template" DESTINATION "${CMAKE_SOURCE_DIR}/src/${PROJECT_NAME_SNAKE_CASE}")
-    file(REMOVE_RECURSE "${CMAKE_SOURCE_DIR}/src/template")
-    file(COPY "${CMAKE_SOURCE_DIR}/test/template" DESTINATION "${CMAKE_SOURCE_DIR}/test/${PROJECT_NAME_SNAKE_CASE}")
-    file(REMOVE_RECURSE "${CMAKE_SOURCE_DIR}/test/template")
+    file(REMOVE "${CMAKE_SOURCE_DIR}/CMakeLists.txt.in")
 endfunction()
