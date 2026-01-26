@@ -66,12 +66,12 @@ string(TOUPPER "${PROJECT_NAME_SNAKE_CASE}" PROJECT_NAME_SCREAMING_CASE)
 #-----------------------------------------------------------------------------------------------------------------------
 # Project Root Directory Configuration
 #-----------------------------------------------------------------------------------------------------------------------
-configure_root_directory("${PROJECT_NAME_PASCAL_CASE}" "${PROJECT_NAMESPACE}" ${PROJECT_VERSION} "${PROJECT_DESCRIPTION}" "${PROJECT_TYPE}")
+configure_root_directory("${PROJECT_NAME}" "${PROJECT_NAMESPACE}" ${PROJECT_VERSION} "${PROJECT_DESCRIPTION}" "${PROJECT_TYPE}")
 
 #-----------------------------------------------------------------------------------------------------------------------
 # Project Source Directory Configuration
 #----------------------------------------------------------------------------------------------------------------------
-configure_source_directory("${PROJECT_NAME_PASCAL_CASE}" "${PROJECT_NAMESPACE}" "${PROJECT_TYPE}")
+configure_source_directory("${PROJECT_NAME}" "${PROJECT_NAMESPACE}" "${PROJECT_TYPE}")
 
 return() # temporary
 
