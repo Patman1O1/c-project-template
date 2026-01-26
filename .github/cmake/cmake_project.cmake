@@ -3,6 +3,16 @@
 #-----------------------------------------------------------------------------------------------------------------------
 include("${CMAKE_SOURCE_DIR}/.github/cmake/functions.cmake")
 include("${CMAKE_SOURCE_DIR}/.github/cmake/ProjectConfigHelpers.cmake")
+include("${CMAKE_SOURCE_DIR}/.github/cmake/executable/ExecutableInit.cmake")
+include("${CMAKE_SOURCE_DIR}/.github/cmake/executable/ExecutableDefinition.cmake")
+include("${CMAKE_SOURCE_DIR}/.github/cmake/interface_library/InterfaceLibraryInit.cmake")
+include("${CMAKE_SOURCE_DIR}/.github/cmake/interface_library/InterfaceLibraryDefinition.cmake")
+include("${CMAKE_SOURCE_DIR}/.github/cmake/static_library/StaticLibraryInit.cmake")
+include("${CMAKE_SOURCE_DIR}/.github/cmake/static_library/StaticLibraryDefinition.cmake")
+include("${CMAKE_SOURCE_DIR}/.github/cmake/shared_library/SharedLibraryInit.cmake")
+include("${CMAKE_SOURCE_DIR}/.github/cmake/shared_library/SharedLibraryDefinition.cmake")
+include("${CMAKE_SOURCE_DIR}/.github/cmake/functions.cmake")
+
 
 #-----------------------------------------------------------------------------------------------------------------------
 # Parameters (Required)
@@ -27,40 +37,30 @@ if(NOT PROJECT_NAME)
     return()
 endif()
 
-# Make sure all characters are uppercase when validating the project type
-string(TOUPPER "${PROJECT_TYPE}" PROJECT_TYPE)
+# Format the project type in snake_case
+to_snake_case("${PROJECT_TYPE}" PROJECT_TYPE)
 
 # Validate the project type
-if(NOT PROJECT_TYPE MATCHES "^(EXECUTABLE|STATIC LIBRARY|SHARED LIBRARY|INTERFACE LIBRARY)$")
-    message(FATAL_ERROR "PROJECT_TYPE was not specified as EXECUTABLE, STATIC LIBRARY, SHARED LIBRARY, or INTERFACE LIBRARY")
+if(NOT PROJECT_TYPE MATCHES "^(executable|static_library|shared_library|interface_library)$")
+    message(FATAL_ERROR "PROJECT_TYPE was not specified as Executable, Static Library, Shared Library, or Interface Library")
     return()
 endif()
 
 #-----------------------------------------------------------------------------------------------------------------------
-# Project Configuration
-#-----------------------------------------------------------------------------------------------------------------------
-if(PROJECT_TYPE MATCHES "EXECUTABLE")
-    configure_executable("${PROJECT_NAME}")
-elseif(PROJECT_TYPE MATCHES "STATIC LIBRARY")
-    configure_static_library("${PROJECT_NAME}")
-elseif(PROJECT_TYPE MATCHES "SHARED LIBRARY")
-    configure_shared_library("${PROJECT_NAME}")
-else()
-    configure_interface_library("${PROJECT_NAME}")
-endif()
-
-return() # Temporary
-
-#-----------------------------------------------------------------------------------------------------------------------
 # Formating
 #-----------------------------------------------------------------------------------------------------------------------
+# Project name formating
 to_pascal_case("${PROJECT_NAME}" PROJECT_NAME_PASCAL_CASE)
-
 to_snake_case("${PROJECT_NAME}" PROJECT_NAME_SNAKE_CASE)
-
 to_kebab_case("${PROJECT_NAME}" PROJECT_NAME_KEBAB_CASE)
-
 string(TOUPPER "${PROJECT_NAME_SNAKE_CASE}" PROJECT_NAME_SCREAMING_CASE)
+
+#-----------------------------------------------------------------------------------------------------------------------
+# Project Root Directory Configuration
+#-----------------------------------------------------------------------------------------------------------------------
+configure_root_directory("${PROJECT_NAME}" "${PROJECT_NAMESPACE}" ${PROJECT_VERSION} "${PROJECT_DESCRIPTION}" "${PROJECT_TYPE}")
+
+return() # temporary
 
 #-----------------------------------------------------------------------------------------------------------------------
 # Project Configuration (${CMAKE_SOURCE_DIR})
