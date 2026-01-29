@@ -1,9 +1,8 @@
 #-----------------------------------------------------------------------------------------------------------------------
 # Includes
 #-----------------------------------------------------------------------------------------------------------------------
-include("${CMAKE_SOURCE_DIR}/.github/cmake/functions.cmake")
-include("${CMAKE_SOURCE_DIR}/.github/cmake/ProjectConfigHelpers.cmake")
-
+include("${CMAKE_CURRENT_LIST_DIR}/functions.cmake")
+include("${CMAKE_CURRENT_LIST_DIR}/ProjectConfigHelpers.cmake")
 
 #-----------------------------------------------------------------------------------------------------------------------
 # Parameters (Required)
