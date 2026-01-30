@@ -68,6 +68,12 @@ string(TOUPPER "${PROJECT_NAME_SNAKE_CASE}" PROJECT_NAME_SCREAMING_CASE)
 configure_root_directory("${PROJECT_NAME}" "${PROJECT_NAMESPACE}" ${PROJECT_VERSION} "${PROJECT_DESCRIPTION}" "${PROJECT_TYPE}")
 
 #-----------------------------------------------------------------------------------------------------------------------
+# Project Include Directory Configuration
+#-----------------------------------------------------------------------------------------------------------------------
+configure_include_directory("${PROJECT_NAME}")
+return() # temporary
+
+#-----------------------------------------------------------------------------------------------------------------------
 # Project Source Directory Configuration
 #----------------------------------------------------------------------------------------------------------------------
 configure_source_directory("${PROJECT_NAME}" "${PROJECT_NAMESPACE}" "${PROJECT_TYPE}")
