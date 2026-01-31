@@ -53,6 +53,9 @@ set(CMAKE_C_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_STANDARD 26)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+# Project Variables
+set(PROJECT_ROOT_DIR "${CMAKE_CURRENT_LIST_DIR}/../..")
+
 #-----------------------------------------------------------------------------------------------------------------------
 # Formating
 #-----------------------------------------------------------------------------------------------------------------------
@@ -65,7 +68,18 @@ string(TOUPPER "${PROJECT_NAME_SNAKE_CASE}" PROJECT_NAME_SCREAMING_CASE)
 #-----------------------------------------------------------------------------------------------------------------------
 # Project Root Directory Configuration
 #-----------------------------------------------------------------------------------------------------------------------
-configure_root_directory("${PROJECT_NAME}" "${PROJECT_NAMESPACE}" ${PROJECT_VERSION} "${PROJECT_DESCRIPTION}" "${PROJECT_TYPE}")
+# Configure the project root CMakeLists.txt file
+file(READ "${CMAKE_CURRENT_LIST_DIR}/${PROJECT_TYPE}/${PROJECT_TYPE}_init.cmake" PROJECT_INIT)
+configure_file("${PROJECT_ROOT_DIR}/CMakeLists.txt.in"
+               "${PROJECT_ROOT_DIR}/CMakeLists.txt"
+               @ONLY)
+file(REMOVE "${PROJECT_ROOT_DIR}/CMakeLists.txt.in")
+
+# Configure the conanfile.py file
+configure_file("${PROJECT_ROOT_DIR}/conanfile.py.in"
+               "${PROJECT_ROOT_DIR}/conanfile.py"
+               @ONLY)
+file(REMOVE "${PROJECT_ROOT_DIR}/conanfile.py.in")
 
 #-----------------------------------------------------------------------------------------------------------------------
 # Project Include Directory Configuration
@@ -76,3 +90,8 @@ configure_include_directory("${PROJECT_NAME}")
 # Project Source Directory Configuration
 #----------------------------------------------------------------------------------------------------------------------
 configure_source_directory("${PROJECT_NAME}" "${PROJECT_NAMESPACE}" "${PROJECT_TYPE}")
+
+#-----------------------------------------------------------------------------------------------------------------------
+# Project Test Directory Configuration
+#----------------------------------------------------------------------------------------------------------------------
+configure_test_directory("${PROJECT_NAME}")
