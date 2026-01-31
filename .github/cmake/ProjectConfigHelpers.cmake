@@ -102,3 +102,5 @@ function(configure_source_directory PROJECT_NAME PROJECT_NAMESPACE PROJECT_TYPE)
         file(REMOVE "${PROJECT_ROOT_DIR}/src/${PROJECT_NAME}/template.c.in")
     endif()
 endfunction()
+
+
