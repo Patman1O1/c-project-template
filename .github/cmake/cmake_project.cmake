@@ -49,7 +49,7 @@ set(CMAKE_C_STANDARD 23)
 set(CMAKE_C_STANDARD_REQUIRED ON)
 
 # C++ Variables
-set(CMAKE_CXX_STANDARD 26)
+set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # Project Variables
@@ -158,6 +158,7 @@ else()
                    @ONLY)
     file(REMOVE "${PROJECT_ROOT_DIR}/src/${PROJECT_NAME}/template.c.in")
 endif()
+
 #-----------------------------------------------------------------------------------------------------------------------
 # Project Test Directory Configuration
 #----------------------------------------------------------------------------------------------------------------------
