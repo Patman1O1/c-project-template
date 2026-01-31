@@ -1,3 +1,5 @@
+include(GenerateExportHeader)
+
 # Set the primary target's header files
 set(PROJECT_PRIMARY_TARGET_HEADERS "include/${PROJECT_PRIMARY_TARGET}.h" PARENT_SCOPE)
 
@@ -7,11 +9,11 @@ set(PROJECT_PRIMARY_TARGET_SOURCES "${PROJECT_PRIMARY_TARGET}.c" PARENT_SCOPE)
 if(BUILD_SHARED_LIBS)
     # Set the primary target's properties
     set_target_properties("${PROJECT_PRIMARY_TARGET}" PROPERTIES
-            OUTPUT_NAME "${PROJECT_OUTPUT_NAME}"
+            OUTPUT_NAME "${PROJECT_NAME_KEBAB_CASE}"
             VERSION ${PROJECT_VERSION}
             SOVERSION ${PROJECT_VERSION_MAJOR}
             PUBLIC_HEADER "${PROJECT_PRIMARY_TARGET_HEADERS}"
-            CXX_VISIBILITY_PRESET hidden
+            C_VISIBILITY_PRESET hidden
             VISIBILITY_INLINES_HIDDEN ON
     )
 
@@ -20,6 +22,9 @@ if(BUILD_SHARED_LIBS)
             PUBLIC
                 "$<$<NOT:$<BOOL:${BUILD_SHARED_LIBS}>>:${PROJECT_NAME_SCREAMING_CASE}_STATIC_DEFINE>"
     )
+
+    # Set the export file name
+    set(EXPORT_FILE_NAME "export_shared.h")
 else()
     # Set the primary target's properties
     set_target_properties("${PROJECT_PRIMARY_TARGET}" PROPERTIES
@@ -34,6 +39,9 @@ else()
             PUBLIC
                 "${PROJECT_NAME_SCREAMING_CASE}_STATIC_DEFINE"
     )
+
+    # Set the export file name
+    set(EXPORT_FILE_NAME "export_static.h")
 endif()
 
 # Include directories
@@ -98,6 +106,7 @@ install(FILES
 )
 
 # Export the project
+generate_export_header("${PROJECT_PRIMARY_TARGET}")
 export(EXPORT "${PROJECT_NAME}Targets"
         FILE "${CMAKE_BINARY_DIR}/${PROJECT_NAME}Targets.cmake"
         NAMESPACE "${PROJECT_NAMESPACE}"::
