@@ -1,3 +1,5 @@
+include(GenerateExportHeader)
+
 # Set the primary target's header files
 set(PROJECT_PRIMARY_TARGET_HEADERS "include/${PROJECT_PRIMARY_TARGET}.h" PARENT_SCOPE)
 
@@ -18,14 +20,16 @@ if(NOT BUILD_SHARED_LIBS)
             PUBLIC
                 "${PROJECT_NAME_SCREAMING_CASE}_STATIC_DEFINE"
     )
+
+    set(EXPORT_FILE_NAME "export_static.h")
 else()
     # Set the primary target's properties
     set_target_properties("${PROJECT_PRIMARY_TARGET}" PROPERTIES
-            OUTPUT_NAME "${PROJECT_OUTPUT_NAME}"
+            OUTPUT_NAME "${PROJECT_NAME_KEBAB_CASE}"
             VERSION ${PROJECT_VERSION}
             SOVERSION ${PROJECT_VERSION_MAJOR}
             PUBLIC_HEADER "${PROJECT_PRIMARY_TARGET_HEADERS}"
-            CXX_VISIBILITY_PRESET hidden
+            C_VISIBILITY_PRESET hidden
             VISIBILITY_INLINES_HIDDEN ON
     )
 
@@ -34,6 +38,8 @@ else()
             PUBLIC
                 "$<$<NOT:$<BOOL:${BUILD_SHARED_LIBS}>>:${PROJECT_NAME_SCREAMING_CASE}_STATIC_DEFINE>"
     )
+
+    set(EXPORT_FILE_NAME "export_shared.h")
 endif()
 
 # Include directories
