@@ -1,7 +1,7 @@
 #-----------------------------------------------------------------------------------------------------------------------
 # Information
 #-----------------------------------------------------------------------------------------------------------------------
-cmake_minimum_required_(VERSION @CMAKE_MINIMUM_REQUIRED_VERSION@)
+cmake_minimum_required(VERSION @CMAKE_MINIMUM_REQUIRED_VERSION@)
 project(@PROJECT_NAME@
         VERSION @PROJECT_VERSION@
         DESCRIPTION @PROJECT_DESCRIPTION@
