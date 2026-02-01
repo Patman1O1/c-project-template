@@ -24,7 +24,7 @@ endif()
 #-----------------------------------------------------------------------------------------------------------------------
 # C Settings
 set(CMAKE_C_STANDARD @CMAKE_C_STANDARD@)
-set(CMAKE_C_STANDARD_REQUIRED ON)
+set(CMAKE_C_STANDARD_REQUIRED @CMAKE_C_STANDARD_REQUIRED@)
 
 # Project Settings
 option(BUILD_SHARED_LIBS "Build the project as a shared library" @BUILD_SHARED_LIBS@)
