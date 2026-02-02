@@ -71,6 +71,7 @@ endif()
 #-----------------------------------------------------------------------------------------------------------------------
 include(CPack)
 
+# Package setup
 set(CPACK_PACKAGE_NAME ${PROJECT_NAME})
 set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "${PROJECT_DESCRIPTION}")
 set(CPACK_PACKAGE_VERSION ${PROJECT_VERSION})
