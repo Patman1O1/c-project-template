@@ -53,16 +53,12 @@ set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # Project Variables
-set(PROJECT_ROOT_DIR "${CMAKE_CURRENT_LIST_DIR}/../..")
-
-#-----------------------------------------------------------------------------------------------------------------------
-# Formating
-#-----------------------------------------------------------------------------------------------------------------------
-# Project name formating
 to_pascal_case("${PROJECT_NAME}" PROJECT_NAME_PASCAL_CASE)
 to_snake_case("${PROJECT_NAME}" PROJECT_NAME_SNAKE_CASE)
 to_kebab_case("${PROJECT_NAME}" PROJECT_NAME_KEBAB_CASE)
 string(TOUPPER "${PROJECT_NAME_SNAKE_CASE}" PROJECT_NAME_SCREAMING_CASE)
+set(PROJECT_ROOT_DIR "${CMAKE_CURRENT_LIST_DIR}/../..")
+set(PROJECT_PRIMARY_TARGET "${PROJECT_NAME}" CACHE STRING "The primary target this project will build")
 
 #-----------------------------------------------------------------------------------------------------------------------
 # Project Root Directory Configuration
