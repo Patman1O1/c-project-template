@@ -2,7 +2,7 @@
 # Information
 #-----------------------------------------------------------------------------------------------------------------------
 cmake_minimum_required(VERSION @CMAKE_MINIMUM_REQUIRED_VERSION@)
-project(@PROJECT_NAME@
+project(@PROJECT_NAME_SNAKE_CASE@
         VERSION @PROJECT_VERSION@
         DESCRIPTION "@PROJECT_DESCRIPTION@"
         LANGUAGES C
@@ -16,7 +16,7 @@ cmake_file_api(
 
 # Ensure the project has a namespace
 if(NOT DEFINED PROJECT_NAMESPACE)
-    set(PROJECT_NAMESPACE "${PROJECT_NAME_PASCAL_CASE}" CACHE STRING "The project's namespace")
+    set(PROJECT_NAMESPACE "${PROJECT_NAME_SNAKE_CASE}" CACHE STRING "The project's namespace")
 endif()
 
 #-----------------------------------------------------------------------------------------------------------------------
@@ -69,8 +69,11 @@ endif()
 # CPack
 #-----------------------------------------------------------------------------------------------------------------------
 include(CPack)
-set(CPACK_PROJECT_NAME "${PROJECT_NAME}")
-set(CPACK_PROJECT_VERSION ${PROJECT_VERSION})
+
+set(CPACK_PACKAGE_NAME ${PROJECT_NAME_SNAKE_CASE})
+set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "${PROJECT_DESCRIPTION}")
+set(CPACK_PACKAGE_VERSION ${PROJECT_VERSION})
+set(CPACK_PACKAGE_INSTALL_DIRECTORY "${PROJECT_NAME_SNAKE_CASE}")
 set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_SOURCE_DIR}/LICENSE")
 set(CPACK_RESOURCE_FILE_README "${CMAKE_SOURCE_DIR}/README.md")
 set(CPACK_SOURCE_IGNORE_FILES
@@ -80,6 +83,15 @@ set(CPACK_SOURCE_IGNORE_FILES
         /\\\\.gitignore
         /\\\\.DS_Store
 )
+
+# Component setup
+set(CPACK_COMPONENTS_ALL Runtime Configuration Documentation)
+set(CPACK_COMPONENT_RUNTIME_DISPLAY_NAME "${PROJECT_NAME_PASCAL_CASE}")
+set(CPACK_COMPONENT_RUNTIME_DESCRIPTION "${PROJECT_DESCRIPTION}")
+set(CPACK_COMPONENT_CONFIGURATION_DISPLAY_NAME "${PROJECT_NAME_PASCAL_CASE}")
+set(CPACK_COMPONENT_CONFIGURATION_DESCRIPTION "${PROJECT_DESCRIPTION}")
+set(CPACK_COMPONENT_DOCUMENTATION_DISPLAY_NAME "Documentation")
+set(CPACK_COMPONENT_DOCUMENTATION_DESCRIPTION "${PROJECT_DESCRIPTION}")
 
 #-----------------------------------------------------------------------------------------------------------------------
 # Subdirectories
