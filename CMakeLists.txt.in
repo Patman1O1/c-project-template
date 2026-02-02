@@ -16,7 +16,7 @@ cmake_file_api(
 
 # Ensure the project has a namespace
 if(NOT DEFINED PROJECT_NAMESPACE)
-    set(PROJECT_NAMESPACE "${PROJECT_NAME_SNAKE_CASE}" CACHE STRING "The project's namespace")
+    set(PROJECT_NAMESPACE "${PROJECT_NAME}" CACHE STRING "The project's namespace")
 endif()
 
 #-----------------------------------------------------------------------------------------------------------------------
