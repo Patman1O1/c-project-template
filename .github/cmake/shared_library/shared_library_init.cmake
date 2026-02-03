@@ -1,4 +1,4 @@
-# Set the default of BUILD_SHARED_LIBS to ON
+# Set the default value of BUILD_SHARED_LIBS to ON
 option(BUILD_SHARED_LIBS "Build the library as a shared library" ON)
 
 # Declare the project primary target as a shared library
