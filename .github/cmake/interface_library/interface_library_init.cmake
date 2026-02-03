@@ -1,4 +1,4 @@
 # Declare the project primary target as a interface library
-set(PROJECT_PRIMARY_TARGET "${PROJECT_NAME}" CACHE STRING "The primary target that this project will build")
+set(PROJECT_PRIMARY_TARGET "${PROJECT_NAME}" CACHE STRING "The project's primary target")
 add_library("${PROJECT_PRIMARY_TARGET}" INTERFACE)
-add_library("${PROJECT_NAMESPACE}"::"${PROJECT_NAME}" ALIAS "${PROJECT_PRIMARY_TARGET}")
+add_library("${PROJECT_NAMESPACE}"::"${PROJECT_PRIMARY_TARGET}" ALIAS "${PROJECT_PRIMARY_TARGET}")
