@@ -1,9 +1,7 @@
-# Set BUILD_SHARED_LIBS to false and set the library type to static
-option(BUILD_SHARED_LIBS "Build the primary target as a shared library" OFF)
+# Set the default value BUILD_SHARED_LIBS to OFF
+option(BUILD_SHARED_LIBS "Build the library as a shared library" OFF)
 
 # Declare the project primary target as a static library
-add_library("${PROJECT_NAME}")
-add_library("${PROJECT_NAMESPACE}"::"${PROJECT_NAME}" ALIAS "${PROJECT_NAME}")
-
-# Set the project's output name
-set(PROJECT_OUTPUT_NAME "${PROJECT_NAME_KEBAB_CASE}")
+set(PROJECT_PRIMARY_TARGET "${PROJECT_NAME}" CACHE STRING "The project's primary target")
+add_library("${PROJECT_PRIMARY_TARGET}")
+add_library("${PROJECT_NAMESPACE}"::"${PROJECT_PRIMARY_TARGET}" ALIAS "${PROJECT_PRIMARY_TARGET}")
