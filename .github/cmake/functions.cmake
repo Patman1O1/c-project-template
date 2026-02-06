@@ -106,10 +106,10 @@ endfunction()
 #
 # Parameters:
 #   INPUT_STRING - The string that will be converted to kebab-case.
-#   OUTPUT_STRING - The variable where the converted string will be stored.
+#   RESULT_STRING - The variable where the converted string will be stored.
 #
 #-----------------------------------------------------------------------------------------------------------------------
-function(to_kebab_case INPUT_STRING OUTPUT_STRING)
+function(to_kebab_case INPUT_STRING RESULT_STRING)
     # Ignore empty strings
     if("${INPUT_STRING}" MATCHES "")
         set(RESULT_STRING "" PARENT_SCOPE)
@@ -140,5 +140,5 @@ function(to_kebab_case INPUT_STRING OUTPUT_STRING)
     # Remove leading/trailing underscores
     string(REGEX REPLACE "^-|-$" "" temp "${temp}")
 
-    set(${OUTPUT_STRING} "${temp}" PARENT_SCOPE)
+    set(RESULT_STRING "${temp}" PARENT_SCOPE)
 endfunction()
