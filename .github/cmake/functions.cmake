@@ -9,6 +9,12 @@
 #
 #-----------------------------------------------------------------------------------------------------------------------
 function(to_pascal_case INPUT_STRING RESULT_STRING)
+    # Ignore empty strings
+    if("${INPUT_STRING}" MATCHES "")
+        set(RESULT_STRING "" PARENT_SCOPE)
+        return()
+    endif()
+
     # Replace common delimiters with spaces
     string(REGEX REPLACE "[-_.]" " " temp "${INPUT_STRING}")
 
