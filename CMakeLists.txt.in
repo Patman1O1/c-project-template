@@ -12,6 +12,8 @@ set(PROJECT_NAMESPACE @PROJECT_NAMESPACE@ CACHE STRING "The namespace the projec
 set(PROJECT_OUTPUT_NAME @PROJECT_OUTPUT_NAME@ CACHE STRING "The base name that will be displayed on project output files")
 set(PROJECT_PACKAGE_NAME @PROJECT_PACKAGE_NAME@ CACHE STRING "The name that will be displayed on CMake package related files")
 set(PROJECT_PRIMARY_TARGET @PROJECT_PRIMARY_TARGET@)
+set(PROJECT_HEADER_FILES)
+set(PROJECT_SOURCE_FILES)
 
 # CMake Information
 cmake_file_api(
