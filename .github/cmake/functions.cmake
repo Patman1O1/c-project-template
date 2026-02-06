@@ -51,6 +51,13 @@ endfunction()
 
 #-----------------------------------------------------------------------------------------------------------------------
 # to_snake_case()
+#
+# Description: Converts a string to snake_case.
+#
+# Parameters:
+#   INPUT_STRING - The string that will be converted to snake_case.
+#   OUTPUT_STRING - The variable where the converted string will be stored.
+#
 #-----------------------------------------------------------------------------------------------------------------------
 function(to_snake_case INPUT_STRING OUTPUT_STRING)
     # Replace common delimiters with underscores
