@@ -1,5 +1,12 @@
 #-----------------------------------------------------------------------------------------------------------------------
 # to_pascal_case()
+#
+# Description: Converts a string to PascalCase.
+#
+# Parameters:
+#   INPUT_STRING - The string that will be converted to PascalCase.
+#   OUTPUT_STRING - The variable where the converted string will be stored.
+#
 #-----------------------------------------------------------------------------------------------------------------------
 function(to_pascal_case INPUT_STRING OUTPUT_STRING)
     # Replace common delimiters with spaces
