@@ -19,7 +19,6 @@ target_include_directories(${PROJECT_PRIMARY_TARGET}
 target_sources(${PROJECT_PRIMARY_TARGET}
         PRIVATE
             "${CMAKE_SOURCE_DIR}/src/${PROJECT_PRIMARY_TARGET}/${PROJECT_PRIMARY_TARGET}.c"
-            "${CMAKE_SOURCE_DIR}/src/${PROJECT_PRIMARY_TARGET}/main.c"
 )
 
 # Initialize export files
