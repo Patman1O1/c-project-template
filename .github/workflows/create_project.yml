@@ -46,5 +46,5 @@ jobs:
       - name: Commit changes
         run: |
           git add .
-          git commit -m "Configure template for ${GITHUB_REPOSITORY}" || echo "No changes to commit"
+          git commit -m "Create ${GITHUB_REPOSITORY}" || echo "No changes to commit"
           git push
