@@ -61,10 +61,6 @@ set(PROJECT_ROOT_DIR "${CMAKE_CURRENT_LIST_DIR}/../..")
 set(PROJECT_PRIMARY_TARGET ${PROJECT_NAME_SNAKE_CASE} CACHE STRING "The primary target this project will build")
 set(PROJECT_OUTPUT_NAME ${PROJECT_NAME_KEBAB_CASE} CACHE STRING "The base name for output files created for the primary target")
 set(PROJECT_PACKAGE_NAME ${PROJECT_NAME_PASCAL_CASE} CACHE STRING "The name that will be displayed on package related files")
-set(PROJECT_SKIP_PACKAGING OFF)
-if(PROJECT_OUTPUT_NAME MATCHES "executable")
-    set(PROJECT_SKIP_PACKAGING ON)
-endif()
 
 #-----------------------------------------------------------------------------------------------------------------------
 # CMake Directory Configuration
