@@ -97,7 +97,7 @@ configure_file("${PROJECT_ROOT_DIR}/include/${PROJECT_PRIMARY_TARGET}/template.h
 file(REMOVE "${PROJECT_ROOT_DIR}/include/${PROJECT_PRIMARY_TARGET}/template.h.in")
 
 # Configure the export header file (i.e. export.h)
-configure_file("${PROJECT_ROOT_DIR}/include/${PROJECT_NAME}/export.h.in"
+configure_file("${PROJECT_ROOT_DIR}/include/${PROJECT_PRIMARY_TARGET}/export.h.in"
                "${PROJECT_ROOT_DIR}/include/${PROJECT_PRIMARY_TARGET}/export.h"
                @ONLY)
 file(REMOVE "${PROJECT_ROOT_DIR}/include/${PROJECT_PRIMARY_TARGET}/export.h.in")
