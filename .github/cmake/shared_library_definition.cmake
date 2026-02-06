@@ -107,7 +107,7 @@ if(NOT CMAKE_SKIP_INSTALL_RULES)
             INCLUDES DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}")
 
     # Install the library headers
-    install(DIRECTORY "include/"
+    install(DIRECTORY "${CMAKE_SOURCE_DIR}/include/"
             TYPE INCLUDE
             COMPONENT ${PROJECT_OUTPUT_NAME}-dev)
     install(FILES "${CMAKE_CURRENT_BINARY_DIR}/include/${PROJECT_PRIMARY_TARGET}/${EXPORT_HEADER_FILE}"
