@@ -1,5 +1,7 @@
 #-----------------------------------------------------------------------------------------------------------------------
-# @PROJECT_NAME@ Definition
+# @PROJECT_PRIMARY_TARGET@ Definition
 #-----------------------------------------------------------------------------------------------------------------------
-set(PROJECT_PRIMARY_TARGET @PROJECT_NAME@ CACHE STRING "The project's primary target")
-@PROJECT_DEFINE@
+set(PROJECT_PRIMARY_TARGET @PROJECT_PRIMARY_TARGET@ CACHE STRING "The project's primary target")
+set(PROJECT_OUTPUT_NAME @PROJECT_OUTPUT_NAME@ CACHE STRING "The base name for output files created for the primary target")
+
+@PROJECT_PRIMARY_TARGET_INIT@
