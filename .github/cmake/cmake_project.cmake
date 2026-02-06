@@ -65,7 +65,7 @@ set(PROJECT_PACKAGE_NAME ${PROJECT_NAME_PASCAL_CASE} CACHE STRING "The name that
 #-----------------------------------------------------------------------------------------------------------------------
 # CMake Directory Configuration
 #-----------------------------------------------------------------------------------------------------------------------
-# Rename cmake/TemplateConfig.cmake.in to cmake/${PROJECT_PACKAGE_NAME}.cmake.in
+# Rename cmake/TemplateConfig.cmake.in to cmake/${PROJECT_PACKAGE_NAME}Config.cmake.in
 file(RENAME "${PROJECT_ROOT_DIR}/cmake/TemplateConfig.cmake.in"
             "${PROJECT_ROOT_DIR}/cmake/${PROJECT_PACKAGE_NAME}Config.cmake.in")
 
