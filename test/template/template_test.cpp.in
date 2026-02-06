@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
 
-#include <@PROJECT_NAME@/@PROJECT_NAME.h@>
+#include <@PROJECT_NAME@/@PROJECT_PRIMARY_TARGET@.h>
 
 TEST(dummy_suite, dummy_test) {
     EXPECT_TRUE(true);
