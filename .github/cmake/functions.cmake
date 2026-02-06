@@ -52,7 +52,7 @@ function(to_pascal_case INPUT_STRING RESULT_STRING)
         endif()
     endforeach()
 
-    set(RESULT_STRING "${result}" PARENT_SCOPE)
+    set(${RESULT_STRING} "${result}" PARENT_SCOPE)
 endfunction()
 
 #-----------------------------------------------------------------------------------------------------------------------
@@ -67,8 +67,8 @@ endfunction()
 #-----------------------------------------------------------------------------------------------------------------------
 function(to_snake_case INPUT_STRING RESULT_STRING)
     # Ignore empty strings
-    if("${INPUT_STRING}" MATCHES "")
-        set(RESULT_STRING "" PARENT_SCOPE)
+    if("${INPUT_STRING}" EQUAL "")
+        set(${RESULT_STRING} "" PARENT_SCOPE)
         return()
     endif()
 
@@ -96,7 +96,7 @@ function(to_snake_case INPUT_STRING RESULT_STRING)
     # Remove leading/trailing underscores
     string(REGEX REPLACE "^_|_$" "" temp "${temp}")
 
-    set(RESULT_STRING "${temp}" PARENT_SCOPE)
+    set(${RESULT_STRING} "${temp}" PARENT_SCOPE)
 endfunction()
 
 #-----------------------------------------------------------------------------------------------------------------------
@@ -111,8 +111,8 @@ endfunction()
 #-----------------------------------------------------------------------------------------------------------------------
 function(to_kebab_case INPUT_STRING RESULT_STRING)
     # Ignore empty strings
-    if("${INPUT_STRING}" MATCHES "")
-        set(RESULT_STRING "" PARENT_SCOPE)
+    if("${INPUT_STRING}" EQUAL "")
+        set(${RESULT_STRING} "" PARENT_SCOPE)
         return()
     endif()
 
@@ -140,5 +140,5 @@ function(to_kebab_case INPUT_STRING RESULT_STRING)
     # Remove leading/trailing underscores
     string(REGEX REPLACE "^-|-$" "" temp "${temp}")
 
-    set(RESULT_STRING "${temp}" PARENT_SCOPE)
+    set(${RESULT_STRING} "${temp}" PARENT_SCOPE)
 endfunction()
