@@ -92,7 +92,7 @@ file(REMOVE "${PROJECT_ROOT_DIR}/conanfile.py.in")
 # Project Include Directory Configuration
 #-----------------------------------------------------------------------------------------------------------------------
 # Rename the template subdirectory to the project name
-file(RENAME "${PROJECT_ROOT_DIR}/include/template" "${PROJECT_ROOT_DIR}/include/${PROJECT_NAME}")
+file(RENAME "${PROJECT_ROOT_DIR}/include/template" "${PROJECT_ROOT_DIR}/include/${PROJECT_PRIMARY_TARGET}")
 
 # Configure the project header file (i.e. ${PROJECT_PRIMARY_TARGET}.h)
 configure_file("${PROJECT_ROOT_DIR}/include/${PROJECT_PRIMARY_TARGET}/template.h.in"
