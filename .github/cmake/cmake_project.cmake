@@ -131,8 +131,9 @@ if(PROJECT_TYPE MATCHES "^(static_library|shared_library)$")
                    @ONLY)
     file(REMOVE "${PROJECT_ROOT_DIR}/src/${PROJECT_PRIMARY_TARGET}/template.c.in")
 elseif(PROJECT_TYPE MATCHES "interface_library")
-    # Remove the ${PROJECT_PRIMARY_TARGET} directory entirely (interface libraries are header-only)
-    file(REMOVE_RECURSE "${PROJECT_ROOT_DIR}/src/${PROJECT_PRIMARY_TARGET}")
+    # Remove all source files
+    file(REMOVE "${PROJECT_ROOT_DIR}/src/${PROJECT_PRIMARY_TARGET}/${PROJECT_PRIMARY_TARGET}.c")
+    file(REMOVE "${PROJECT_ROOT_DIR}/src/${PROJECT_PRIMARY_TARGET}/main.c")
 else()
     # Configure main.c
     configure_file("${PROJECT_ROOT_DIR}/src/${PROJECT_PRIMARY_TARGET}/main.c.in"
