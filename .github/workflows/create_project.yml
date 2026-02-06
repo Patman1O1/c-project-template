@@ -39,6 +39,10 @@ jobs:
           -D PROJECT_TYPE="${{ github.event.inputs.project_type }}" \
           -P "$GITHUB_WORKSPACE/.github/cmake/cmake_project.cmake"
 
+      - name: Remove .github directory
+        run: |
+          rm -rf "$GITHUB_WORKSPACE/.github"
+
       - name: Commit changes
         run: |
           git add .
