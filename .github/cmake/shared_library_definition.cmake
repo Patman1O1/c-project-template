@@ -1,25 +1,22 @@
 # Set the default value of BUILD_SHARED_LIBS to OFF
-option(BUILD_SHARED_LIBS "Build the library as a shared library" OFF)
+option(BUILD_SHARED_LIBS "Build the library as a shared library" ON)
 
 # Declare the project primary target as a static library
 add_library(${PROJECT_PRIMARY_TARGET})
 add_library(${PROJECT_NAMESPACE}::${PROJECT_PRIMARY_TARGET} ALIAS ${PROJECT_PRIMARY_TARGET})
+list(APPEND PROJECT_TARGETS ${PROJECT_PRIMARY_TARGET})
 
+# Initialize export files
 include(GenerateExportHeader)
-
-# Set the primary target's header files
-set(PROJECT_PRIMARY_TARGET_HEADERS "include/${PROJECT_PRIMARY_TARGET}.h" PARENT_SCOPE)
-
-# Set the primary target's source files
-set(PROJECT_PRIMARY_TARGET_SOURCES "${PROJECT_PRIMARY_TARGET}.c" PARENT_SCOPE)
+set(EXPORT_HEADER_FILE)
+set(EXPORT_TARGET_FILE)
 
 if(BUILD_SHARED_LIBS)
     # Set the primary target's properties
     set_target_properties(${PROJECT_PRIMARY_TARGET} PROPERTIES
-            OUTPUT_NAME "${PROJECT_NAME_KEBAB_CASE}"
+            OUTPUT_NAME ${PROJECT_OUTPUT_NAME}
             VERSION ${PROJECT_VERSION}
             SOVERSION ${PROJECT_VERSION_MAJOR}
-            PUBLIC_HEADER "${PROJECT_PRIMARY_TARGET_HEADERS}"
             C_VISIBILITY_PRESET hidden
             VISIBILITY_INLINES_HIDDEN ON
     )
@@ -30,14 +27,15 @@ if(BUILD_SHARED_LIBS)
                 $<$<NOT:$<BOOL:${BUILD_SHARED_LIBS}>>:${PROJECT_NAME_SCREAMING_CASE}_STATIC_DEFINE>
     )
 
-    set(EXPORT_FILE_NAME "export_shared.h")
+    # Set export files
+    set(EXPORT_HEADER_FILE "export_shared.h")
+    set(EXPORT_TARGET_FILE "${PROJECT_PACKAGE_NAME}SharedTargets.cmake")
 else()
     # Set the primary target's properties
     set_target_properties(${PROJECT_PRIMARY_TARGET} PROPERTIES
-            OUTPUT_NAME "${PROJECT_NAME_KEBAB_CASE}"
+            OUTPUT_NAME ${PROJECT_OUTPUT_NAME}
             VERSION ${PROJECT_VERSION}
             SOVERSION ${PROJECT_VERSION_MAJOR}
-            PUBLIC_HEADER "${PROJECT_PRIMARY_TARGET_HEADERS}"
             POSITION_INDEPENDENT_CODE ON
     )
 
@@ -47,13 +45,15 @@ else()
                 ${PROJECT_NAME_SCREAMING_CASE}_STATIC_DEFINE
     )
 
-    set(EXPORT_FILE_NAME "export_static.h")
+    # Set export files
+    set(EXPORT_HEADER_FILE "export_static.h")
+    set(EXPORT_TARGET_FILE "${PROJECT_EXPORT_NAME}StaticTargets.cmake")
 endif()
 
 # Include directories
 target_include_directories(${PROJECT_PRIMARY_TARGET}
         PUBLIC
-            "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>"
+            "$<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/include>"
             "$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>"
         PRIVATE
             "${CMAKE_CURRENT_SOURCE_DIR}/src"
@@ -64,35 +64,12 @@ set(PROJECT_TARGETS)
 list(APPEND PROJECT_TARGETS "${PROJECT_PRIMARY_TARGET}")
 
 if(NOT CMAKE_SKIP_INSTALL_RULES)
-    # Install the library targets
-    install(TARGETS ${PROJECT_TARGETS}
-            EXPORT "${PROJECT_PACKAGE_NAME}Targets"
-            LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"
-            COMPONENT Runtime
-            NAMELINK_COMPONENT Development
-            ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}"
-            COMPONENT Development
-            RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
-            COMPONENT Runtime
-            PUBLIC_HEADER DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/${PROJECT_NAME}"
-            COMPONENT Development
-            INCLUDES DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}"
-    )
-
-    # Install export set (for find_package support)
-    install(EXPORT "${PROJECT_PACKAGE_NAME}Targets"
-            FILE "${PROJECT_PACKAGE_NAME}Targets"
-            NAMESPACE ${PROJECT_NAMESPACE}::
-            DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}"
-            COMPONENT Development
-    )
-
     # Generate the configuration file that includes the project exports
     include(CMakePackageConfigHelpers)
     configure_package_config_file(
             "${CMAKE_SOURCE_DIR}/cmake/${PROJECT_PACKAGE_NAME}Config.cmake.in"
             "${CMAKE_BINARY_DIR}/${PROJECT_PACKAGE_NAME}Config.cmake"
-            INSTALL_DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}"
+            INSTALL_DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_OUTPUT_NAME}"
             NO_SET_AND_CHECK_MACRO
             NO_CHECK_REQUIRED_COMPONENTS_MACRO
     )
@@ -104,18 +81,42 @@ if(NOT CMAKE_SKIP_INSTALL_RULES)
             COMPATIBILITY SameMajorVersion
     )
 
-    # Install the configuration files
+    # Install package files
     install(FILES
             "${CMAKE_BINARY_DIR}/${PROJECT_PACKAGE_NAME}Config.cmake"
             "${CMAKE_BINARY_DIR}/${PROJECT_PACKAGE_NAME}ConfigVersion.cmake"
-            DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}"
-            COMPONENT Development
-    )
+            COMPONENT ${PROJECT_OUTPUT_NAME}-dev
+            DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_OUTPUT_NAME}")
 
-    # Export the project
-    export(EXPORT ${PROJECT_PACKAGE_NAME}Targets
-            FILE "${CMAKE_BINARY_DIR}/${PROJECT_PACKAGE_NAME}Targets.cmake"
-            NAMESPACE ${PROJECT_NAMESPACE}::
-    )
-    export(PACKAGE ${PROJECT_NAME})
+    # Create export files
+    include(GenerateExportHeader)
+    set(EXPORT_HEADER_FILE "export_static.h")
+    set(EXPORT_TARGET_FILE "${PROJECT_EXPORT_NAME}StaticTargets.cmake")
+    if(BUILD_SHARED_LIBS)
+        set(EXPORT_HEADER_FILE "export_shared.h")
+        set(EXPORT_TARGET_FILE "${PROJECT_PACKAGE_NAME}SharedTargets.cmake")
+    endif()
+
+    # Install the library target
+    install(TARGETS ${PROJECT_PRIMARY_TARGET} EXPORT ${PROJECT_PRIMARY_TARGET}_export
+            RUNTIME COMPONENT ${PROJECT_OUTPUT_NAME}
+            LIBRARY COMPONENT ${PROJECT_OUTPUT_NAME} NAMELINK_COMPONENT ${PROJECT_OUTPUT_NAME}-dev
+            ARCHIVE COMPONENT ${PROJECT_OUTPUT_NAME}-dev
+            INCLUDES DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}")
+
+    # Install the library headers
+    install(DIRECTORY "include/"
+            TYPE INCLUDE
+            COMPONENT ${PROJECT_OUTPUT_NAME}-dev)
+    install(FILES "${CMAKE_BINARY_DIR}/include/${PROJECT_PRIMARY_TARGET}/${EXPORT_HEADER_FILE}"
+            COMPONENT ${PROJECT_OUTPUT_NAME}-dev
+            DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/${PROJECT_OUTPUT_NAME}")
+
+    # Install export files
+    install(EXPORT ${PROJECT_PRIMARY_TARGET}_export
+            COMPONENT mylib-dev
+            FILE "${targets_file}"
+            DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/${PROJECT_OUTPUT_NAME}"
+            NAMESPACE ${PROJECT_NAMESPACE}::)
+
 endif()
