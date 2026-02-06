@@ -10,8 +10,8 @@
 #-----------------------------------------------------------------------------------------------------------------------
 function(to_pascal_case INPUT_STRING RESULT_STRING)
     # Ignore empty strings
-    if("${INPUT_STRING}" MATCHES "")
-        set(RESULT_STRING "" PARENT_SCOPE)
+    if("${INPUT_STRING}" EQUAL "")
+        set(${RESULT_STRING} "" PARENT_SCOPE)
         return()
     endif()
 
