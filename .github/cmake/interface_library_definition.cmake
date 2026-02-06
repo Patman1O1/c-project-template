@@ -11,27 +11,10 @@ target_include_directories(${PROJECT_PRIMARY_TARGET}
             "$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>"
 )
 
-configure_package_config_file("${CMAKE_CURRENT_SOURCE_DIR}/cmake/${LIBRARY_TARGET}-config.cmake.in"
-        "${LIBRARY_TARGET}-config.cmake"
-        INSTALL_DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/${LIBRARY_TARGET}")
-
-write_basic_package_version_file(
-        "${LIBRARY_TARGET}-config-version.cmake"
-        COMPATIBILITY SameMajorVersion)
-
-install(DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/include/"
-        TYPE INCLUDE
-        COMPONENT ${LIBRARY_TARGET}-dev)
-
-install(TARGETS ${LIBRARY_TARGET}
-        EXPORT ${LIBRARY_TARGET}-targets
-        COMPONENT ${LIBRARY_TARGET}-dev)
-
-install(FILES
-        "${CMAKE_CURRENT_BINARY_DIR}/${LIBRARY_TARGET}-config.cmake"
-        "${CMAKE_CURRENT_BINARY_DIR}/${LIBRARY_TARGET}-config-version.cmake"
-        COMPONENT ${LIBRARY_TARGET}-dev
-        DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/${LIBRARY_TARGET}")
+# Initialize export files
+include(GenerateExportHeader)
+set(EXPORT_HEADER_FILE)
+set(EXPORT_TARGET_FILE)
 
 if(NOT CMAKE_SKIP_INSTALL_RULES)
     # Generate the configuration file that includes the project exports
