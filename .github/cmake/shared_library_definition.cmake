@@ -96,7 +96,7 @@ if(NOT CMAKE_SKIP_INSTALL_RULES)
     set(EXPORT_TARGET_FILE "${PROJECT_EXPORT_NAME}StaticTargets.cmake")
     if(BUILD_SHARED_LIBS)
         set(EXPORT_HEADER_FILE "export_shared.h")
-        set(EXPORT_TARGET_FILE "${PROJECT_PACKAGE_NAME}SharedTargets.cmake")
+        set(EXPORT_TARGETS_FILE "${PROJECT_PACKAGE_NAME}SharedTargets.cmake")
     endif()
 
     # Install the library target
@@ -117,7 +117,7 @@ if(NOT CMAKE_SKIP_INSTALL_RULES)
     # Install export files
     install(EXPORT ${PROJECT_PRIMARY_TARGET}_export
             COMPONENT mylib-dev
-            FILE "${targets_file}"
+            FILE "${EXPORT_TARGETS_FILE}"
             DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/${PROJECT_OUTPUT_NAME}"
             NAMESPACE ${PROJECT_NAMESPACE}::)
 
