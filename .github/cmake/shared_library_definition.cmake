@@ -9,10 +9,10 @@ list(APPEND PROJECT_TARGETS ${PROJECT_PRIMARY_TARGET})
 # Include directories
 target_include_directories(${PROJECT_PRIMARY_TARGET}
         PRIVATE
-        "${CMAKE_SOURCE_DIR}/include/${PROJECT_PRIMARY_TARGET}"
+            "${CMAKE_SOURCE_DIR}/include/${PROJECT_PRIMARY_TARGET}"
         PUBLIC
-        "$<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/include>"
-        "$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>"
+            "$<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/include>"
+            "$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>"
 )
 
 # Set sources
