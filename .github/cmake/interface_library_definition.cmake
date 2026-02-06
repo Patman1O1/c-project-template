@@ -1,6 +1,6 @@
 # Define the primary target as an interface library
 add_library(${PROJECT_PRIMARY_TARGET} INTERFACE)
-add_library(${PROJECT_NAMESPACE}::${PROJECT_PRIMARY_TARGET} ALIAS ${PROJECT_PRIMARY_TARGET}})
+add_library(${PROJECT_NAMESPACE}::${PROJECT_PRIMARY_TARGET} ALIAS ${PROJECT_PRIMARY_TARGET})
 
 # Include directories
 target_include_directories(${PROJECT_PRIMARY_TARGET}
