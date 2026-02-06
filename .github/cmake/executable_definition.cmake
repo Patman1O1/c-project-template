@@ -4,8 +4,6 @@ add_executable(${PROJECT_PRIMARY_TARGET})
 # Set properties
 set_target_properties(${PROJECT_PRIMARY_TARGET} PROPERTIES
         OUTPUT_NAME ${PROJECT_OUTPUT_NAME}
-        VERSION ${PROJECT_VERSION}
-        SOVERSION ${PROJECT_VERSION_MAJOR}
 )
 
 # Include directories
