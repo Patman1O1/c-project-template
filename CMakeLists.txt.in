@@ -2,7 +2,7 @@
 # Information
 #-----------------------------------------------------------------------------------------------------------------------
 cmake_minimum_required(VERSION @CMAKE_MINIMUM_REQUIRED_VERSION@)
-project(@PROJECT_NAME_SNAKE_CASE@
+project(@PROJECT_NAME@
         VERSION @PROJECT_VERSION@
         DESCRIPTION "@PROJECT_DESCRIPTION@"
         LANGUAGES C
@@ -14,18 +14,12 @@ cmake_file_api(
         CODEMODEL 2.3
 )
 
-# Ensure the project has a namespace
-if(NOT DEFINED PROJECT_NAMESPACE)
-    set(PROJECT_NAMESPACE "${PROJECT_NAME}" CACHE STRING "The project's namespace")
-endif()
-
 #-----------------------------------------------------------------------------------------------------------------------
 # Settings
 #-----------------------------------------------------------------------------------------------------------------------
 # C Settings
 set(CMAKE_C_STANDARD @CMAKE_C_STANDARD@)
 set(CMAKE_C_STANDARD_REQUIRED @CMAKE_C_STANDARD_REQUIRED@)
-set(CMAKE_C_EXTENSIONS @CMAKE_C_EXTENSIONS@)
 
 # Project Settings
 option(BUILD_SHARED_LIBS "Build the project as a shared library" @BUILD_SHARED_LIBS@)
@@ -89,6 +83,13 @@ set(CPACK_COMPONENT_CONFIGURATION_DISPLAY_NAME "${PROJECT_NAME}")
 set(CPACK_COMPONENT_CONFIGURATION_DESCRIPTION "${PROJECT_DESCRIPTION}")
 set(CPACK_COMPONENT_DOCUMENTATION_DISPLAY_NAME "Documentation")
 set(CPACK_COMPONENT_DOCUMENTATION_DESCRIPTION "${PROJECT_DESCRIPTION}")
+
+#-----------------------------------------------------------------------------------------------------------------------
+# Uninstall
+#-----------------------------------------------------------------------------------------------------------------------
+add_custom_target(uninstall
+    COMMAND ${CMAKE_COMMAND} -P ${CMAKE_CURRENT_BINARY_DIR}/uninstall.cmake
+)
 
 #-----------------------------------------------------------------------------------------------------------------------
 # Subdirectories
