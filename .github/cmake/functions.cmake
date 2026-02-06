@@ -66,6 +66,12 @@ endfunction()
 #
 #-----------------------------------------------------------------------------------------------------------------------
 function(to_snake_case INPUT_STRING OUTPUT_STRING)
+    # Ignore empty strings
+    if("${INPUT_STRING}" MATCHES "")
+        set(RESULT_STRING "" PARENT_SCOPE)
+        return()
+    endif()
+
     # Replace common delimiters with underscores
     string(REGEX REPLACE "[-. ]" "_" temp "${INPUT_STRING}")
 
