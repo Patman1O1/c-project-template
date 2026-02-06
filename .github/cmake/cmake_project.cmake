@@ -12,7 +12,6 @@ set(PROJECT_TYPE "" CACHE STRING "The type of the project")
 #-----------------------------------------------------------------------------------------------------------------------
 # Parameters (Optional)
 #-----------------------------------------------------------------------------------------------------------------------
-set(PROJECT_NAMESPACE "${PROJECT_NAME}" CACHE STRING "The namespace of the project")
 set(PROJECT_VERSION 0.1.0 CACHE STRING "The version of the project")
 set(PROJECT_DESCRIPTION "" CACHE STRING "The description of the project")
 
@@ -57,23 +56,33 @@ to_pascal_case("${PROJECT_NAME}" PROJECT_NAME_PASCAL_CASE)
 to_snake_case("${PROJECT_NAME}" PROJECT_NAME_SNAKE_CASE)
 to_kebab_case("${PROJECT_NAME}" PROJECT_NAME_KEBAB_CASE)
 string(TOUPPER "${PROJECT_NAME_SNAKE_CASE}" PROJECT_NAME_SCREAMING_CASE)
+set(PROJECT_NAMESPACE ${PROJECT_NAME_SNAKE_CASE})
 set(PROJECT_ROOT_DIR "${CMAKE_CURRENT_LIST_DIR}/../..")
-set(PROJECT_PRIMARY_TARGET "${PROJECT_NAME}" CACHE STRING "The primary target this project will build")
+set(PROJECT_PRIMARY_TARGET ${PROJECT_NAME_SNAKE_CASE} CACHE STRING "The primary target this project will build")
+set(PROJECT_OUTPUT_NAME ${PROJECT_NAME_KEBAB_CASE} CACHE STRING "The base name for output files created for the primary target")
+set(PROJECT_PACKAGE_NAME ${PROJECT_PASCAL_CASE} CACHE STRING "The name that will be displayed on package related files")
+
+#-----------------------------------------------------------------------------------------------------------------------
+# CMake Directory Configuration
+#-----------------------------------------------------------------------------------------------------------------------
+if(PROJECT_TYPE MATCHES "executable")
+    # Remove TemplateConfig.cmake.in (executables don't get exported)
+    file(REMOVE "${PROJECT_ROOT_DIR}/cmake/TemplateConfig.cmake.in")
+endif()
 
 #-----------------------------------------------------------------------------------------------------------------------
 # Project Root Directory Configuration
 #-----------------------------------------------------------------------------------------------------------------------
 # Configure the project root CMakeLists.txt file
-file(READ "${CMAKE_CURRENT_LIST_DIR}/${PROJECT_TYPE}/${PROJECT_TYPE}_init.cmake" PROJECT_INIT)
 configure_file("${PROJECT_ROOT_DIR}/CMakeLists.txt.in"
-               "${PROJECT_ROOT_DIR}/CMakeLists.txt"
-               @ONLY)
+        "${PROJECT_ROOT_DIR}/CMakeLists.txt"
+        @ONLY)
 file(REMOVE "${PROJECT_ROOT_DIR}/CMakeLists.txt.in")
 
 # Configure the conanfile.py file
 configure_file("${PROJECT_ROOT_DIR}/conanfile.py.in"
-               "${PROJECT_ROOT_DIR}/conanfile.py"
-               @ONLY)
+        "${PROJECT_ROOT_DIR}/conanfile.py"
+        @ONLY)
 file(REMOVE "${PROJECT_ROOT_DIR}/conanfile.py.in")
 
 #-----------------------------------------------------------------------------------------------------------------------
@@ -82,79 +91,72 @@ file(REMOVE "${PROJECT_ROOT_DIR}/conanfile.py.in")
 # Rename the template subdirectory to the project name
 file(RENAME "${PROJECT_ROOT_DIR}/include/template" "${PROJECT_ROOT_DIR}/include/${PROJECT_NAME}")
 
-# Configure the project header file (i.e. ${PROJECT_NAME}.h)
-configure_file("${PROJECT_ROOT_DIR}/include/${PROJECT_NAME}/template.h.in"
-               "${PROJECT_ROOT_DIR}/include/${PROJECT_NAME}/${PROJECT_NAME}.h"
-               @ONLY)
-file(REMOVE "${PROJECT_ROOT_DIR}/include/${PROJECT_NAME}/template.h.in")
+# Configure the project header file (i.e. ${PROJECT_PRIMARY_TARGET}.h)
+configure_file("${PROJECT_ROOT_DIR}/include/${PROJECT_PRIMARY_TARGET}/template.h.in"
+        "${PROJECT_ROOT_DIR}/include/${PROJECT_PRIMARY_TARGET}/${PROJECT_PRIMARY_TARGET}.h"
+        @ONLY)
+file(REMOVE "${PROJECT_ROOT_DIR}/include/${PROJECT_PRIMARY_TARGET}/template.h.in")
 
 # Configure the export header file (i.e. export.h)
 configure_file("${PROJECT_ROOT_DIR}/include/${PROJECT_NAME}/export.h.in"
-               "${PROJECT_ROOT_DIR}/include/${PROJECT_NAME}/export.h"
-               @ONLY)
-file(REMOVE "${PROJECT_ROOT_DIR}/include/${PROJECT_NAME}/export.h.in")
+        "${PROJECT_ROOT_DIR}/include/${PROJECT_PRIMARY_TARGET}/export.h"
+        @ONLY)
+file(REMOVE "${PROJECT_ROOT_DIR}/include/${PROJECT_PRIMARY_TARGET}/export.h.in")
 
 #-----------------------------------------------------------------------------------------------------------------------
 # Project Source Directory Configuration
-#----------------------------------------------------------------------------------------------------------------------
+#-----------------------------------------------------------------------------------------------------------------------
+# Rename ${PROJECT_ROOT_DIR}/src/template to ${PROJECT_ROOT_DIR}/src/${PROJECT_PRIMARY_TARGET}
+file(RENAME "${PROJECT_ROOT_DIR}/src/template" "${PROJECT_ROOT_DIR}/src/${PROJECT_PRIMARY_TARGET}")
+
+# Configure the source directory CMakeLists.txt
+configure_file("${PROJECT_ROOT_DIR}/src/CMakeLists.txt.in"
+        "${PROJECT_ROOT_DIR}/src/CMakeLists.txt"
+        @ONLY)
+file(REMOVE "${PROJECT_ROOT_DIR}/src/CMakeLists.txt.in")
+
+# Configure the CMakeLists.txt file in ${PROJECT_ROOT_DIR}/src/${PROJECT_PRIMARY_TARGET}
+file(READ "${CMAKE_CURRENT_LIST_DIR}/${PROJECT_TYPE}_definition.cmake" PROJECT_PRIMARY_TARGET_INIT)
+configure_file("${PROJECT_ROOT_DIR}/src/${PROJECT_PRIMARY_TARGET}/CMakeLists.txt.in"
+        "${PROJECT_ROOT_DIR}/src/${PROJECT_PRIMARY_TARGET}/CMakeLists.txt"
+        @ONLY)
+file(REMOVE "${PROJECT_ROOT_DIR}/src/${PROJECT_PRIMARY_TARGET}/CMakeLists.txt.in")
+
 if(PROJECT_TYPE MATCHES "^(static_library|shared_library)$")
-    # Rename ${PROJECT_ROOT_DIR}/src/template to ${PROJECT_ROOT_DIR}/src/${PROJECT_NAME}
-    file(RENAME "${PROJECT_ROOT_DIR}/src/template" "${PROJECT_ROOT_DIR}/src/${PROJECT_NAME}")
-
-    # Configure the source directory CMakeLists.txt
-    configure_file("${PROJECT_ROOT_DIR}/src/CMakeLists.txt.in"
-                   "${PROJECT_ROOT_DIR}/src/CMakeLists.txt"
-                   @ONLY)
-    file(REMOVE "${PROJECT_ROOT_DIR}/src/CMakeLists.txt.in")
-
-    # Configure the CMakeLists.txt file in ${PROJECT_ROOT_DIR}/src/${PROJECT_NAME}
-    file(READ "${CMAKE_CURRENT_LIST_DIR}/${PROJECT_TYPE}/${PROJECT_TYPE}_definition.cmake" PROJECT_DEFINE)
-    configure_file("${PROJECT_ROOT_DIR}/src/${PROJECT_NAME}/CMakeLists.txt.in"
-                   "${PROJECT_ROOT_DIR}/src/${PROJECT_NAME}/CMakeLists.txt"
-                   @ONLY)
-    file(REMOVE "${PROJECT_ROOT_DIR}/src/${PROJECT_NAME}/CMakeLists.txt.in")
-
     # Remove main.c.in (libraries don't have entry points)
-    file(REMOVE "${PROJECT_ROOT_DIR}/src/${PROJECT_NAME}/main.c.in")
+    file(REMOVE "${PROJECT_ROOT_DIR}/src/${PROJECT_PRIMARY_TARGET}/main.c.in")
 
-    # Configure ${PROJECT_NAME}.c
-    configure_file("${PROJECT_ROOT_DIR}/src/${PROJECT_NAME}/template.c.in"
-                   "${PROJECT_ROOT_DIR}/src/${PROJECT_NAME}/${PROJECT_NAME}.c"
-                   @ONLY)
-    file(REMOVE "${PROJECT_ROOT_DIR}/src/${PROJECT_NAME}/template.c.in")
+    # Configure ${PROJECT_PRIMARY_TARGET}.c
+    configure_file("${PROJECT_ROOT_DIR}/src/${PROJECT_PRIMARY_TARGET}/template.c.in"
+            "${PROJECT_ROOT_DIR}/src/${PROJECT_PRIMARY_TARGET}/${PROJECT_PRIMARY_TARGET}.c"
+            @ONLY)
+    file(REMOVE "${PROJECT_ROOT_DIR}/src/${PROJECT_PRIMARY_TARGET}/template.c.in")
 elseif(PROJECT_TYPE MATCHES "interface_library")
-    # Remove the source directory entirely (interface libraries are header only)
-    file(REMOVE_RECURSE "${PROJECT_ROOT_DIR}/src")
+    # Remove the ${PROJECT_PRIMARY_TARGET} directory entirely (interface libraries are header-only)
+    file(REMOVE_RECURSE "${PROJECT_ROOT_DIR}/src/${PROJECT_PRIMARY_TARGET}")
 else()
-    # Rename ${PROJECT_ROOT_DIR}/src/template to ${PROJECT_ROOT_DIR}/src/${PROJECT_NAME}
-    file(RENAME "${PROJECT_ROOT_DIR}/src/template" "${PROJECT_ROOT_DIR}/src/${PROJECT_NAME}")
-
-    # Configure the source directory CMakeLists.txt
-    configure_file("${PROJECT_ROOT_DIR}/src/CMakeLists.txt.in"
-                   "${PROJECT_ROOT_DIR}/src/CMakeLists.txt"
-                   @ONLY)
-    file(REMOVE "${PROJECT_ROOT_DIR}/src/CMakeLists.txt.in")
-
-    # Configure the CMakeLists.txt file in ${PROJECT_ROOT_DIR}/src/${PROJECT_NAME}
-    file(READ "${CMAKE_CURRENT_LIST_DIR}/${PROJECT_TYPE}/${PROJECT_TYPE}_definition.cmake" PROJECT_DEFINE)
-    configure_file("${PROJECT_ROOT_DIR}/src/${PROJECT_NAME}/CMakeLists.txt.in"
-                   "${PROJECT_ROOT_DIR}/src/${PROJECT_NAME}/CMakeLists.txt"
-                   @ONLY)
-    file(REMOVE "${PROJECT_ROOT_DIR}/src/${PROJECT_NAME}/CMakeLists.txt.in")
-
     # Configure main.c
-    configure_file("${PROJECT_ROOT_DIR}/src/${PROJECT_NAME}/main.c.in"
-                   "${PROJECT_ROOT_DIR}/src/${PROJECT_NAME}/main.c"
-                   @ONLY)
-    file(REMOVE "${PROJECT_ROOT_DIR}/src/${PROJECT_NAME}/main.c.in")
+    configure_file("${PROJECT_ROOT_DIR}/src/${PROJECT_PRIMARY_TARGET}/main.c.in"
+            "${PROJECT_ROOT_DIR}/src/${PROJECT_PRIMARY_TARGET}/main.c"
+            @ONLY)
+    file(REMOVE "${PROJECT_ROOT_DIR}/src/${PROJECT_PRIMARY_TARGET}/main.c.in")
 
-    # Configure ${PROJECT_NAME}.c
-    configure_file("${PROJECT_ROOT_DIR}/src/${PROJECT_NAME}/template.c.in"
-                   "${PROJECT_ROOT_DIR}/src/${PROJECT_NAME}/${PROJECT_NAME}.c"
-                   @ONLY)
-    file(REMOVE "${PROJECT_ROOT_DIR}/src/${PROJECT_NAME}/template.c.in")
+    # Configure ${PROJECT_PRIMARY_TARGET}.c
+    configure_file("${PROJECT_ROOT_DIR}/src/${PROJECT_PRIMARY_TARGET}/template.c.in"
+            "${PROJECT_ROOT_DIR}/src/${PROJECT_PRIMARY_TARGET}/${PROJECT_PRIMARY_TARGET}.c"
+            @ONLY)
+    file(REMOVE "${PROJECT_ROOT_DIR}/src/${PROJECT_PRIMARY_TARGET}/template.c.in")
 endif()
 
 #-----------------------------------------------------------------------------------------------------------------------
 # Project Test Directory Configuration
 #----------------------------------------------------------------------------------------------------------------------
+# Rename ${PROJECT_ROOT_DIR}/test/template to ${PROJECT_ROOT_DIR}/test/${PROJECT_PRIMARY_TARGET}
+file(RENAME "${PROJECT_ROOT_DIR}/test/template" "${PROJECT_ROOT_DIR}/test/${PROJECT_PRIMARY_TARGET}")
+
+# Configure the test directory CMakeLists.txt
+configure_file("${PROJECT_ROOT_DIR}/test/CMakeLists.txt.in"
+        "${PROJECT_ROOT_DIR}/test/CMakeLists.txt"
+        @ONLY)
+file(REMOVE "${PROJECT_ROOT_DIR}/test/CMakeLists.txt.in")
+
