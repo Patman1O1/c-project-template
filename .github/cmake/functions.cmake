@@ -102,10 +102,10 @@ endfunction()
 #-----------------------------------------------------------------------------------------------------------------------
 # to_kebab_case()
 #
-# Description: Converts a string to snake_case.
+# Description: Converts a string to kebab-case.
 #
 # Parameters:
-#   INPUT_STRING - The string that will be converted to snake_case.
+#   INPUT_STRING - The string that will be converted to kebab-case.
 #   OUTPUT_STRING - The variable where the converted string will be stored.
 #
 #-----------------------------------------------------------------------------------------------------------------------
