@@ -8,7 +8,7 @@
 #   OUTPUT_STRING - The variable where the converted string will be stored.
 #
 #-----------------------------------------------------------------------------------------------------------------------
-function(to_pascal_case INPUT_STRING OUTPUT_STRING)
+function(to_pascal_case INPUT_STRING RESULT_STRING)
     # Replace common delimiters with spaces
     string(REGEX REPLACE "[-_.]" " " temp "${INPUT_STRING}")
 
