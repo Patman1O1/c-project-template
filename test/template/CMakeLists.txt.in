@@ -1,15 +1,15 @@
 #-----------------------------------------------------------------------------------------------------------------------
 # Targets
 #-----------------------------------------------------------------------------------------------------------------------
-list(APPEND SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/${PROJECT_NAME}_tests.cpp")
+list(APPEND SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/${PROJECT_PRIMARY_TARGET}_test.cpp")
 source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}" FILES ${SOURCES})
 
-add_executable(${PROJECT_NAME}_tests)
-target_sources(${PROJECT_NAME}_tests PRIVATE ${SOURCES})
-target_link_libraries(${PROJECT_NAME}_tests
+add_executable(${PROJECT_PRIMARY_TARGET}_test)
+target_sources(${PROJECT_PRIMARY_TARGET}_test PRIVATE ${SOURCES})
+target_link_libraries(${PROJECT_PRIMARY_TARGET}_test
         PRIVATE
-            ${PROJECT_NAMESPACE}::${PROJECT_NAME}
+            ${PROJECT_NAMESPACE}::${PROJECT_PRIMARY_TARGET}
             GTest::gtest_main
             GTest::gmock_main
 )
-gtest_discover_tests(${PROJECT_NAME}_tests)
+gtest_discover_tests(${PROJECT_PRIMARY_TARGET}_test)
