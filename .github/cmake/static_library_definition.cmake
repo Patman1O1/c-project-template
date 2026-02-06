@@ -6,6 +6,22 @@ add_library(${PROJECT_PRIMARY_TARGET})
 add_library(${PROJECT_NAMESPACE}::${PROJECT_PRIMARY_TARGET} ALIAS ${PROJECT_PRIMARY_TARGET})
 list(APPEND PROJECT_TARGETS ${PROJECT_PRIMARY_TARGET})
 
+# Include directories
+target_include_directories(${PROJECT_PRIMARY_TARGET}
+        PRIVATE
+            "${CMAKE_SOURCE_DIR}/include/${PROJECT_PRIMARY_TARGET}"
+        PUBLIC
+            "$<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/include>"
+            "$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>"
+)
+
+# Set sources
+target_sources(${PROJECT_PRIMARY_TARGET}
+        PRIVATE
+            "${CMAKE_SOURCE_DIR}/src/${PROJECT_PRIMARY_TARGET}/${PROJECT_PRIMARY_TARGET}.c"
+            "${CMAKE_SOURCE_DIR}/src/${PROJECT_PRIMARY_TARGET}/main.c"
+)
+
 # Initialize export files
 include(GenerateExportHeader)
 set(EXPORT_HEADER_FILE)
@@ -49,15 +65,6 @@ else()
     set(EXPORT_HEADER_FILE "export_shared.h")
     set(EXPORT_TARGET_FILE "${PROJECT_PACKAGE_NAME}SharedTargets.cmake")
 endif()
-
-# Include directories
-target_include_directories(${PROJECT_PRIMARY_TARGET}
-        PUBLIC
-            "$<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/include>"
-            "$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>"
-        PRIVATE
-            "${CMAKE_CURRENT_SOURCE_DIR}/src"
-)
 
 # Group all targets
 set(PROJECT_TARGETS)
