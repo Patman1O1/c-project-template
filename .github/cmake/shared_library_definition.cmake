@@ -65,6 +65,9 @@ else()
     set(EXPORT_TARGET_FILE "${PROJECT_EXPORT_NAME}StaticTargets.cmake")
 endif()
 
+# Generate export header file
+generate_export_header(${PROJECT_PRIMARY_TARGET} EXPORT_FILE_NAME "include/${PROJECT_PRIMARY_TARGET}/${EXPORT_HEADER_FILE}")
+
 if(NOT CMAKE_SKIP_INSTALL_RULES)
     # Generate the configuration file that includes the project exports
     include(CMakePackageConfigHelpers)
@@ -110,7 +113,7 @@ if(NOT CMAKE_SKIP_INSTALL_RULES)
     install(DIRECTORY "${CMAKE_SOURCE_DIR}/include/"
             TYPE INCLUDE
             COMPONENT ${PROJECT_OUTPUT_NAME}-dev)
-    install(FILES "${CMAKE_CURRENT_BINARY_DIR}/include/${PROJECT_PRIMARY_TARGET}/export.h"
+    install(FILES "${CMAKE_CURRENT_BINARY_DIR}/include/${PROJECT_PRIMARY_TARGET}/${EXPORT_HEADER_FILE}"
             COMPONENT ${PROJECT_OUTPUT_NAME}-dev
             DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/${PROJECT_OUTPUT_NAME}")
 
