@@ -66,7 +66,7 @@ list(APPEND PROJECT_TARGETS "${PROJECT_PRIMARY_TARGET}")
 if(NOT CMAKE_SKIP_INSTALL_RULES)
     # Install the library targets
     install(TARGETS ${PROJECT_TARGETS}
-            EXPORT "${PROJECT_NAME_PASCAL_CASE}Targets"
+            EXPORT "${PROJECT_PACKAGE_NAME}Targets"
             LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"
             COMPONENT Runtime
             NAMELINK_COMPONENT Development
@@ -80,8 +80,8 @@ if(NOT CMAKE_SKIP_INSTALL_RULES)
     )
 
     # Install export set (for find_package support)
-    install(EXPORT "${PROJECT_NAME_PASCAL_CASE}Targets"
-            FILE "${PROJECT_NAME_PASCAL_CASE}Targets"
+    install(EXPORT "${PROJECT_PACKAGE_NAME}Targets"
+            FILE "${PROJECT_PACKAGE_NAME}Targets"
             NAMESPACE ${PROJECT_NAMESPACE}::
             DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}"
             COMPONENT Development
@@ -90,8 +90,8 @@ if(NOT CMAKE_SKIP_INSTALL_RULES)
     # Generate the configuration file that includes the project exports
     include(CMakePackageConfigHelpers)
     configure_package_config_file(
-            "${CMAKE_SOURCE_DIR}/cmake/${PROJECT_NAME_PASCAL_CASE}Config.cmake.in"
-            "${CMAKE_BINARY_DIR}/${PROJECT_NAME_PASCAL_CASE}Config.cmake"
+            "${CMAKE_SOURCE_DIR}/cmake/${PROJECT_PACKAGE_NAME}Config.cmake.in"
+            "${CMAKE_BINARY_DIR}/${PROJECT_PACKAGE_NAME}Config.cmake"
             INSTALL_DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}"
             NO_SET_AND_CHECK_MACRO
             NO_CHECK_REQUIRED_COMPONENTS_MACRO
@@ -99,22 +99,22 @@ if(NOT CMAKE_SKIP_INSTALL_RULES)
 
     # Generate the version file for the configuration file
     write_basic_package_version_file(
-            "${CMAKE_BINARY_DIR}/${PROJECT_NAME_PASCAL_CASE}ConfigVersion.cmake"
+            "${CMAKE_BINARY_DIR}/${PROJECT_PACKAGE_NAME}ConfigVersion.cmake"
             VERSION ${PROJECT_VERSION}
             COMPATIBILITY SameMajorVersion
     )
 
     # Install the configuration files
     install(FILES
-            "${CMAKE_BINARY_DIR}/${PROJECT_NAME_PASCAL_CASE}Config.cmake"
-            "${CMAKE_BINARY_DIR}/${PROJECT_NAME_PASCAL_CASE}ConfigVersion.cmake"
+            "${CMAKE_BINARY_DIR}/${PROJECT_PACKAGE_NAME}Config.cmake"
+            "${CMAKE_BINARY_DIR}/${PROJECT_PACKAGE_NAME}ConfigVersion.cmake"
             DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}"
             COMPONENT Development
     )
 
     # Export the project
-    export(EXPORT ${PROJECT_NAME_PASCAL_CASE}Targets
-            FILE "${CMAKE_BINARY_DIR}/${PROJECT_NAME_PASCAL_CASE}Targets.cmake"
+    export(EXPORT ${PROJECT_PACKAGE_NAME}Targets
+            FILE "${CMAKE_BINARY_DIR}/${PROJECT_PACKAGE_NAME}Targets.cmake"
             NAMESPACE ${PROJECT_NAMESPACE}::
     )
     export(PACKAGE ${PROJECT_NAME})
