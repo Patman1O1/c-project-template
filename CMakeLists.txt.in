@@ -94,7 +94,7 @@ set(CPACK_COMPONENT_DOCUMENTATION_DESCRIPTION "${PROJECT_DESCRIPTION}")
 # Uninstall
 #-----------------------------------------------------------------------------------------------------------------------
 add_custom_target(uninstall
-    COMMAND ${CMAKE_COMMAND} -P ${CMAKE_BINARY_DIR}/cmake/cmake_uninstall.cmake
+    COMMAND ${CMAKE_COMMAND} -P ${CMAKE_SOURCE_DIR}/cmake/cmake_uninstall.cmake
 )
 
 #-----------------------------------------------------------------------------------------------------------------------
