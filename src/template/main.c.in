@@ -1,4 +1,4 @@
-#include <@PROJECT_NAMESPACE@/@PROJECT_NAME@.h>
+#include <@PROJECT_NAME_SNAKE_CASE@/@PROJECT_PRIMARY_TARGET@.h>
 
 int main(int argc, char** argv) {
 
