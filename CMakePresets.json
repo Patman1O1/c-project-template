@@ -7,30 +7,25 @@
   },
   "configurePresets": [
     {
-      "name": "default",
-      "description": "Base preset for all other presets",
-      "binaryDir": "${sourceDir}/build",
-      "hidden": true,
+      "name": "debug",
+      "displayName": "Debug",
+      "description": "A preset used for debugging.",
+      "binaryDir": "${sourceDir}/build/Debug",
+      "hidden": false,
       "cacheVariables": {
-        "PROJECT_BUILD_TESTS": "ON"
+        "CMAKE_BUILD_TYPE": "Debug",
+        "CMAKE_TOOLCHAIN_FILE": "${sourceDir}/build/Debug/generators/conan_toolchain.cmake"
       }
     },
     {
-      "name": "windows-default",
-      "description": "Default preset for Windows.",
+      "name": "release",
+      "displayName": "Release",
+      "description": "A preset used for release.",
+      "binaryDir": "${sourceDir}/build/Release",
       "hidden": false,
-      "inherits": ["default"],
       "cacheVariables": {
-        "CMAKE_C_FLAGS": "/W4 /EHsc /w14242 /w14254 /w14263 /w14265 /w14287 /w14289 /w14296 /w14311 /w14545 /w14546 /w14547 /w14549 /w14555 /w14640 /w14826 /w14928 /WX"
-      }
-    },
-    {
-      "name": "linux-default",
-      "description": "Default preset for Linux.",
-      "hidden": false,
-      "inherits": ["default"],
-      "cacheVariables": {
-        "CMAKE_C_FLAGS": "-Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wsign-conversion -Wcast-align -Wcast-qual -Wnull-dereference -Woverloaded-virtual -Wformat=2 -Werror"
+        "CMAKE_BUILD_TYPE": "Release",
+        "CMAKE_TOOLCHAIN_FILE": "${sourceDir}/build/Release/generators/conan_toolchain.cmake"
       }
     }
   ]
