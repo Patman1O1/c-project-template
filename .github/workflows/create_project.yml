@@ -39,6 +39,10 @@ jobs:
           -D PROJECT_TYPE="${{ github.event.inputs.project_type }}" \
           -P "$GITHUB_WORKSPACE/.github/cmake/cmake_project.cmake"
 
+      - name: Update README.md
+        run: |
+          echo -e "# ${{ github.event.repository.name }}\n${{ github.event.repository.description }}" > "$GITHUB_WORKSPACE/README.md"
+
       - name: Remove .github directory
         run: |
           rm -rf "$GITHUB_WORKSPACE/.github"
