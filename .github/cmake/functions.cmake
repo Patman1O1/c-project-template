@@ -142,3 +142,4 @@ function(to_kebab_case INPUT_STRING RESULT_STRING)
 
     set(${RESULT_STRING} "${temp}" PARENT_SCOPE)
 endfunction()
+
