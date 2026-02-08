@@ -7,3 +7,4 @@ set(PROJECT_TARGETS "${PROJECT_PRIMARY_TARGET}")
 # Subdirectories
 #-----------------------------------------------------------------------------------------------------------------------
 add_subdirectory(${PROJECT_PRIMARY_TARGET})
+
