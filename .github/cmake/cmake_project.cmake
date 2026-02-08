@@ -160,3 +160,14 @@ configure_file("${PROJECT_ROOT_DIR}/test/CMakeLists.txt.in"
                @ONLY)
 file(REMOVE "${PROJECT_ROOT_DIR}/test/CMakeLists.txt.in")
 
+# Configure the ${PROJECT_PRIMARY_TARGET} CMakeLists.txt file
+configure_file("${PROJECT_ROOT_DIR}/test/${PROJECT_PRIMARY_TARGET}/CMakeLists.txt.in"
+               "${PROJECT_ROOT_DIR}/test/${PROJECT_PRIMARY_TARGET}/CMakeLists.txt"
+               @ONLY)
+file(REMOVE "${PROJECT_ROOT_DIR}/test/${PROJECT_PRIMARY_TARGET}/CMakeLists.txt.in")
+
+# Configure the ${PROJECT_PRIMARY_TARGET} .cpp file
+configure_file("${PROJECT_ROOT_DIR}/test/${PROJECT_PRIMARY_TARGET}/template_test.cpp.in"
+               "${PROJECT_ROOT_DIR}/test/${PROJECT_PRIMARY_TARGET}/${PROJECT_PRIMARY_TARGET}_test.cpp"
+               @ONLY)
+file(REMOVE "${PROJECT_ROOT_DIR}/test/${PROJECT_PRIMARY_TARGET}/template_test.cpp.in")
