@@ -1,11 +1,29 @@
 #-----------------------------------------------------------------------------------------------------------------------
-# Targets
+# Project Test Target
 #-----------------------------------------------------------------------------------------------------------------------
-list(APPEND SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/${PROJECT_PRIMARY_TARGET}_test.cpp")
-source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}" FILES ${SOURCES})
-
+# Define the test target
 add_executable(${PROJECT_PRIMARY_TARGET}_test)
-target_sources(${PROJECT_PRIMARY_TARGET}_test PRIVATE ${SOURCES})
+
+# Set properties
+set_target_properties(${PROJECT_PRIMARY_TARGET}_test PROPERTIES
+        OUTPUT_NAME ${PROJECT_OUTPUT_NAME}-test
+)
+
+# Include directories
+target_include_directories(${PROJECT_PRIMARY_TARGET}_test
+        PRIVATE
+            "${CMAKE_SOURCE_DIR}/include/${PROJECT_PRIMARY_TARGET}"
+        PUBLIC
+            "$<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/include>"
+            "$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>"
+)
+
+# Set sources
+target_sources(${PROJECT_PRIMARY_TARGET}_test
+    PRIVATE
+        "${CMAKE_CURRENT_SOURCE_DIR}/${PROJECT_PRIMARY_TARGET}_test.cpp"
+)
+
 target_link_libraries(${PROJECT_PRIMARY_TARGET}_test
         PRIVATE
             GTest::gtest_main
