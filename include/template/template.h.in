@@ -10,3 +10,4 @@ extern "C" {
 #endif // #ifdef __cplusplus
 
 #endif // #ifndef @PROJECT_NAME_SCREAMING_CASE@_H
+
