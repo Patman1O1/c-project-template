@@ -20,6 +20,11 @@ cmake_file_api(
         CODEMODEL 2.3
 )
 
+if(NOT DEFINED CMAKE_BUILD_TYPE AND NOT DEFINED CMAKE_CONFIGURATION_TYPES)
+    set(CMAKE_BUILD_TYPE Release CACHE STRING "Build type" FORCE)
+    set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS "Debug" "Release" "MinSizeRel" "RelWithDebInfo")
+endif()
+
 #-----------------------------------------------------------------------------------------------------------------------
 # Settings
 #-----------------------------------------------------------------------------------------------------------------------
