@@ -102,7 +102,7 @@ add_custom_target(uninstall
 #-----------------------------------------------------------------------------------------------------------------------
 add_subdirectory("src")
 
-if(ENABLE_TESTS)
+if(BUILD_TESTS)
     add_subdirectory("test")
 endif()
 
