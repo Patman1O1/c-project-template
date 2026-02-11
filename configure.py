@@ -35,12 +35,20 @@ if conan_process.returncode != 0:
     raise RuntimeError("Conan install failed")
 
 # Create the CMake configure process
-cmake_configure_process: subprocess.Popen[str] = subprocess.Popen(
-    ["cmake", "-S", f"{source_dir}", "-B", f"{binary_dir}", "-D", f"CMAKE_TOOLCHAIN_FILE={conan_toolchain}", "-D", f"CMAKE_BUILD_TYPE={args.build_type}"],
-    stdout=subprocess.PIPE,
-    stderr=subprocess.STDOUT,
-    text=True
-)
+if args.build_type == "Debug":
+    cmake_configure_process: subprocess.Popen[str] = subprocess.Popen(
+        ["cmake", "-S", f"{source_dir}", "-B", f"{binary_dir}", "-D", f"CMAKE_TOOLCHAIN_FILE={conan_toolchain}", "-D", f"CMAKE_BUILD_TYPE={args.build_type}", "-D", "BUILD_TESTS=ON"],
+        stdout=subprocess.PIPE,
+        stderr=subprocess.STDOUT,
+        text=True
+    )
+else:
+    cmake_configure_process: subprocess.Popen[str] = subprocess.Popen(
+        ["cmake", "-S", f"{source_dir}", "-B", f"{binary_dir}", "-D", f"CMAKE_TOOLCHAIN_FILE={conan_toolchain}", "-D", f"CMAKE_BUILD_TYPE={args.build_type}"],
+        stdout=subprocess.PIPE,
+        stderr=subprocess.STDOUT,
+        text=True
+    )
 
 # Print the output
 for line in cmake_configure_process.stdout:
@@ -49,5 +57,3 @@ for line in cmake_configure_process.stdout:
 cmake_configure_process.wait()
 if cmake_configure_process.returncode != 0:
     raise RuntimeError("CMake configuration step failed")
-
-
