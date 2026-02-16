@@ -1,14 +1,27 @@
-# Declare the project primary target as a static library
+# Define the primary target as an interface library
 add_library(${PROJECT_PRIMARY_TARGET} INTERFACE)
 add_library(${PROJECT_NAMESPACE}::${PROJECT_PRIMARY_TARGET} ALIAS ${PROJECT_PRIMARY_TARGET})
-list(APPEND PROJECT_TARGETS ${PROJECT_PRIMARY_TARGET})
+
+# Set properties
+set_target_properties(${PROJECT_PRIMARY_TARGET} PROPERTIES
+        OUTPUT_NAME ${PROJECT_OUTPUT_NAME}
+)
+
+# Create objects
+add_library(PROJECT_OBJECTS OBJECT)
+add_library(${PROJECT_NAMESPACE}::PROJECT_OBJECTS ALIAS PROJECT_OBJECTS)
 
 # Include directories
-target_include_directories(${PROJECT_PRIMARY_TARGET}
-        INTERFACE
+target_include_directories(PROJECT_OBJECTS
+        PRIVATE
+            "${CMAKE_SOURCE_DIR}/include/${PROJECT_PRIMARY_TARGET}"
+        PUBLIC
             "$<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/include>"
             "$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>"
 )
+
+# Link objects with the primary target
+target_link_libraries(${PROJECT_PRIMARY_TARGET} INTERFACE PROJECT_OBJECTS)
 
 # Initialize export files
 include(GenerateExportHeader)
