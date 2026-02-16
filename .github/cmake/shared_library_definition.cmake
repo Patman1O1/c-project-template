@@ -1,13 +1,16 @@
-# Set the default value of BUILD_SHARED_LIBS to OFF
+# Set the default value of BUILD_SHARED_LIBS to ON
 option(BUILD_SHARED_LIBS "Build the library as a shared library" ON)
 
-# Declare the project primary target as a static library
+# Define the primary target as a shared library
 add_library(${PROJECT_PRIMARY_TARGET})
 add_library(${PROJECT_NAMESPACE}::${PROJECT_PRIMARY_TARGET} ALIAS ${PROJECT_PRIMARY_TARGET})
-list(APPEND PROJECT_TARGETS ${PROJECT_PRIMARY_TARGET})
+
+# Create objects
+add_library(PROJECT_OBJECTS OBJECT "${CMAKE_SOURCE_DIR}/src/${PROJECT_PRIMARY_TARGET}/${PROJECT_PRIMARY_TARGET}.c")
+add_library(${PROJECT_NAMESPACE}::PROJECT_OBJECTS ALIAS PROJECT_OBJECTS)
 
 # Include directories
-target_include_directories(${PROJECT_PRIMARY_TARGET}
+target_include_directories(PROJECT_OBJECTS
         PRIVATE
             "${CMAKE_SOURCE_DIR}/include/${PROJECT_PRIMARY_TARGET}"
         PUBLIC
@@ -16,10 +19,10 @@ target_include_directories(${PROJECT_PRIMARY_TARGET}
 )
 
 # Set sources
-target_sources(${PROJECT_PRIMARY_TARGET}
-        PRIVATE
-            "${CMAKE_SOURCE_DIR}/src/${PROJECT_PRIMARY_TARGET}/${PROJECT_PRIMARY_TARGET}.c"
-)
+target_sources(${PROJECT_PRIMARY_TARGET} PRIVATE $<TARGET_OBJECTS:PROJECT_OBJECTS>)
+
+# Link objects with the primary target
+target_link_libraries(${PROJECT_PRIMARY_TARGET} PRIVATE PROJECT_OBJECTS)
 
 # Initialize export files
 include(GenerateExportHeader)
