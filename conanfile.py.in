@@ -17,7 +17,7 @@ class @PROJECT_NAME_PASCAL_CASE@File(ConanFile):
     }
 
     default_options: dict = {
-        "build_shared_libs": False,
+        "build_shared_libs": @CONAN_BUILD_SHARED_LIBS@,
         "build_tests": False
     }
 
