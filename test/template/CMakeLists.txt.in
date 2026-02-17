@@ -23,16 +23,10 @@ target_sources(${PROJECT_PRIMARY_TARGET}_test
     PRIVATE
         "${CMAKE_CURRENT_SOURCE_DIR}/${PROJECT_PRIMARY_TARGET}_test.cpp"
 )
-if(EXISTS "${CMAKE_SOURCE_DIR}/src/${PROJECT_PRIMARY_TARGET}/${PROJECT_PRIMARY_TARGET}.cpp")
-    target_sources(${PROJECT_PRIMARY_TARGET}_test
-            PRIVATE
-                "${CMAKE_SOURCE_DIR}/src/${PROJECT_PRIMARY_TARGET}/${PROJECT_PRIMARY_TARGET}.c"
-    )
-endif()
 
 target_link_libraries(${PROJECT_PRIMARY_TARGET}_test
         PRIVATE
-            ${PROJECT_NAMESPACE}::PROJECT_OBJECTS
+            ${PROJECT_NAMESPACE}::${PROJECT_PRIMARY_TARGET}_objects
             GTest::gtest_main
             GTest::gmock_main
 )
