@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 
 from pathlib import Path
-import os
 import argparse
 import shutil
 import subprocess
@@ -9,11 +8,11 @@ import subprocess
 # Parse commandline arguments
 parser: argparse.ArgumentParser = argparse.ArgumentParser()
 parser.add_argument("conan_profile", help="Conan profile name", type=str)
-parser.add_argument("build_type", help="CMake build type", type=str)
+parser.add_argument("build_type", help="CMake build type", choices=["Debug", "Release", "RelWithDebInfo", "MinSizeRel"], type=str)
 args: argparse.Namespace = parser.parse_args()
 
 # Set project directories
-source_dir: Path = Path(os.getcwd())
+source_dir: Path = Path(__file__).parent.resolve()
 binary_dir: Path = source_dir/"build"
 
 # Set Conan toolchain file path
@@ -37,7 +36,7 @@ if conan_process.returncode != 0:
 
 # Create the CMake configure process
 cmake_configure_process: subprocess.Popen[str] = subprocess.Popen(
-    ["cmake", "-S", f"{source_dir}", "-B", f"{binary_dir}", "-D", f"CMAKE_TOOLCHAIN_FILE={conan_toolchain}", "-D", f"CMAKE_BUILD_TYPE={args.build_type}"],
+    ["cmake", "-S", f"{source_dir}", "-B", f"{binary_dir}/{args.build_type}", "-D", f"CMAKE_TOOLCHAIN_FILE={conan_toolchain}", "-D", f"CMAKE_BUILD_TYPE={args.build_type}"],
     stdout=subprocess.PIPE,
     stderr=subprocess.STDOUT,
     text=True
