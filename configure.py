@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 from pathlib import Path
+import os
 import argparse
 import shutil
 import subprocess
@@ -12,7 +13,7 @@ parser.add_argument("build_type", help="CMake build type", type=str)
 args: argparse.Namespace = parser.parse_args()
 
 # Set project directories
-source_dir: Path = Path(__file__).parent
+source_dir: Path = Path(os.getcwd())
 binary_dir: Path = source_dir/"build"
 
 # Set Conan toolchain file path
@@ -35,20 +36,12 @@ if conan_process.returncode != 0:
     raise RuntimeError("Conan install failed")
 
 # Create the CMake configure process
-if args.build_type == "Debug":
-    cmake_configure_process: subprocess.Popen[str] = subprocess.Popen(
-        ["cmake", "-S", f"{source_dir}", "-B", f"{binary_dir}", "-D", f"CMAKE_TOOLCHAIN_FILE={conan_toolchain}", "-D", f"CMAKE_BUILD_TYPE={args.build_type}", "-D", "BUILD_TESTS=ON"],
-        stdout=subprocess.PIPE,
-        stderr=subprocess.STDOUT,
-        text=True
-    )
-else:
-    cmake_configure_process: subprocess.Popen[str] = subprocess.Popen(
-        ["cmake", "-S", f"{source_dir}", "-B", f"{binary_dir}", "-D", f"CMAKE_TOOLCHAIN_FILE={conan_toolchain}", "-D", f"CMAKE_BUILD_TYPE={args.build_type}"],
-        stdout=subprocess.PIPE,
-        stderr=subprocess.STDOUT,
-        text=True
-    )
+cmake_configure_process: subprocess.Popen[str] = subprocess.Popen(
+    ["cmake", "-S", f"{source_dir}", "-B", f"{binary_dir}", "-D", f"CMAKE_TOOLCHAIN_FILE={conan_toolchain}", "-D", f"CMAKE_BUILD_TYPE={args.build_type}"],
+    stdout=subprocess.PIPE,
+    stderr=subprocess.STDOUT,
+    text=True
+)
 
 # Print the output
 for line in cmake_configure_process.stdout:
