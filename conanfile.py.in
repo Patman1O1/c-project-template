@@ -5,7 +5,7 @@ from conan.tools.build import check_min_cppstd
 class @PROJECT_NAME_PASCAL_CASE@File(ConanFile):
     name = "@PROJECT_NAME_SNAKE_CASE@"
     version = "@PROJECT_VERSION@"
-    label = "@PROJECT_DESCRIPTION@"
+    description = "@PROJECT_DESCRIPTION@"
 
     settings = ("os", "arch", "compiler", "build_type")
 
