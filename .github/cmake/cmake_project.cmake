@@ -7,6 +7,7 @@ include("${CMAKE_CURRENT_LIST_DIR}/functions.cmake")
 # Parameters (Required)
 #-----------------------------------------------------------------------------------------------------------------------
 set(PROJECT_NAME "" CACHE STRING "The name of the project")
+set(PROJECT_AUTHOR "" CACHE STRING "The name of the author")
 set(PROJECT_TYPE "" CACHE STRING "The type of the project")
 
 #-----------------------------------------------------------------------------------------------------------------------
@@ -22,6 +23,11 @@ set(PROJECT_DESCRIPTION "" CACHE STRING "The description of the project")
 if(NOT PROJECT_NAME)
     message(FATAL_ERROR "PROJECT_NAME was not specified")
     return()
+endif()
+
+# Validate the project author
+if (NOT PROJECT_AUTHOR)
+    message(FATAL_ERROR "PROJECT_AUTHOR was not specified")
 endif()
 
 # Format the project type in snake_case
