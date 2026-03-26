@@ -10,7 +10,7 @@ class @PROJECT_NAME_PASCAL_CASE@File(ConanFile):
 
     settings = ("os", "arch", "compiler", "build_type")
 
-    exports_sources = ("CMakeLists.txt", "cmake/*", "src/*", "test/*")
+    exports_sources = ("CMakeLists.txt", "cmake/*", "src/*")
 
     options = {
         "build_shared_libs": [True, False],
