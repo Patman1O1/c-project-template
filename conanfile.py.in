@@ -1,6 +1,5 @@
 from conan import ConanFile
 from conan.tools.cmake import CMake, CMakeToolchain, CMakeDeps, cmake_layout
-from conan.tools.build import check_min_cstd, check_min_cppstd
 from conan.tools.scm import Git
 
 class @PROJECT_NAME_PASCAL_CASE@File(ConanFile):
@@ -28,10 +27,6 @@ class @PROJECT_NAME_PASCAL_CASE@File(ConanFile):
         self.tool_requires("ccache/[>=4.8.3]")
         self.tool_requires("cppcheck/[>=2.12.1]")
         self.test_requires("gtest/[>=1.14.0]")
-
-    def validate(self) -> None:
-        check_min_cstd(self, "23")
-        check_min_cppstd(self, "23")
 
     def layout(self) -> None:
         cmake_layout(self)
