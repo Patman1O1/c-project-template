@@ -50,6 +50,7 @@ class @PROJECT_NAME_PASCAL_CASE@File(ConanFile):
         CMake(self).install()
 
     def source(self):
-        git = Git(self)
-        git.clone("https://github.com/@PROJECT_AUTHOR@/@PROJECT_NAME_KEBAB_CASE@.git", target=".")
-        git.checkout("v@PROJECT_VERSION@")
+        if not os.path.exists(os.path.join(self.source_folder, "CMakeLists.txt")):
+            git = Git(self)
+            git.clone("https://github.com/@PROJECT_AUTHOR@/@PROJECT_NAME_KEBAB_CASE@.git", target=".")
+            git.checkout("v@PROJECT_VERSION@")
