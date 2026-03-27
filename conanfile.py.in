@@ -1,6 +1,7 @@
 from conan import ConanFile
 from conan.tools.cmake import CMake, CMakeToolchain, CMakeDeps, cmake_layout
 from conan.tools.scm import Git
+import os
 
 class @PROJECT_NAME_PASCAL_CASE@File(ConanFile):
     name = "@PROJECT_NAME_SNAKE_CASE@"
