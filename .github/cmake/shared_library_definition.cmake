@@ -6,13 +6,13 @@ add_library(${PROJECT_PRIMARY_TARGET})
 add_library(${PROJECT_NAMESPACE}::${PROJECT_PRIMARY_TARGET} ALIAS ${PROJECT_PRIMARY_TARGET})
 
 # Create objects
-add_library(${PROJECT_PRIMARY_TARGET}_objects OBJECT "${CMAKE_SOURCE_DIR}/src/${PROJECT_PRIMARY_TARGET}/${PROJECT_PRIMARY_TARGET}.c")
+add_library(${PROJECT_PRIMARY_TARGET}_objects OBJECT "${CMAKE_SOURCE_DIR}/src/${PROJECT_OUTPUT_NAME}/${PROJECT_PRIMARY_TARGET}.c")
 add_library(${PROJECT_NAMESPACE}::${PROJECT_PRIMARY_TARGET}_objects ALIAS ${PROJECT_PRIMARY_TARGET}_objects)
 
 # Include directories
 target_include_directories(${PROJECT_PRIMARY_TARGET}_objects
         PRIVATE
-            "${CMAKE_SOURCE_DIR}/include/${PROJECT_PRIMARY_TARGET}"
+            "${CMAKE_SOURCE_DIR}/include/${PROJECT_OUTPUT_NAME}"
         PUBLIC
             "$<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/include>"
             "$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>"
@@ -69,7 +69,7 @@ else()
 endif()
 
 # Generate export header file
-generate_export_header(${PROJECT_PRIMARY_TARGET} EXPORT_FILE_NAME "include/${PROJECT_PRIMARY_TARGET}/${EXPORT_HEADER_FILE}")
+generate_export_header(${PROJECT_PRIMARY_TARGET} EXPORT_FILE_NAME "include/${PROJECT_OUTPUT_NAME}/${EXPORT_HEADER_FILE}")
 
 if(NOT CMAKE_SKIP_INSTALL_RULES)
     # Generate the configuration file that includes the project exports
@@ -116,7 +116,7 @@ if(NOT CMAKE_SKIP_INSTALL_RULES)
     install(DIRECTORY "${CMAKE_SOURCE_DIR}/include/"
             TYPE INCLUDE
             COMPONENT ${PROJECT_OUTPUT_NAME}-dev)
-    install(FILES "${CMAKE_CURRENT_BINARY_DIR}/include/${PROJECT_PRIMARY_TARGET}/${EXPORT_HEADER_FILE}"
+    install(FILES "${CMAKE_CURRENT_BINARY_DIR}/include/${PROJECT_OUTPUT_NAME}/${EXPORT_HEADER_FILE}"
             COMPONENT ${PROJECT_OUTPUT_NAME}-dev
             DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/${PROJECT_OUTPUT_NAME}")
 
