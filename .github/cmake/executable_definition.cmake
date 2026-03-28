@@ -7,13 +7,13 @@ set_target_properties(${PROJECT_PRIMARY_TARGET} PROPERTIES
 )
 
 # Create objects
-add_library(${PROJECT_PRIMARY_TARGET}_objects OBJECT "${CMAKE_SOURCE_DIR}/src/${PROJECT_PRIMARY_TARGET}/${PROJECT_PRIMARY_TARGET}.c")
+add_library(${PROJECT_PRIMARY_TARGET}_objects OBJECT "${CMAKE_SOURCE_DIR}/src/${PROJECT_OUTPUT_NAME}/${PROJECT_PRIMARY_TARGET}.c")
 add_library(${PROJECT_NAMESPACE}::${PROJECT_PRIMARY_TARGET}_objects ALIAS ${PROJECT_PRIMARY_TARGET}_objects)
 
 # Include directories
 target_include_directories(${PROJECT_PRIMARY_TARGET}_objects
         PRIVATE
-            "${CMAKE_SOURCE_DIR}/include/${PROJECT_PRIMARY_TARGET}"
+            "${CMAKE_SOURCE_DIR}/include/${PROJECT_OUTPUT_NAME}"
         PUBLIC
             "$<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/include>"
             "$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>"
@@ -22,7 +22,7 @@ target_include_directories(${PROJECT_PRIMARY_TARGET}_objects
 # Set sources
 target_sources(${PROJECT_PRIMARY_TARGET}
         PRIVATE
-            "${CMAKE_SOURCE_DIR}/src/${PROJECT_PRIMARY_TARGET}/main.c"
+            "${CMAKE_SOURCE_DIR}/src/${PROJECT_OUTPUT_NAME}/main.c"
             $<TARGET_OBJECTS:${PROJECT_PRIMARY_TARGET}_objects>
 )
 
