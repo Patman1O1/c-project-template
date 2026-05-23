@@ -27,7 +27,8 @@ class @PROJECT_NAME_PASCAL_CASE@File(ConanFile):
         self.tool_requires("cmake/[>=3.28.0]")
         self.tool_requires("ccache/[>=4.8.3]")
         self.tool_requires("cppcheck/[>=2.12.1]")
-        self.test_requires("gtest/[>=1.14.0]")
+        if self.build_tests == True:
+            self.test_requires("gtest/1.14.0")
 
     def layout(self) -> None:
         cmake_layout(self)
