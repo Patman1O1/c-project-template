@@ -19,16 +19,14 @@ class Project(object):
     def __init__(self,
                  project_name: str,
                  project_type: str,
-                 project_version: str,
                  project_author: str,
-                 project_description: str,
-                 project_build_tests: bool) -> None: # raises ValueError
+                 project_version: str="0.1.0",
+                 project_description: str="") -> None: # raises ValueError
         self.name: str = project_name
         self.type: str = project_type
-        self.version: str = project_version
         self.author: str = project_author
+        self.version: str = project_version
         self.description: str = project_description
-        self.build_tests: bool = project_build_tests
 
     @property
     def type(self) -> str:
