@@ -1,0 +1,7 @@
+@PACKAGE_INIT@
+
+include("${CMAKE_CURRENT_LIST_DIR}/{{ project.package_name }}Targets.cmake")
+
+set({{ project.name|to_screaming_case }}_VERSION {{ project.version }})
+check_required_components({{ project.name }})
+
