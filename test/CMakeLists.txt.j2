@@ -1,0 +1,41 @@
+#-----------------------------------------------------------------------------------------------------------------------
+# Settings
+#-----------------------------------------------------------------------------------------------------------------------
+enable_language(CXX)
+set(CMAKE_CXX_STANDARD {{ cmake.cxx_std }})
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
+
+#-----------------------------------------------------------------------------------------------------------------------
+# Google Test
+#-----------------------------------------------------------------------------------------------------------------------
+include(GoogleTest)
+enable_testing()
+
+#-----------------------------------------------------------------------------------------------------------------------
+# Target: {{ project.name }}_test
+# Alias: {{ project.namespace }}::{{ project.name }}_test
+# Type: Executable
+# Dependencies: GTest::gtest_main, GTest::gmock_main, {{ project.namespace }}::{{ project.name }}_headers
+#-----------------------------------------------------------------------------------------------------------------------
+# Target definition
+add_executable({{ project.name }}_test)
+
+# Target alias
+add_executable({{ project.namespace }}::{{ project.name }} ALIAS {{ project.name }})
+
+# Target sources
+target_sources({{ project.name }}_test
+    PRIVATE
+        ${CMAKE_CURRENT_SOURCE_DIR}/{{ project.name }}_test.cpp
+)
+
+// Target dependencies
+target_link_libraries({{ project.name }}_test
+        PRIVATE
+            {{ project.namespace }}::{{ project.name }}_headers
+            GTest::gtest_main
+            GTest::gmock_main
+)
+gtest_discover_tests({{ project.name }}_test)
+
