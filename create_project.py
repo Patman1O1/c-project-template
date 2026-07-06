@@ -21,12 +21,14 @@ class Project(object):
                  project_type: str,
                  project_version: str,
                  project_author: str,
-                 project_description: str) -> None: # raises ValueError
+                 project_description: str,
+                 project_build_tests: bool) -> None: # raises ValueError
         self.name: str = project_name
         self.type: str = project_type
         self.version: str = project_version
         self.author: str = project_author
         self.description: str = project_description
+        self.build_tests: bool = project_build_tests
 
     @property
     def type(self) -> str:
