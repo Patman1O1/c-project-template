@@ -1,0 +1,18 @@
+#ifndef EXPORT_H
+#define EXPORT_H
+
+#ifdef __cplusplus
+extern "C" {
+#endif // #ifdef __cplusplus
+
+#ifndef {{ project.name|to_screaming_case }}_STATIC_DEFINE
+    #include <{{ project.name|to_screaming_case }}/export_shared.h>
+#else
+    #include <{{ project.name|to_screaming_case }}/export_static.h>
+#endif // #ifndef {{ project.name|to_screaming_case }}_STATIC_DEFINE
+
+#ifdef __cplusplus
+}
+#endif // #ifdef __cplusplus
+
+#endif // #ifndef EXPORT_H
