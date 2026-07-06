@@ -1,0 +1,54 @@
+from conan import ConanFile
+from conan.tools.cmake import CMake, CMakeToolchain, CMakeDeps, cmake_layout
+import os
+
+class {{ project.name|to_pascal_case }}(ConanFile):
+    name = "{{ project.name }}"
+    version = "{{ project.version }}"
+    author = "{{ project.author }}"
+    description = "{{ project.description }}"
+
+    settings = ("os", "arch", "compiler", "build_type")
+
+    exports_sources = ("CMakeLists.txt", "cmake/*", "src/*")
+
+    options = {
+        {%- if project.type == "Static Library" or project.type == "Shared Library" -%}
+        "build_shared_libs": [True, False],
+        {%- endif -%}
+        "build_tests": [True, False]
+    }
+
+    default_options = {
+        {%- if project.type == "Static Library" -%}
+        "build_shared_libs": False,
+        {%- elif project.type == "Shared Library" -%}
+        "build_shared_libs": True,
+        {%- endif -%}
+        "build_tests": False
+    }
+
+    def build_requirements(self) -> None:
+        self.tool_requires("cmake/[>=3.28.0]")
+        if bool(self.options.build_tests):
+            self.test_requires("gtest/1.14.0")
+
+    def layout(self) -> None:
+        cmake_layout(self)
+
+    def generate(self) -> None:
+        toolchain = CMakeToolchain(self)
+        {%- if project.type == "Static Library" or project.type == "Shared Library" -%}
+        toolchain.variables["BUILD_SHARED_LIBS"] = bool(self.options.build_shared_libs)
+        {%- endif -%}
+        toolchain.variables["BUILD_TESTS"] = bool(self.options.build_tests)
+        toolchain.generate()
+        CMakeDeps(self).generate()
+
+    def build(self) -> None:
+        cmake = CMake(self)
+        cmake.configure()
+        cmake.build()
+
+    def package(self) -> None:
+        CMake(self).install()
