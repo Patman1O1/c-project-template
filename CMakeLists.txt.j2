@@ -1,0 +1,167 @@
+#-----------------------------------------------------------------------------------------------------------------------
+# Information
+#-----------------------------------------------------------------------------------------------------------------------
+cmake_minimum_required(VERSION {{ cmake.version }})
+project("{{ project.name }}"
+        VERSION {{ project.version }}
+        DESCRIPTION "{{ project.description }}"
+        LANGUAGES C
+)
+
+# CMake Information
+cmake_file_api(
+        QUERY
+        API_VERSION 1
+        CODEMODEL 2.3
+)
+
+#-----------------------------------------------------------------------------------------------------------------------
+# Settings
+#-----------------------------------------------------------------------------------------------------------------------
+if(PROJECT_IS_TOP_LEVEL)
+    # C Settings
+    set(CMAKE_C_STANDARD {{ cmake.c_std }})
+    set(CMAKE_C_STANDARD_REQUIRED ON)
+    set(CMAKE_C_EXTENSIONS OFF)
+    set(CMAKE_C_VISIBILITY_PRESET hidden)
+    set(CMAKE_VISIBILITY_INLINES_HIDDEN ON)
+
+    # Project Settings
+    set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+    set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
+    set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
+
+    # Project Options
+    {%- if project.type == "Shared Library" -%}
+    option(BUILD_SHARED_LIBS "Build the project as a shared library" ON)
+    {%- elif project.type == "Static Library" -%}
+    option(BUILD_SHARED_LIBS "Build the project as a shared library" OFF)
+    {%- endif -%}
+    option(BUILD_TESTS "Build the project's test suite" project.build_tests)
+
+    # Set default build type if not specified
+    if(NOT DEFINED CMAKE_BUILD_TYPE AND NOT DEFINED CMAKE_CONFIGURATION_TYPES)
+        set(CMAKE_BUILD_TYPE Release CACHE STRING "Build type" FORCE)
+        set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS "Debug" "Release" "MinSizeRel" "RelWithDebInfo")
+    endif()
+endif()
+
+#-----------------------------------------------------------------------------------------------------------------------
+# Dependencies
+#-----------------------------------------------------------------------------------------------------------------------
+if(BUILD_TESTS)
+    find_package(GTest REQUIRED)
+endif()
+
+include(GNUInstallDirs)
+
+{%- if project.type != "Executable" -%}
+#-----------------------------------------------------------------------------------------------------------------------
+# Installation
+#-----------------------------------------------------------------------------------------------------------------------
+if(NOT CMAKE_SKIP_INSTALL_RULES)
+    # Generate the configuration file that includes the project exports
+    include(CMakePackageConfigHelpers)
+    configure_package_config_file(
+            ${CMAKE_CURRENT_SOURCE_DIR}/cmake/{{ project.name|to_pascal_case }}Config.cmake.in
+            ${CMAKE_CURRENT_BINARY_DIR}/{{ project.name|to_pascal_case }}Config.cmake
+            INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/{{ project.name }}
+            NO_SET_AND_CHECK_MACRO
+            NO_CHECK_REQUIRED_COMPONENTS_MACRO
+    )
+
+    # Generate the version file for the configuration file
+    write_basic_package_version_file(
+            ${CMAKE_CURRENT_BINARY_DIR}/{{ project.name|to_pascal_case }}ConfigVersion.cmake
+            VERSION ${PROJECT_VERSION}
+            COMPATIBILITY SameMajorVersion
+    )
+
+    # Install package files
+    install(FILES
+            ${CMAKE_CURRENT_BINARY_DIR}/{{ project.name|to_pascal_case }}Config.cmake
+            ${CMAKE_CURRENT_BINARY_DIR}/{{ project.name|to_pascal_case }}ConfigVersion.cmake
+            DESTINATION
+            ${CMAKE_INSTALL_LIBDIR}/cmake/{{ project.name }})
+
+    # Install headers
+    install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/include
+            TYPE INCLUDE)
+endif()
+{%- endif -%}
+
+#-----------------------------------------------------------------------------------------------------------------------
+# Target: {{ project.name }}_headers
+# Alias: {{ project.namespace }}::{{ project.name }}_headers
+# Type: Interface Library
+#-----------------------------------------------------------------------------------------------------------------------
+# Target definition
+add_library({{ project.name }}_headers INTERFACE)
+
+# Target alias
+add_library({{ project.namespace }}::{{ project.name }}_headers)
+
+# Target headers
+target_include_directories({{ project.name }}_headers
+    PUBLIC
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+        $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
+)
+
+{%- if project.type == "Interface Library" -%}
+#-----------------------------------------------------------------------------------------------------------------------
+# Target: {{ project.name }}
+# Alias: {{ project.namespace }}::{{ project.name }}
+# Type: {{ project.type }}
+# Dependencies: {{ project.namespace }}::{{ project.name }}_headers
+#-----------------------------------------------------------------------------------------------------------------------
+# Target definition
+add_library({{ project.name }} INTERFACE)
+
+# Target alias
+add_library({{ project.namespace }}::{{ project.name }} ALIAS {{ project.name }})
+
+# Target dependencies
+target_link_libraries({{ project.name }}
+    PUBLIC
+        {{ project.namespace }}::{{ project.name }}_headers
+)
+
+# Target properties
+set_target_properties({{ project.name }} PROPERTIES
+        OUTPUT_NAME {{ project.name }}
+        VERSION ${PROJECT_VERSION}
+        SOVERSION ${PROJECT_VERSION_MAJOR}
+        C_VISIBILITY_PRESET hidden
+        VISIBILITY_INLINES_HIDDEN ON
+)
+
+if(NOT CMAKE_SKIP_INSTALL_RULES)
+    # Install {{ project.name }}
+    install(TARGETS {{ project.name }}
+            RUNTIME COMPONENT {{ project.name }}
+            LIBRARY COMPONENT {{ project.name }}
+            NAMELINK_COMPONENT {{ project.name }}
+            ARCHIVE COMPONENT {{ project.name }}
+            INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+endif()
+{%- endif -%}
+
+#-----------------------------------------------------------------------------------------------------------------------
+# Target: uninstall
+# Type: Custom
+#-----------------------------------------------------------------------------------------------------------------------
+add_custom_target(uninstall
+    COMMAND ${CMAKE_COMMAND} -P ${CMAKE_CURRENT_SOURCE_DIR}/cmake/cmake_uninstall.cmake
+)
+
+#-----------------------------------------------------------------------------------------------------------------------
+# Subdirectories
+#-----------------------------------------------------------------------------------------------------------------------
+{%- if project.type != "Interface Library" -%}
+add_subdirectory(src)
+{%- endif -%}
+
+if(BUILD_TESTS)
+    add_subdirectory(test)
+endif()
