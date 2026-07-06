@@ -63,8 +63,8 @@ if(NOT CMAKE_SKIP_INSTALL_RULES)
     # Generate the configuration file that includes the project exports
     include(CMakePackageConfigHelpers)
     configure_package_config_file(
-            ${CMAKE_CURRENT_SOURCE_DIR}/cmake/{{ project.name|to_pascal_case }}Config.cmake.in
-            ${CMAKE_CURRENT_BINARY_DIR}/{{ project.name|to_pascal_case }}Config.cmake
+            ${CMAKE_CURRENT_SOURCE_DIR}/cmake/{{ project.package_name }}Config.cmake.in
+            ${CMAKE_CURRENT_BINARY_DIR}/{{ project.package_name }}Config.cmake
             INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/{{ project.name }}
             NO_SET_AND_CHECK_MACRO
             NO_CHECK_REQUIRED_COMPONENTS_MACRO
@@ -72,15 +72,15 @@ if(NOT CMAKE_SKIP_INSTALL_RULES)
 
     # Generate the version file for the configuration file
     write_basic_package_version_file(
-            ${CMAKE_CURRENT_BINARY_DIR}/{{ project.name|to_pascal_case }}ConfigVersion.cmake
+            ${CMAKE_CURRENT_BINARY_DIR}/{{ project.package_name }}ConfigVersion.cmake
             VERSION ${PROJECT_VERSION}
             COMPATIBILITY SameMajorVersion
     )
 
     # Install package files
     install(FILES
-            ${CMAKE_CURRENT_BINARY_DIR}/{{ project.name|to_pascal_case }}Config.cmake
-            ${CMAKE_CURRENT_BINARY_DIR}/{{ project.name|to_pascal_case }}ConfigVersion.cmake
+            ${CMAKE_CURRENT_BINARY_DIR}/{{ project.package_name }}Config.cmake
+            ${CMAKE_CURRENT_BINARY_DIR}/{{ project.package_name }}ConfigVersion.cmake
             DESTINATION
             ${CMAKE_INSTALL_LIBDIR}/cmake/{{ project.name }})
 
