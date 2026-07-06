@@ -33,12 +33,11 @@ jobs:
 
       - name: Run cmake_project.cmake
         run: |
-          cmake \
-          -D PROJECT_NAME="${{ github.event.repository.name }}" \
-          -D PROJECT_AUTHOR="${{ github.actor }}" \
-          -D PROJECT_DESCRIPTION="${{ github.event.repository.description }}" \
-          -D PROJECT_TYPE="${{ github.event.inputs.project_type }}" \
-          -P "$GITHUB_WORKSPACE/.github/cmake/cmake_project.cmake"
+          python3 ${GITHUB_WORKSPACE}/create_project.py \
+          "${{ github.event.repository.name }}" \
+          "${{ github.event.inputs.project_type }}" \
+          "${{ github.actor }}" \
+          "${{ github.event.repository.description }}" \
 
       - name: Update README.md
         run: |
