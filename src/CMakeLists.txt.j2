@@ -64,7 +64,7 @@ target_compile_definitions({{ project.name }}
 
 include(GenerateExportHeader)
 set(EXPORT_HEADER_FILE export_static.h)
-set(EXPORT_TARGET_FILE {{ project.name|to_pascal_case }}StaticTargets.cmake)
+set(EXPORT_TARGET_FILE {{ project.package_name }}StaticTargets.cmake)
 
 # Target installation
 if(NOT CMAKE_SKIP_INSTALL_RULES)
@@ -84,10 +84,10 @@ if(NOT CMAKE_SKIP_INSTALL_RULES)
     # Create export files
     include(GenerateExportHeader)
     set(EXPORT_HEADER_FILE export_static.h)
-    set(EXPORT_TARGET_FILE {{ project.name|to_pascal_case }}StaticTargets.cmake)
+    set(EXPORT_TARGET_FILE {{ project.package_name }}StaticTargets.cmake)
     if(BUILD_SHARED_LIBS)
         set(EXPORT_HEADER_FILE export_shared.h)
-        set(EXPORT_TARGET_FILE {{ project.name|to_pascal_case }}SharedTargets.cmake)
+        set(EXPORT_TARGET_FILE {{ project.package_name }}SharedTargets.cmake)
     endif()
 
     # Install the library target
@@ -126,10 +126,10 @@ if(NOT CMAKE_SKIP_INSTALL_RULES)
     # Create export files
     include(GenerateExportHeader)
     set(EXPORT_HEADER_FILE export_static.h)
-    set(EXPORT_TARGET_FILE {{ project.name|to_pascal_case }}StaticTargets.cmake)
+    set(EXPORT_TARGET_FILE {{ project.package_name }}StaticTargets.cmake)
     if(BUILD_SHARED_LIBS)
         set(EXPORT_HEADER_FILE export_shared.h)
-        set(EXPORT_TARGETS_FILE {{ project.name|to_pascal_case }}SharedTargets.cmake)
+        set(EXPORT_TARGETS_FILE {{ project.package_name }}SharedTargets.cmake)
     endif()
 
     # Install the library target
