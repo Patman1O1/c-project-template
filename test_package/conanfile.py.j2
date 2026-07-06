@@ -1,0 +1,34 @@
+from conan import ConanFile
+from conan.tools.cmake import CMake, CMakeToolchain, CMakeDeps, cmake_layout
+import os
+
+class TestPackage(ConanFile):
+    name = "test_package"
+    version = "0.1.0"
+    description = ""
+
+    settings = ("os", "arch", "compiler", "build_type")
+
+    exports_sources = ("CMakeLists.txt", "src/*")
+
+    def requirements(self) -> None:
+        self.requires("{{ project.name }}/{{ project.version }}")
+
+    def build_requirements(self) -> None:
+        self.tool_requires("cmake/[>=3.28.0]")
+
+    def layout(self) -> None:
+        cmake_layout(self)
+
+    def generate(self) -> None:
+        toolchain = CMakeToolchain(self)
+        toolchain.generate()
+        CMakeDeps(self).generate()
+
+    def build(self) -> None:
+        cmake = CMake(self)
+        cmake.configure()
+        cmake.build()
+
+    def package(self) -> None:
+        CMake(self).install()
