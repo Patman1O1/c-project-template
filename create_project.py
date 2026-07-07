@@ -62,13 +62,13 @@ def to_screaming_case(string: str) -> str:
 
     # Replace any sequence of horizontal whitespace and hyphens
     # with a single underscore character
-    string = re.sub(r"[- ]+", "_", string)
+    string = re.sub(r"[\- ]+", "_", string)
 
     # Convert all lowercase alphabetic characters to uppercase alphabetic characters
     return string.upper()
 
 def to_pascal_case(string: str) -> str:
-    return string
+    return "".join(map(str.capitalize, re.compile(r"[A-Z]+(?=[A-Z][a-z])|[A-Z]?[a-z]+|[A-Z]+|[0-9]+").findall(string)))
 
 def main() -> int:
     try:
@@ -82,5 +82,5 @@ def main() -> int:
 
 if __name__ == "__main__":
     #sys.exit(main())
-    os.write(sys.stdout.fileno(), str(f"{to_screaming_case("getUser24FA")}\n").encode("utf-8"))
+    os.write(sys.stdout.fileno(), str(f"{to_pascal_case("Get User 24 FA")}\n").encode("utf-8"))
     sys.exit(0)
