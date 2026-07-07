@@ -47,25 +47,7 @@ class Project(object):
         return
 
 def to_screaming_case(string: str) -> str:
-    # Insert an underscore character between any lowercase alphanumeric character (i.e. [a-z0-9])
-    # and any succeeding uppercase alphabetic character (i.e. [A-Z])
-    string = re.sub(r"(?<=[a-z0-9])(?=[A-Z])", "_", string)
-
-    # Insert an underscore character between any uppercase alphabetic character (i.e. [A-Z])
-    # and any succeeding uppercase alphabetic character that is also succeeded by a
-    # lowercase alphabetic character (i.e. [A-Z][a-z])
-    string = re.sub(r"(?<=[A-Z])(?=[A-Z][a-z])", "_", string)
-
-    # Insert an underscore character between any sequence of alphabetic character (i.e. [A-Za-z])
-    # and any sequence of numeric characters (i.e. [0-9])
-    string = re.sub(r"(?<=[A-Za-z])(?=[0-9])", "_", string)
-
-    # Replace any sequence of horizontal whitespace and hyphens
-    # with a single underscore character
-    string = re.sub(r"[\- ]+", "_", string)
-
-    # Convert all lowercase alphabetic characters to uppercase alphabetic characters
-    return string.upper()
+    return "_".join(re.compile(r"[A-Z]+(?=[A-Z][a-z])|[A-Z]?[a-z]+|[A-Z]+|[0-9]+").findall(string)).upper()
 
 def to_pascal_case(string: str) -> str:
     return "".join(map(str.capitalize, re.compile(r"[A-Z]+(?=[A-Z][a-z])|[A-Z]?[a-z]+|[A-Z]+|[0-9]+").findall(string)))
