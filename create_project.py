@@ -1,5 +1,6 @@
 # Builtin Imports
 from typing import Final
+import re
 import sys
 import os
 
@@ -41,19 +42,45 @@ class Project(object):
                 break
         raise ValueError(f"Invalid project type: '{value}'")
 
-def render_project(project: Project, cmake: CMake) -> None:
+    def render(self, cmake: CMake) -> None:
 
-    return
+        return
+
+def to_screaming_case(string: str) -> str:
+    # Insert an underscore character between any lowercase alphanumeric character (i.e. [a-z0-9])
+    # and any succeeding uppercase alphabetic character (i.e. [A-Z])
+    string = re.sub(r"(?<=[a-z0-9])(?=[A-Z])", "_", string)
+
+    # Insert an underscore character between any uppercase alphabetic character (i.e. [A-Z])
+    # and any succeeding uppercase alphabetic character that is also succeeded by a
+    # lowercase alphabetic character (i.e. [A-Z][a-z])
+    string = re.sub(r"(?<=[A-Z])(?=[A-Z][a-z])", "_", string)
+
+    # Insert an underscore character between any sequence of alphabetic character (i.e. [A-Za-z])
+    # and any sequence of numeric characters (i.e. [0-9])
+    string = re.sub(r"(?<=[A-Za-z])(?=[0-9])", "_", string)
+
+    # Replace any sequence of horizontal whitespace and hyphens
+    # with a single underscore character
+    string = re.sub(r"[- ]+", "_", string)
+
+    # Convert all lowercase alphabetic characters to uppercase alphabetic characters
+    return string.upper()
+
+def to_pascal_case(string: str) -> str:
+    return string
 
 def main() -> int:
     try:
         cmake: CMake = CMake(version="4.3.0", c_std=23, cxx_std=23)
         project: Project = Project(sys.argv[1], sys.argv[2], sys.argv[3], sys.argv[4], sys.argv[5])
-        render_project(project, cmake)
+        project.render(cmake)
         return 0
     except Exception as exception:
         os.write(sys.stderr.fileno(), str(f"{exception}\n").encode("utf-8"))
         return 1
 
 if __name__ == "__main__":
-    sys.exit(main())
+    #sys.exit(main())
+    os.write(sys.stdout.fileno(), str(f"{to_screaming_case("getUser24FA")}\n").encode("utf-8"))
+    sys.exit(0)
