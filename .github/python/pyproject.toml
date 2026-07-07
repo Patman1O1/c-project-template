@@ -24,9 +24,10 @@ create-project = "cproject.main:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]
+include = ["cproject*"]
 
 [tool.pytest.ini_options]
-testpaths = [ "tests" ]
+testpaths = ["tests"]
 
 addopts = "-v --strict-markers"
 
