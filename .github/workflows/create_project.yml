@@ -18,37 +18,48 @@ permissions:
 
 jobs:
   create_project:
-    # Make sure this is not the template repository
     if: github.repository != 'Patman1O1/c-project-template'
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          # PAT with `workflow` scope — the default GITHUB_TOKEN cannot push
+          # a commit that deletes .github/workflows/**.
+          token: ${{ secrets.WORKFLOW_PAT }}
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
 
       - name: Configure Bot With GitHub
         run: |
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
 
-      - name: Run cmake_project.cmake
+      - name: Install Tools
+        run: pip install -e "${GITHUB_WORKSPACE}/.github/python"
+
+      - name: Create Project
         run: |
-          python3 ${GITHUB_WORKSPACE}/create_project.py \
-          "${{ github.event.repository.name }}" \
-          "${{ github.event.inputs.project_type }}" \
-          "${{ github.actor }}" \
-          "${{ github.event.repository.description }}" \
+          create-project \
+            "${GITHUB_WORKSPACE}" \
+            "${{ github.event.repository.name }}" \
+            "${{ github.event.inputs.project_type }}" \
+            "${{ github.actor }}" \
+            --project-description "${{ github.event.repository.description }}"
 
       - name: Update README.md
         run: |
-          echo -e "# ${{ github.event.repository.name }}\n${{ github.event.repository.description }}" > "$GITHUB_WORKSPACE/README.md"
+          printf '# %s\n%s\n' "${{ github.event.repository.name }}" "${{ github.event.repository.description }}" > "${GITHUB_WORKSPACE}/README.md"
 
       - name: Remove .github directory
-        run: |
-          rm -rf "$GITHUB_WORKSPACE/.github"
+        run: rm -rf "${GITHUB_WORKSPACE}/.github"
 
       - name: Commit changes
         run: |
-          git add .
+          git add -A
           git commit -m "Create ${GITHUB_REPOSITORY}" || echo "No changes to commit"
           git push
