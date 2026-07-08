@@ -6,6 +6,7 @@ import os
 # Pip Imports
 import click
 
+from cproject.cmake import CMake
 # Local Imports
 from cproject.project import Project
 
@@ -25,6 +26,9 @@ def main(project_root: Path,
     try:
         # Create a new instance of Project
         project: Project = Project(project_root, project_name, project_type, project_author, project_version, project_description)
+
+        # Render the project
+        project.render(CMake(version="4.3.0", c_std=23, cxx_std=23))
         return 0
     except Exception as exception:
         os.write(sys.stderr.fileno(), str(f"{exception}\n").encode("utf-8"))
