@@ -103,7 +103,7 @@ add_library({{ project.namespace }}::{{ project.name }}_headers ALIAS {{ project
 
 # Target headers
 target_include_directories({{ project.name }}_headers
-    PUBLIC
+    INTERFACE
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
         $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
 )
