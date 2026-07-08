@@ -77,32 +77,20 @@ class Project(object):
         os.rename(filepath, filepath.with_name(filepath.name.removesuffix(".j2")))
 
     def render(self, cmake: CMake) -> None:  # raises NotADirectoryError, ValueError, jinja2.TemplateNotFound
-        # Rename directories
-        os.rename(Project.ROOT/"include"/"{{ project.name }}", Project.ROOT/"include"/self.namespace)
-
-        # Rename files
-        os.rename(Project.ROOT/"CMakeLists.txt.j2",
-                  Project.ROOT/"CMakeLists.txt")
-        os.rename(Project.ROOT/"conanfile.py.j2",
-                  Project.ROOT/"conanfile.py")
-        os.rename(Project.ROOT/"cmake"/"{{ project.package_name }}Config.cmake.in.j2",
-                  Project.ROOT/"cmake"/f"{self.package_name}Config.cmake.in.j2")
-        os.rename(Project.ROOT/"include"/self.namespace/"{{ project.name }}.h.j2",
-                  Project.ROOT/"include"/self.namespace/f"{self.name}.h.j2")
-        os.rename(Project.ROOT/"src"/"{{ project.name }}.c.j2",
-                  Project.ROOT/"src"/f"{self.name}.c.j2")
-        os.rename(Project.ROOT/"test"/"{{ project.name }}_test.cpp.j2",
-                  Project.ROOT/"test"/f"{self.name}_test.cpp.j2")
-        os.rename(Project.ROOT/"test_package"/"CMakeLists.txt.j2",
-                  Project.ROOT/"test_package"/"CMakeLists.txt")
-        os.rename(Project.ROOT/"test_package"/"conanfile.py.j2",
-                  Project.ROOT/"test_package"/"conanfile.py")
-        os.rename(Project.ROOT/"test_package"/"CMakeLists.txt.j2",
-                  Project.ROOT/"test_package"/"CMakeLists.txt")
-        os.rename(Project.ROOT/"test_package"/"src"/"main.c.j2",
-                  Project.ROOT/"test_package"/"src"/"main.c")
-
         # Recursively render every *.j2 under the tree. rglob recurses;
         # sorted() materializes the listing before _render() renames files.
         for filepath in sorted(Project.ROOT.rglob("*.j2")):
             self._render(filepath, cmake)
+
+            # Rename directories
+            os.rename(Project.ROOT / "include" / "{{ project.name }}", Project.ROOT / "include" / self.namespace)
+
+            # Rename files
+            os.rename(Project.ROOT / "cmake" / "{{ project.package_name }}Config.cmake.in.j2",
+                      Project.ROOT / "cmake" / f"{self.package_name}Config.cmake.in.j2")
+            os.rename(Project.ROOT / "include" / self.namespace / "{{ project.name }}.h.j2",
+                      Project.ROOT / "include" / self.namespace / f"{self.name}.h.j2")
+            os.rename(Project.ROOT / "src" / "{{ project.name }}.c.j2",
+                      Project.ROOT / "src" / f"{self.name}.c.j2")
+            os.rename(Project.ROOT / "test" / "{{ project.name }}_test.cpp.j2",
+                      Project.ROOT / "test" / f"{self.name}_test.cpp.j2")
