@@ -106,7 +106,7 @@ def test__pull_repo__pulls_default_remote(monkeypatch: pytest.MonkeyPatch, tmp_p
     repo.remote.return_value.pull.assert_called_once_with()
 
 # ── run_workflow ──────────────────────────────────────────────────────────────────────────────────────────────────────
-def test__run_workflow__triggers_and_returns_run(monkeypatch: pytest.MonkeyPatch) -> None:
+def test__run_workflow__triggers_and_returns_run__executable(monkeypatch: pytest.MonkeyPatch) -> None:
     repo: MagicMock = MagicMock(spec=Repository)
     workflow: MagicMock = MagicMock()
     repo.get_workflow.return_value = workflow
@@ -122,6 +122,59 @@ def test__run_workflow__triggers_and_returns_run(monkeypatch: pytest.MonkeyPatch
     assert github.run_workflow(repo, "Executable") is new
     repo.get_workflow.assert_called_once_with(github.WORKFLOW_FILE_NAME)
     workflow.create_dispatch.assert_called_once_with(ref="main", inputs={"project_type": "Executable"})
+
+def test__run_workflow__triggers_and_returns_run__static_library(monkeypatch: pytest.MonkeyPatch) -> None:
+    repo: MagicMock = MagicMock(spec=Repository)
+    workflow: MagicMock = MagicMock()
+    repo.get_workflow.return_value = workflow
+
+    r1: MagicMock = MagicMock(id=1)
+    r2: MagicMock = MagicMock(id=2)
+    new: MagicMock = MagicMock(id=3)
+
+    workflow.get_runs.side_effect = [[r1, r2], [new, r1, r2]]
+    workflow.create_dispatch.return_value = True
+    monkeypatch.setattr(github.time, "sleep", lambda *_: None)
+
+    assert github.run_workflow(repo, "Static Library") is new
+    repo.get_workflow.assert_called_once_with(github.WORKFLOW_FILE_NAME)
+    workflow.create_dispatch.assert_called_once_with(ref="main", inputs={"project_type": "Static Library"})
+
+def test__run_workflow__triggers_and_returns_run__shared_library(monkeypatch: pytest.MonkeyPatch) -> None:
+    repo: MagicMock = MagicMock(spec=Repository)
+    workflow: MagicMock = MagicMock()
+    repo.get_workflow.return_value = workflow
+
+    r1: MagicMock = MagicMock(id=1)
+    r2: MagicMock = MagicMock(id=2)
+    new: MagicMock = MagicMock(id=3)
+
+    workflow.get_runs.side_effect = [[r1, r2], [new, r1, r2]]
+    workflow.create_dispatch.return_value = True
+    monkeypatch.setattr(github.time, "sleep", lambda *_: None)
+
+    assert github.run_workflow(repo, "Shared Library") is new
+    repo.get_workflow.assert_called_once_with(github.WORKFLOW_FILE_NAME)
+    workflow.create_dispatch.assert_called_once_with(ref="main", inputs={"project_type": "Shared Library"})
+
+def test__run_workflow__triggers_and_returns_run__interface_library(monkeypatch: pytest.MonkeyPatch) -> None:
+    repo: MagicMock = MagicMock(spec=Repository)
+    workflow: MagicMock = MagicMock()
+    repo.get_workflow.return_value = workflow
+
+    r1: MagicMock = MagicMock(id=1)
+    r2: MagicMock = MagicMock(id=2)
+    new: MagicMock = MagicMock(id=3)
+
+    workflow.get_runs.side_effect = [[r1, r2], [new, r1, r2]]
+    workflow.create_dispatch.return_value = True
+    monkeypatch.setattr(github.time, "sleep", lambda *_: None)
+
+    assert github.run_workflow(repo, "Interface Library") is new
+    repo.get_workflow.assert_called_once_with(github.WORKFLOW_FILE_NAME)
+    workflow.create_dispatch.assert_called_once_with(ref="main", inputs={"project_type": "Interface Library"})
+
+
 
 # ── rm_repo ───────────────────────────────────────────────────────────────────────────────────────────────────────────
 def test__rm_repo__local_then_remote(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
