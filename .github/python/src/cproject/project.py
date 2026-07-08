@@ -23,6 +23,7 @@ class Project(object):
                  project_version: str = "0.1.0",
                  project_description: str = "") -> None:  # raises ValueError
         self.name: str = project_name
+        self.package_name: str = to_pascal_case(project_name)
         self.type: str = project_type
         self.author: str = project_author
         self.namespace: str = project_namespace
@@ -84,3 +85,12 @@ class Project(object):
         # sorted() materializes the listing before _render() renames files.
         for filepath in sorted(Project.ROOT.rglob("*.j2")):
             self._render(filepath, cmake)
+
+        # Rename directories
+        os.rename(Project.ROOT/"include"/"{{ project.name }}", Project.ROOT/"include"/self.namespace)
+
+        # Rename files
+        os.rename(Project.ROOT/"cmake"/"{{ project.package_name }}Config.cmake.in", Project.ROOT/"cmake"/f"{self.package_name}Config.cmake.in")
+        os.rename(Project.ROOT/"include"/self.name/"{{ project.name }}.h", Project.ROOT/"include"/f"{self.name}.h")
+        os.rename(Project.ROOT/"src"/"{{ project.name }}.c", Project.ROOT/"src"/f"{self.name}.c")
+        os.rename(Project.ROOT/"test"/"{{ project.name }}_test.cpp", Project.ROOT/"test"/f"{self.name}_test.cpp")
