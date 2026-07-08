@@ -50,6 +50,7 @@ jobs:
             "${{ github.event.inputs.project_type }}" \
             "${{ github.actor }}" \
             "${{ github.event.inputs.project_namespace }}" \
+            "0.1.0" \
             "${{ github.event.repository.description }}"
 
       - name: Update README.md
