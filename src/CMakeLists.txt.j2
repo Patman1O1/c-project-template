@@ -4,7 +4,7 @@
 # Type: {{ project.type }}
 # Dependencies: {{ project.namespace }}::{{ project.name }}_headers
 #-----------------------------------------------------------------------------------------------------------------------
-{%- if project.type == "Executable" %}
+{% if project.type == "Executable" %}
 # Target definition
 add_executable({{ project.name }})
 
@@ -43,7 +43,7 @@ target_link_libraries({{ project.name }}
 if(NOT CMAKE_SKIP_INSTALL_RULES)
     include(GNUInstallDirs)
 
-    install(TARGETS {{ project.name }}
+    install(TARGETS {{ project.name }} {{ project.name }}_headers
             RUNTIME COMPONENT {{ project.name }}
             DESTINATION ${CMAKE_INSTALL_BINDIR}
     )
@@ -100,7 +100,7 @@ if(NOT CMAKE_SKIP_INSTALL_RULES)
     include(GNUInstallDirs)
 
     # Install the library target and register it in the export set
-    install(TARGETS {{ project.name }} EXPORT {{ project.name }}_export
+    install(TARGETS {{ project.name }} {{ project.name }}_headers EXPORT {{ project.name }}_export
             RUNTIME COMPONENT {{ project.name }}
             LIBRARY COMPONENT {{ project.name }}
             NAMELINK_COMPONENT {{ project.name }}
