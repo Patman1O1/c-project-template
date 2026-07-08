@@ -81,6 +81,10 @@ class Project(object):
         os.rename(Project.ROOT/"include"/"{{ project.name }}", Project.ROOT/"include"/self.namespace)
 
         # Rename files
+        os.rename(Project.ROOT/"CMakeLists.txt.j2",
+                  Project.ROOT/"CMakeLists.txt")
+        os.rename(Project.ROOT/"conanfile.py.j2",
+                  Project.ROOT/"conanfile.py")
         os.rename(Project.ROOT/"cmake"/"{{ project.package_name }}Config.cmake.in.j2",
                   Project.ROOT/"cmake"/f"{self.package_name}Config.cmake.in.j2")
         os.rename(Project.ROOT/"include"/self.namespace/"{{ project.name }}.h.j2",
