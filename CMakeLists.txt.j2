@@ -32,11 +32,11 @@ if(PROJECT_IS_TOP_LEVEL)
     set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 
     # Project Options
-    {%- if project.type == "Shared Library" %}
+    {% if project.type == "Shared Library" %}
     option(BUILD_SHARED_LIBS "Build the project as a shared library" ON)
-    {%- elif project.type == "Static Library" %}
+    {% elif project.type == "Static Library" %}
     option(BUILD_SHARED_LIBS "Build the project as a shared library" OFF)
-    {%- endif %}
+    {% endif %}
     option(BUILD_TESTS "Build the project's test suite" OFF)
 
     # Set default build type if not specified
@@ -55,7 +55,7 @@ endif()
 
 include(GNUInstallDirs)
 
-{%- if project.type != "Executable" %}
+{% if project.type != "Executable" %}
 #-----------------------------------------------------------------------------------------------------------------------
 # Installation
 #-----------------------------------------------------------------------------------------------------------------------
@@ -88,7 +88,7 @@ if(NOT CMAKE_SKIP_INSTALL_RULES)
     install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/include
             TYPE INCLUDE)
 endif()
-{%- endif %}
+{% endif %}
 
 #-----------------------------------------------------------------------------------------------------------------------
 # Target: {{ project.name }}_headers
@@ -108,7 +108,7 @@ target_include_directories({{ project.name }}_headers
         $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
 )
 
-{%- if project.type == "Interface Library" %}
+{% if project.type == "Interface Library" %}
 #-----------------------------------------------------------------------------------------------------------------------
 # Target: {{ project.name }}
 # Alias: {{ project.namespace }}::{{ project.name }}
