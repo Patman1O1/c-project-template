@@ -22,12 +22,6 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-        with:
-          # PAT with `workflow` scope — the default GITHUB_TOKEN cannot push
-          # a commit that deletes .github/workflows/**.
-          token: ${{ secrets.WORKFLOW_PAT }}
 
       - name: Set up Python
         uses: actions/setup-python@v5
