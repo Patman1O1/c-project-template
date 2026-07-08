@@ -19,11 +19,13 @@ class Project(object):
                  project_name: str,
                  project_type: str,
                  project_author: str,
+                 project_namespace: str = "",
                  project_version: str = "0.1.0",
                  project_description: str = "") -> None:  # raises ValueError
         self.name: str = project_name
         self.type: str = project_type
         self.author: str = project_author
+        self.namespace: str = project_namespace
         self.version: str = project_version
         self.description: str = project_description
         self.env: Environment = Environment(
@@ -43,6 +45,13 @@ class Project(object):
                 self._type = value
                 return
         raise ValueError(f"Invalid project type: '{value}'")
+
+    @property
+    def namespace(self) -> str: return self._namespace
+
+    @namespace.setter
+    def namespace(self, value: str) -> None:
+        self._namespace: str = value if value != "" else self.name
 
     @property
     def env(self) -> Environment: return self._env
