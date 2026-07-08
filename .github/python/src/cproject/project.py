@@ -37,6 +37,12 @@ class Project(object):
         )
 
     @property
+    def name(self) -> str: return self._name
+
+    @name.setter
+    def name(self, value: str) -> None: self._name: str = to_snake_case(value)
+
+    @property
     def type(self) -> str: return self._type
 
     @type.setter
@@ -52,7 +58,7 @@ class Project(object):
 
     @namespace.setter
     def namespace(self, value: str) -> None:
-        self._namespace: str = value if value != "" else self.name
+        self._namespace: str = value if to_snake_case(value) != "" else self.name
 
     @property
     def env(self) -> Environment: return self._env
