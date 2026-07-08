@@ -83,7 +83,7 @@ class Project(object):
             self._render(filepath, cmake)
 
         # Rename directories
-        os.rename(Project.ROOT / "include" / "{{ project.name }}", Project.ROOT / "include" / self.namespace)
+        os.rename(Project.ROOT / "include" / "{{ project.namespace }}", Project.ROOT / "include" / self.namespace)
 
         # Rename files
         os.rename(Project.ROOT / "cmake" / "{{ project.package_name }}Config.cmake.in",
