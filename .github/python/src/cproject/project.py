@@ -84,7 +84,7 @@ class Project(object):
         os.rename(Project.ROOT/"cmake"/"{{ project.package_name }}Config.cmake.in.j2",
                   Project.ROOT/"cmake"/f"{self.package_name}Config.cmake.in.j2")
         os.rename(Project.ROOT/"include"/self.namespace/"{{ project.name }}.h.j2",
-                  Project.ROOT/"include"/f"{self.name}.h.j2")
+                  Project.ROOT/"include"/self.namespace/f"{self.name}.h.j2")
         os.rename(Project.ROOT/"src"/"{{ project.name }}.c.j2",
                   Project.ROOT/"src"/f"{self.name}.c.j2")
         os.rename(Project.ROOT/"test"/"{{ project.name }}_test.cpp.j2",
