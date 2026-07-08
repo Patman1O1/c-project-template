@@ -41,7 +41,6 @@ jobs:
       - name: Create Project
         run: |
           create-project \
-            "${GITHUB_WORKSPACE}" \
             "${{ github.event.repository.name }}" \
             "${{ github.event.inputs.project_type }}" \
             "${{ github.actor }}" \
