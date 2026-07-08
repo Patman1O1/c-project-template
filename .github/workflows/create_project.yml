@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       project_type:
-        description: "Project type"
+        description: "The type of project that will be created."
         required: true
         type: choice
         options:
@@ -13,6 +13,11 @@ on:
           - "Shared Library"
           - "Interface Library"
 
+      project_namespace:
+        description: "The namespace that will be applied to CMake targets."
+        required: false
+        type: string
+        default: "${{ github.event.repository.name }}"
 permissions:
   contents: write
 
