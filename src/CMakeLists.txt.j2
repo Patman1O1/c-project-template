@@ -10,13 +10,13 @@ add_executable({{ project.name }})
 
 # Target alias
 add_executable({{ project.namespace }}::{{ project.name }} ALIAS {{ project.name }})
-{%- elif project.type == "Static Library" %}
+{% elif project.type == "Static Library" %}
 # Target definition
 add_library({{ project.name }} STATIC)
 
 # Target alias
 add_library({{ project.namespace }}::{{ project.name }} ALIAS {{ project.name }})
-{%- elif project.type == "Shared Library" %}
+{% elif project.type == "Shared Library" %}
 # Target definition
 add_library({{ project.name }} SHARED)
 
@@ -48,7 +48,7 @@ if(NOT CMAKE_SKIP_INSTALL_RULES)
             DESTINATION ${CMAKE_INSTALL_BINDIR}
     )
 endif()
-{%- elif project.type == "Static Library" or project.type == "Shared Library" %}
+{% elif project.type == "Static Library" or project.type == "Shared Library" %}
 # Export configuration
 include(GenerateExportHeader)
 
@@ -119,4 +119,4 @@ if(NOT CMAKE_SKIP_INSTALL_RULES)
             DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/{{ project.name }}
             NAMESPACE {{ project.namespace }}::)
 endif()
-{%- endif %}
+{% endif %}
