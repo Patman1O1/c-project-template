@@ -71,26 +71,20 @@ class Project(object):
         os.rename(filepath, filepath.with_name(filepath.name.removesuffix(".j2")))
 
     def render(self, cmake: CMake) -> None:  # raises NotADirectoryError, ValueError, jinja2.TemplateNotFound
-        # A single file: render it only if it is a template
-        if Project.ROOT.is_file():
-            if Project.ROOT.suffix == ".j2":
-                self._render(Project.ROOT, cmake)
-            return
+        # Rename directories
+        os.rename(Project.ROOT/"include"/"{{ project.name }}", Project.ROOT/"include"/self.namespace)
 
-        # Otherwise the path must be a directory
-        if not Project.ROOT.is_dir():
-            raise NotADirectoryError(f"{Project.ROOT} is not a directory")
+        # Rename files
+        os.rename(Project.ROOT/"cmake"/"{{ project.package_name }}Config.cmake.in.j2",
+                  Project.ROOT/"cmake"/f"{self.package_name}Config.cmake.in.j2")
+        os.rename(Project.ROOT/"include"/self.namespace/"{{ project.name }}.h.j2",
+                  Project.ROOT/"include"/f"{self.name}.h.j2")
+        os.rename(Project.ROOT/"src"/"{{ project.name }}.c.j2",
+                  Project.ROOT/"src"/f"{self.name}.c.j2")
+        os.rename(Project.ROOT/"test"/"{{ project.name }}_test.cpp.j2",
+                  Project.ROOT/"test"/f"{self.name}_test.cpp.j2")
 
         # Recursively render every *.j2 under the tree. rglob recurses;
         # sorted() materializes the listing before _render() renames files.
         for filepath in sorted(Project.ROOT.rglob("*.j2")):
             self._render(filepath, cmake)
-
-        # Rename directories
-        os.rename(Project.ROOT/"include"/"{{ project.name }}", Project.ROOT/"include"/self.namespace)
-
-        # Rename files
-        os.rename(Project.ROOT/"cmake"/"{{ project.package_name }}Config.cmake.in", Project.ROOT/"cmake"/f"{self.package_name}Config.cmake.in")
-        os.rename(Project.ROOT/"include"/self.namespace/"{{ project.name }}.h", Project.ROOT/"include"/f"{self.name}.h")
-        os.rename(Project.ROOT/"src"/"{{ project.name }}.c", Project.ROOT/"src"/f"{self.name}.c")
-        os.rename(Project.ROOT/"test"/"{{ project.name }}_test.cpp", Project.ROOT/"test"/f"{self.name}_test.cpp")
