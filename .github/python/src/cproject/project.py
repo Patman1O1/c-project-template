@@ -91,6 +91,6 @@ class Project(object):
 
         # Rename files
         os.rename(Project.ROOT/"cmake"/"{{ project.package_name }}Config.cmake.in", Project.ROOT/"cmake"/f"{self.package_name}Config.cmake.in")
-        os.rename(Project.ROOT/"include"/self.name/"{{ project.name }}.h", Project.ROOT/"include"/f"{self.name}.h")
+        os.rename(Project.ROOT/"include"/self.namespace/"{{ project.name }}.h", Project.ROOT/"include"/f"{self.name}.h")
         os.rename(Project.ROOT/"src"/"{{ project.name }}.c", Project.ROOT/"src"/f"{self.name}.c")
         os.rename(Project.ROOT/"test"/"{{ project.name }}_test.cpp", Project.ROOT/"test"/f"{self.name}_test.cpp")
