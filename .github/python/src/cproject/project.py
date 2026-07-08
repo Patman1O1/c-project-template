@@ -89,6 +89,14 @@ class Project(object):
                   Project.ROOT/"src"/f"{self.name}.c.j2")
         os.rename(Project.ROOT/"test"/"{{ project.name }}_test.cpp.j2",
                   Project.ROOT/"test"/f"{self.name}_test.cpp.j2")
+        os.rename(Project.ROOT/"test_package"/"CMakeLists.txt.j2",
+                  Project.ROOT/"test_package"/"CMakeLists.txt")
+        os.rename(Project.ROOT/"test_package"/"conanfile.py.j2",
+                  Project.ROOT/"test_package"/"conanfile.py")
+        os.rename(Project.ROOT/"test_package"/"CMakeLists.txt.j2",
+                  Project.ROOT/"test_package"/"CMakeLists.txt")
+        os.rename(Project.ROOT/"test_package"/"src"/"main.c.j2",
+                  Project.ROOT/"test_package"/"src"/"main.c")
 
         # Recursively render every *.j2 under the tree. rglob recurses;
         # sorted() materializes the listing before _render() renames files.
