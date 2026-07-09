@@ -288,7 +288,7 @@ def test__render__interface_library(temp_dir: Path, monkeypatch: pytest.MonkeyPa
     assert "DESTINATION ${CMAKE_INSTALL_BINDIR}" not in src
     assert f"install(EXPORT {project_name}_export" not in src
 
-def test__render__test_suite(temp_dir: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+def test__render__tests(temp_dir: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     project: Project = _render("Executable", TEST_NAMES["Executable"], temp_dir, monkeypatch)
     project_name: str = project.name
     project_namespace: str = project.namespace
