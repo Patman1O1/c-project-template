@@ -288,6 +288,24 @@ def test__render__interface_library(temp_dir: Path, monkeypatch: pytest.MonkeyPa
     assert "DESTINATION ${CMAKE_INSTALL_BINDIR}" not in src
     assert f"install(EXPORT {project_name}_export" not in src
 
+def test__render__test_suite(temp_dir: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    project: Project = _render("Executable", TEST_NAMES["Executable"], temp_dir, monkeypatch)
+    project_name: str = project.name
+    project_namespace: str = project.namespace
+
+    # test/CMakeLists.txt
+    test: str = _read("test", "CMakeLists.txt")
+    assert f"set(CMAKE_CXX_STANDARD {CMAKE.cxx_std})" in test
+    assert f"# Target: {project_name}_test" in test
+    assert f"# Alias: {project_namespace}::{project_name}_test" in test
+    assert f"# Dependencies: GTest::gtest_main, GTest::gmock_main, {project_namespace}::{project_name}_headers" in test
+    assert f"add_executable({project_name}_test)" in test
+    assert f"add_executable({project_namespace}::{project_name}_test ALIAS {project_name}_test)" in test
+    assert f"target_sources({project_name}_test" in test
+    assert f"        ${{CMAKE_CURRENT_SOURCE_DIR}}/{project_name}_test.cpp" in test
+    assert f"target_link_libraries({project_name}_test" in test
+    assert f"        {project_namespace}::{project_name}_headers" in test
+    assert f"gtest_discover_tests({project_name}_test)" in test
 
 def test__render__name_namespace_package_substitution(temp_dir: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     project: Project = _render("Static Library", "My-Cool-Lib", temp_dir, monkeypatch)
