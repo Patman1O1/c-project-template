@@ -211,9 +211,9 @@ def test__render__static_library(temp_dir: Path, monkeypatch: pytest.MonkeyPatch
 
 def test__render__shared_library(temp_dir: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     project: Project = _render("Shared Library", TEST_NAMES["Shared Library"], temp_dir, monkeypatch)
-    n: str = project.name
-    pkg: str = project.package_name
-    scream: str = to_screaming_case(n)
+    project_name: str = project.name
+    project_package_name: str = project.package_name
+    project_macro_name: str = to_screaming_case(project_name)
 
     _assert_common_layout(project)
 
@@ -224,7 +224,7 @@ def test__render__shared_library(temp_dir: Path, monkeypatch: pytest.MonkeyPatch
     assert "configure_package_config_file(" in root
     assert "write_basic_package_version_file(" in root
     assert "install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/include" in root
-    assert f"add_library({n} INTERFACE)" not in root
+    assert f"add_library({project_name} INTERFACE)" not in root
     assert "add_subdirectory(src)" in root
 
     # conanfile.py
@@ -236,25 +236,25 @@ def test__render__shared_library(temp_dir: Path, monkeypatch: pytest.MonkeyPatch
 
     # src/CMakeLists.txt
     src: str = _read("src", "CMakeLists.txt")
-    assert f"add_library({n} SHARED)" in src
-    assert f"add_library({n} STATIC)" not in src
-    assert f"add_executable({n})" not in src
+    assert f"add_library({project_name} SHARED)" in src
+    assert f"add_library({project_name} STATIC)" not in src
+    assert f"add_executable({project_name})" not in src
     assert "${CMAKE_CURRENT_SOURCE_DIR}/main.c" not in src
     assert "include(GenerateExportHeader)" in src
     assert "set(EXPORT_HEADER_FILE export_shared.h)" in src
     assert "set(EXPORT_HEADER_FILE export_static.h)" in src
-    assert f"{pkg}SharedTargets.cmake" in src
-    assert f"{pkg}StaticTargets.cmake" in src
-    assert f"{scream}_STATIC_DEFINE" in src
-    assert f"generate_export_header({n}" in src
-    assert f"install(EXPORT {n}_export" in src
+    assert f"{project_package_name}SharedTargets.cmake" in src
+    assert f"{project_package_name}StaticTargets.cmake" in src
+    assert f"{project_macro_name}_STATIC_DEFINE" in src
+    assert f"generate_export_header({project_name}" in src
+    assert f"install(EXPORT {project_name}_export" in src
     assert "DESTINATION ${CMAKE_INSTALL_BINDIR}" not in src
 
 
 def test__render__interface_library(temp_dir: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     project: Project = _render("Interface Library", TEST_NAMES["Interface Library"], temp_dir, monkeypatch)
-    n: str = project.name
-    ns: str = project.namespace
+    project_name: str = project.name
+    project_namespace: str = project.namespace
 
     _assert_common_layout(project)
 
@@ -265,11 +265,11 @@ def test__render__interface_library(temp_dir: Path, monkeypatch: pytest.MonkeyPa
     assert "write_basic_package_version_file(" in root
     assert "install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/include" in root
     # Interface-target arm taken: target, alias, deps, properties, install.
-    assert f"add_library({n} INTERFACE)" in root
-    assert f"add_library({ns}::{n} ALIAS {n})" in root
-    assert f"target_link_libraries({n}" in root
-    assert f"{ns}::{n}_headers" in root
-    assert f"install(TARGETS {n}" in root
+    assert f"add_library({project_name} INTERFACE)" in root
+    assert f"add_library({project_namespace}::{project_name} ALIAS {project_name})" in root
+    assert f"target_link_libraries({project_name}" in root
+    assert f"{project_namespace}::{project_name}_headers" in root
+    assert f"install(TARGETS {project_name}" in root
     # src is not added for a header-only library.
     assert "add_subdirectory(src)" not in root
 
@@ -280,13 +280,13 @@ def test__render__interface_library(temp_dir: Path, monkeypatch: pytest.MonkeyPa
 
     # src/CMakeLists.txt
     src: str = _read("src", "CMakeLists.txt")
-    assert f"add_executable({n})" not in src
-    assert f"add_library({n} STATIC)" not in src
-    assert f"add_library({n} SHARED)" not in src
+    assert f"add_executable({project_name})" not in src
+    assert f"add_library({project_name} STATIC)" not in src
+    assert f"add_library({project_name} SHARED)" not in src
     assert "${CMAKE_CURRENT_SOURCE_DIR}/main.c" not in src
     assert "include(GenerateExportHeader)" not in src
     assert "DESTINATION ${CMAKE_INSTALL_BINDIR}" not in src
-    assert f"install(EXPORT {n}_export" not in src
+    assert f"install(EXPORT {project_name}_export" not in src
 
 
 def test__render__name_namespace_package_substitution(temp_dir: Path, monkeypatch: pytest.MonkeyPatch) -> None:
