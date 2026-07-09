@@ -146,6 +146,7 @@ def test__render__executable(temp_dir: Path, monkeypatch: pytest.MonkeyPatch) ->
     conan: str = _read("conanfile.py")
     # No build_shared_libs option, default, or toolchain variable for an executable.
     assert "build_shared_libs" not in conan
+    assert f"        self.tool_requires(\"cmake/[>={CMAKE.version}]\")" in conan
     assert 'toolchain.variables["BUILD_SHARED_LIBS"]' not in conan
 
     # src/CMakeLists.txt
@@ -188,6 +189,7 @@ def test__render__static_library(temp_dir: Path, monkeypatch: pytest.MonkeyPatch
     assert '"build_shared_libs": [True, False]' in conan
     assert '"build_shared_libs": False,' in conan
     assert '"build_shared_libs": True,' not in conan
+    assert f"        self.tool_requires(\"cmake/[>={CMAKE.version}]\")" in conan
     assert 'toolchain.variables["BUILD_SHARED_LIBS"]' in conan
 
     # src/CMakeLists.txt
@@ -232,6 +234,7 @@ def test__render__shared_library(temp_dir: Path, monkeypatch: pytest.MonkeyPatch
     assert '"build_shared_libs": [True, False]' in conan
     assert '"build_shared_libs": True,' in conan
     assert '"build_shared_libs": False,' not in conan
+    assert f"        self.tool_requires(\"cmake/[>={CMAKE.version}]\")" in conan
     assert 'toolchain.variables["BUILD_SHARED_LIBS"]' in conan
 
     # src/CMakeLists.txt
@@ -276,6 +279,7 @@ def test__render__interface_library(temp_dir: Path, monkeypatch: pytest.MonkeyPa
     # conanfile.py
     conan: str = _read("conanfile.py")
     assert "build_shared_libs" not in conan
+    assert f"        self.tool_requires(\"cmake/[>={CMAKE.version}]\")" in conan
     assert 'toolchain.variables["BUILD_SHARED_LIBS"]' not in conan
 
     # src/CMakeLists.txt
