@@ -217,7 +217,7 @@ def test__render__shared_library(temp_dir: Path, monkeypatch: pytest.MonkeyPatch
 
     _assert_common_layout(project)
 
-    # ── root CMakeLists.txt ──
+    # CMakeLists.txt
     root: str = _read("CMakeLists.txt")
     assert 'option(BUILD_SHARED_LIBS "Build the project as a shared library" ON)' in root
     assert 'option(BUILD_SHARED_LIBS "Build the project as a shared library" OFF)' not in root
@@ -227,14 +227,14 @@ def test__render__shared_library(temp_dir: Path, monkeypatch: pytest.MonkeyPatch
     assert f"add_library({n} INTERFACE)" not in root
     assert "add_subdirectory(src)" in root
 
-    # ── conanfile.py ──
+    # conanfile.py
     conan: str = _read("conanfile.py")
     assert '"build_shared_libs": [True, False]' in conan
-    assert '"build_shared_libs": True,' in conan              # default arm (Shared)
+    assert '"build_shared_libs": True,' in conan
     assert '"build_shared_libs": False,' not in conan
     assert 'toolchain.variables["BUILD_SHARED_LIBS"]' in conan
 
-    # ── src/CMakeLists.txt ──
+    # src/CMakeLists.txt
     src: str = _read("src", "CMakeLists.txt")
     assert f"add_library({n} SHARED)" in src
     assert f"add_library({n} STATIC)" not in src
@@ -258,7 +258,7 @@ def test__render__interface_library(temp_dir: Path, monkeypatch: pytest.MonkeyPa
 
     _assert_common_layout(project)
 
-    # ── root CMakeLists.txt ──
+    # root CMakeLists.txt
     root: str = _read("CMakeLists.txt")
     assert "option(BUILD_SHARED_LIBS" not in root
     assert "configure_package_config_file(" in root
@@ -273,12 +273,12 @@ def test__render__interface_library(temp_dir: Path, monkeypatch: pytest.MonkeyPa
     # src is not added for a header-only library.
     assert "add_subdirectory(src)" not in root
 
-    # ── conanfile.py ──
+    # conanfile.py
     conan: str = _read("conanfile.py")
     assert "build_shared_libs" not in conan
     assert 'toolchain.variables["BUILD_SHARED_LIBS"]' not in conan
 
-    # ── src/CMakeLists.txt ──
+    # src/CMakeLists.txt
     src: str = _read("src", "CMakeLists.txt")
     assert f"add_executable({n})" not in src
     assert f"add_library({n} STATIC)" not in src
