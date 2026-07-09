@@ -69,22 +69,24 @@ class Project(object):
         self._env.filters["to_screaming_case"] = to_screaming_case
         self._env.filters["to_pascal_case"] = to_pascal_case
 
-    def _render(self, filepath: Path, cmake: CMake) -> None:  # raises ValueError, jinja2.TemplateNotFound
-        name: str = filepath.resolve().relative_to(Project.ROOT.resolve()).as_posix()
-        template: Template = self._env.get_template(name)
-        with filepath.open("w", encoding="utf-8") as file:
-            file.write(template.render(project=self, cmake=cmake))
-        os.rename(filepath, filepath.with_name(filepath.name.removesuffix(".j2")))
+    def render(self, cmake: CMake) -> None:  # raises ValueError, jinja2.TemplateNotFound
+        # One filesystem walk, materialized and ordered deepest-first so a
+        # directory is only renamed after everything inside it.
+        entries: list[Path] = sorted(Project.ROOT.rglob("*"), key=lambda p: len(p.parts), reverse=True)
 
-    def render(self, cmake: CMake) -> None:  # raises NotADirectoryError, ValueError, jinja2.TemplateNotFound
-        for path in sorted(Project.ROOT.rglob("*"), key=lambda p: len(p.parts), reverse=True):
-            if "{{" not in path.name:
-                continue
-            resolved: str = self._env.from_string(path.name).render(project=self, cmake=cmake)
-            if resolved and resolved != path.name:
-                path.rename(path.with_name(resolved))
+        # 1. Render every *.j2 in place. Nothing is renamed yet, so include /
+        #    extends / import between templates still resolve by on-disk name.
+        for path in entries:
+            if path.is_file() and path.suffix == ".j2":
+                template: Template = self._env.get_template(path.relative_to(Project.ROOT).as_posix())
+                path.write_text(template.render(project=self, cmake=cmake), encoding="utf-8")
 
-        # Recursively render every *.j2 under the tree. rglob recurses;
-        # sorted() materializes the listing before _render() renames files.
-        for filepath in sorted(Project.ROOT.rglob("*.j2")):
-            self._render(filepath, cmake)
+        # 2. Drop .j2 and resolve {{ }} in each name, deepest-first so a child is
+        #    renamed while its parent still carries its templated name; renaming
+        #    the parent afterward carries the already-renamed children with it.
+        for path in entries:
+            name: str = path.name.removesuffix(".j2")
+            if "{{" in name:
+                name = self._env.from_string(name).render(project=self, cmake=cmake)
+            if name != path.name:
+                path.rename(path.with_name(name))
