@@ -41,7 +41,10 @@ class {{ project.package_name }}(ConanFile):
         {% if project.type == "Static Library" or project.type == "Shared Library" %}
         toolchain.variables["BUILD_SHARED_LIBS"] = bool(self.options.build_shared_libs)
         {% endif %}
-        toolchain.variables["BUILD_TESTS"] = bool(self.options.build_tests)
+        if self.settings.build_type == "Debug":
+            toolchain.variables["BUILD_TESTS"] = True
+        else:
+            toolchain.variables["BUILD_TESTS"] = bool(self.options.build_tests)
         toolchain.generate()
         CMakeDeps(self).generate()
 
