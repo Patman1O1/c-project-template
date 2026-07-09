@@ -13,7 +13,7 @@ from cproject.cmake import CMake
 
 class Project(object):
     TYPES: Final[list[str]] = ["Static Library", "Shared Library", "Interface Library", "Executable"]
-    ROOT: Final[Path] = Path(__file__).resolve().parents[3]
+    ROOT: Final[Path] = Path(__file__).resolve().parents[4]
 
     def __init__(self,
                  project_name: str,
