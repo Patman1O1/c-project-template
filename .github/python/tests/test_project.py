@@ -136,7 +136,7 @@ def test__render__executable(temp_dir: Path, monkeypatch: pytest.MonkeyPatch) ->
     assert "install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/include" not in cmake_lists_txt
     assert f"add_library({project_name}_headers INTERFACE)" in cmake_lists_txt
     assert f"add_library({project_name} INTERFACE)" not in cmake_lists_txt
-    assert "add_subdirectory(src_cmake_lists_txt)" in cmake_lists_txt
+    assert "add_subdirectory(src)" in cmake_lists_txt
 
     # conanfile.py
     conanfile_py: str = _read("conanfile.py")
@@ -145,7 +145,7 @@ def test__render__executable(temp_dir: Path, monkeypatch: pytest.MonkeyPatch) ->
     assert 'toolchain.variables["BUILD_SHARED_LIBS"]' not in conanfile_py
 
     # src/CMakeLists.txt
-    src_cmake_lists_txt: str = _read("src_cmake_lists_txt", "CMakeLists.txt")
+    src_cmake_lists_txt: str = _read("src", "CMakeLists.txt")
     assert f"add_executable({project_name})" in src_cmake_lists_txt
     assert f"add_executable({project_namespace}::{project_name} ALIAS {project_name})" in src_cmake_lists_txt
     assert f"add_library({project_name} STATIC)" not in src_cmake_lists_txt
@@ -175,7 +175,7 @@ def test__render__static_library(temp_dir: Path, monkeypatch: pytest.MonkeyPatch
     assert "write_basic_package_version_file(" in cmake_lists_txt
     assert "install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/include" in cmake_lists_txt
     assert f"add_library({project_name} INTERFACE)" not in cmake_lists_txt
-    assert "add_subdirectory(src_cmake_lists_txt)" in cmake_lists_txt
+    assert "add_subdirectory(src)" in cmake_lists_txt
 
     # conanfile.py
     conanfile_py: str = _read("conanfile.py")
@@ -191,8 +191,8 @@ def test__render__static_library(temp_dir: Path, monkeypatch: pytest.MonkeyPatch
     # include/<project_namespace>/export.h
     export_h: str = _read("include", f"{project_name}", "export.h")
     assert f"#ifndef {project_macro_name}_STATIC_DEFINE" in export_h
-    assert f"    #include <{project_macro_name}/export_shared.h>" in export_h
-    assert f"    #include <{project_macro_name}/export_static.h>" in export_h
+    assert f"    #include <{project_name}/export_shared.h>" in export_h
+    assert f"    #include <{project_name}/export_static.h>" in export_h
     assert f"#endif // #ifndef {project_macro_name}_STATIC_DEFINE" in export_h
 
     # include/<project_namespace>/<project_name>.h
@@ -203,7 +203,7 @@ def test__render__static_library(temp_dir: Path, monkeypatch: pytest.MonkeyPatch
     assert f"#endif // #ifndef {project_macro_name}_H" in project_name_h
 
     # src/CMakeLists.txt
-    src_cmake_lists_txt: str = _read("src_cmake_lists_txt", "CMakeLists.txt")
+    src_cmake_lists_txt: str = _read("src", "CMakeLists.txt")
     assert f"add_library({project_name} STATIC)" in src_cmake_lists_txt
     assert f"add_library({project_name} SHARED)" not in src_cmake_lists_txt
     assert f"add_executable({project_name})" not in src_cmake_lists_txt
@@ -241,7 +241,7 @@ def test__render__shared_library(temp_dir: Path, monkeypatch: pytest.MonkeyPatch
     assert "write_basic_package_version_file(" in cmake_lists_txt
     assert "install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/include" in cmake_lists_txt
     assert f"add_library({project_name} INTERFACE)" not in cmake_lists_txt
-    assert "add_subdirectory(src_cmake_lists_txt)" in cmake_lists_txt
+    assert "add_subdirectory(src)" in cmake_lists_txt
 
     # conanfile.py
     conanfile_py: str = _read("conanfile.py")
@@ -257,8 +257,8 @@ def test__render__shared_library(temp_dir: Path, monkeypatch: pytest.MonkeyPatch
     # include/<project_namespace>/export.h
     export_h: str = _read("include", f"{project_name}", "export.h")
     assert f"#ifndef {project_macro_name}_STATIC_DEFINE" in export_h
-    assert f"    #include <{project_macro_name}/export_shared.h>" in export_h
-    assert f"    #include <{project_macro_name}/export_static.h>" in export_h
+    assert f"    #include <{project_name}/export_shared.h>" in export_h
+    assert f"    #include <{project_name}/export_static.h>" in export_h
     assert f"#endif // #ifndef {project_macro_name}_STATIC_DEFINE" in export_h
 
     # include/<project_namespace>/<project_name>.h
@@ -269,7 +269,7 @@ def test__render__shared_library(temp_dir: Path, monkeypatch: pytest.MonkeyPatch
     assert f"#endif // #ifndef {project_macro_name}_H" in project_name_h
 
     # src/CMakeLists.txt
-    src_cmake_lists_txt: str = _read("src_cmake_lists_txt", "CMakeLists.txt")
+    src_cmake_lists_txt: str = _read("src", "CMakeLists.txt")
     assert f"add_library({project_name} SHARED)" in src_cmake_lists_txt
     assert f"add_library({project_name} STATIC)" not in src_cmake_lists_txt
     assert f"add_executable({project_name})" not in src_cmake_lists_txt
@@ -309,7 +309,7 @@ def test__render__interface_library(temp_dir: Path, monkeypatch: pytest.MonkeyPa
     assert f"target_link_libraries({project_name}" in cmake_lists_txt
     assert f"{project_namespace}::{project_name}_headers" in cmake_lists_txt
     assert f"install(TARGETS {project_name}" in cmake_lists_txt
-    assert "add_subdirectory(src_cmake_lists_txt)" not in cmake_lists_txt
+    assert "add_subdirectory(src)" not in cmake_lists_txt
 
     # conanfile.py
     conanfile_py: str = _read("conanfile.py")
