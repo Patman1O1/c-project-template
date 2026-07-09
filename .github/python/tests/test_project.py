@@ -163,6 +163,7 @@ def test__render__static_library(temp_dir: Path, monkeypatch: pytest.MonkeyPatch
     project_name: str = project.name
     project_package_name: str = project.package_name
     project_macro_name: str = to_screaming_case(project_name)
+    project_namespace: str = project.namespace
 
     _assert_common_layout(project)
 
@@ -184,6 +185,23 @@ def test__render__static_library(temp_dir: Path, monkeypatch: pytest.MonkeyPatch
     assert f"        self.tool_requires(\"cmake/[>={CMAKE.version}]\")" in conanfile_py
     assert 'toolchain.variables["BUILD_SHARED_LIBS"]' in conanfile_py
 
+    # include/<project_namespace>
+    assert Path(temp_dir/"template"/"include"/f"{project_namespace}").exists()
+
+    # include/<project_namespace>/export.h
+    export_h: str = _read("include", f"{project_name}", "export.h")
+    assert f"#ifndef {project_macro_name}_STATIC_DEFINE" in export_h
+    assert f"    #include <{project_macro_name}/export_shared.h>" in export_h
+    assert f"    #include <{project_macro_name}/export_static.h>" in export_h
+    assert f"#endif // #ifndef {project_macro_name}_STATIC_DEFINE" in export_h
+
+    # include/<project_namespace>/<project_name>.h
+    project_name_h: str = _read("include", f"{project_name}", f"{project_name}.h")
+    assert Path(temp_dir/"template"/"include"/f"{project_namespace}"/f"{project_name}.h").exists()
+    assert f"#ifndef {project_macro_name}_H" in project_name_h
+    assert f"#define {project_macro_name}_H" in project_name_h
+    assert f"#endif // #ifndef {project_macro_name}_H" in project_name_h
+
     # src/CMakeLists.txt
     src_cmake_lists_txt: str = _read("src_cmake_lists_txt", "CMakeLists.txt")
     assert f"add_library({project_name} STATIC)" in src_cmake_lists_txt
@@ -200,12 +218,18 @@ def test__render__static_library(temp_dir: Path, monkeypatch: pytest.MonkeyPatch
     assert f"install(EXPORT {project_name}_export" in src_cmake_lists_txt
     assert "DESTINATION ${CMAKE_INSTALL_BINDIR}" not in src_cmake_lists_txt
 
+    # src/<project_name>.c
+    project_name_c: str = _read("src", f"{project_name}.c")
+    assert Path(temp_dir/"template"/"src"/f"{project_name}.c").exists()
+    assert f"#include \"{project_namespace}/{project_name}.h\"" in project_name_c
+
 
 def test__render__shared_library(temp_dir: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     project: Project = _render("Shared Library", TEST_NAMES["Shared Library"], temp_dir, monkeypatch)
     project_name: str = project.name
     project_package_name: str = project.package_name
     project_macro_name: str = to_screaming_case(project_name)
+    project_namespace: str = project.namespace
 
     _assert_common_layout(project)
 
@@ -227,6 +251,23 @@ def test__render__shared_library(temp_dir: Path, monkeypatch: pytest.MonkeyPatch
     assert f"        self.tool_requires(\"cmake/[>={CMAKE.version}]\")" in conanfile_py
     assert 'toolchain.variables["BUILD_SHARED_LIBS"]' in conanfile_py
 
+    # include/<project_namespace>
+    assert Path(temp_dir/"template"/"include"/f"{project_namespace}").exists()
+
+    # include/<project_namespace>/export.h
+    export_h: str = _read("include", f"{project_name}", "export.h")
+    assert f"#ifndef {project_macro_name}_STATIC_DEFINE" in export_h
+    assert f"    #include <{project_macro_name}/export_shared.h>" in export_h
+    assert f"    #include <{project_macro_name}/export_static.h>" in export_h
+    assert f"#endif // #ifndef {project_macro_name}_STATIC_DEFINE" in export_h
+
+    # include/<project_namespace>/<project_name>.h
+    project_name_h: str = _read("include", f"{project_name}", f"{project_name}.h")
+    assert Path(temp_dir/"template"/"include"/f"{project_namespace}"/f"{project_name}.h").exists()
+    assert f"#ifndef {project_macro_name}_H" in project_name_h
+    assert f"#define {project_macro_name}_H" in project_name_h
+    assert f"#endif // #ifndef {project_macro_name}_H" in project_name_h
+
     # src/CMakeLists.txt
     src_cmake_lists_txt: str = _read("src_cmake_lists_txt", "CMakeLists.txt")
     assert f"add_library({project_name} SHARED)" in src_cmake_lists_txt
@@ -243,10 +284,16 @@ def test__render__shared_library(temp_dir: Path, monkeypatch: pytest.MonkeyPatch
     assert f"install(EXPORT {project_name}_export" in src_cmake_lists_txt
     assert "DESTINATION ${CMAKE_INSTALL_BINDIR}" not in src_cmake_lists_txt
 
+    # src/<project_name>.c
+    project_name_c: str = _read("src", f"{project_name}.c")
+    assert Path(temp_dir / "template" / "src" / f"{project_name}.c").exists()
+    assert f"#include \"{project_namespace}/{project_name}.h\"" in project_name_c
+
 
 def test__render__interface_library(temp_dir: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     project: Project = _render("Interface Library", TEST_NAMES["Interface Library"], temp_dir, monkeypatch)
     project_name: str = project.name
+    project_macro_name: str = to_screaming_case(project_name)
     project_namespace: str = project.namespace
 
     _assert_common_layout(project)
@@ -270,15 +317,16 @@ def test__render__interface_library(temp_dir: Path, monkeypatch: pytest.MonkeyPa
     assert f"        self.tool_requires(\"cmake/[>={CMAKE.version}]\")" in conanfile_py
     assert 'toolchain.variables["BUILD_SHARED_LIBS"]' not in conanfile_py
 
-    # src/CMakeLists.txt
-    src_cmake_lists_txt: str = _read("src_cmake_lists_txt", "CMakeLists.txt")
-    assert f"add_executable({project_name})" not in src_cmake_lists_txt
-    assert f"add_library({project_name} STATIC)" not in src_cmake_lists_txt
-    assert f"add_library({project_name} SHARED)" not in src_cmake_lists_txt
-    assert "${CMAKE_CURRENT_SOURCE_DIR}/main.c" not in src_cmake_lists_txt
-    assert "include(GenerateExportHeader)" not in src_cmake_lists_txt
-    assert "DESTINATION ${CMAKE_INSTALL_BINDIR}" not in src_cmake_lists_txt
-    assert f"install(EXPORT {project_name}_export" not in src_cmake_lists_txt
+    # include/<project_namespace>
+    assert Path(temp_dir/"template"/"include"/f"{project_namespace}").exists()
+
+    # include/<project_namespace>/<project_name>.h
+    project_name_h: str = _read("include", f"{project_name}", f"{project_name}.h")
+    assert Path(temp_dir/"template"/"include"/f"{project_namespace}"/f"{project_name}.h").exists()
+    assert f"#ifndef {project_macro_name}_H" in project_name_h
+    assert f"#define {project_macro_name}_H" in project_name_h
+    assert f"#endif // #ifndef {project_macro_name}_H" in project_name_h
+
 
 def test__render__tests(temp_dir: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     project: Project = _render("Executable", TEST_NAMES["Executable"], temp_dir, monkeypatch)
