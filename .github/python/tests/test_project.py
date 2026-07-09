@@ -329,6 +329,10 @@ def test__render__test_package(temp_dir: Path, monkeypatch: pytest.MonkeyPatch) 
     assert f"# Dependencies: {project_namespace}::{project_name}" in src_cmake_lists_txt
     assert f"        {project_namespace}::{project_name}" in src_cmake_lists_txt
 
+    # test_package/src/main.c.j2
+    src_main_c: str = _read("test_package", "src", "main.c")
+    assert f"#include <{project_namespace}/{project_name}.h>" in src_main_c
+
 def test__render__name_namespace_package_substitution(temp_dir: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     project: Project = _render("Static Library", "My-Cool-Lib", temp_dir, monkeypatch)
 
