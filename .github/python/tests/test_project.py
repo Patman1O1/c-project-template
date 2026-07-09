@@ -127,44 +127,36 @@ def test__render__executable(temp_dir: Path, monkeypatch: pytest.MonkeyPatch) ->
     _assert_common_layout(project)
 
     # CMakeLists.txt
-    root: str = _read("CMakeLists.txt")
-    assert f'project("{project_name}"' in root
-    # BUILD_SHARED_LIBS: neither the Shared (ON) nor Static (OFF) arm fires.
-    assert "option(BUILD_SHARED_LIBS" not in root
-    assert 'option(BUILD_TESTS "Build the project\'s test suite" OFF)' in root
-    # Installation arm (type != Executable) is skipped for an executable.
-    assert "configure_package_config_file(" not in root
-    assert "write_basic_package_version_file(" not in root
-    assert "install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/include" not in root
-    # Interface-target arm is skipped; only the unconditional headers target remains.
-    assert f"add_library({project_name}_headers INTERFACE)" in root
-    assert f"add_library({project_name} INTERFACE)" not in root
-    # Subdirectory arm (type != Interface) is taken.
-    assert "add_subdirectory(src)" in root
+    cmake_lists_txt: str = _read("CMakeLists.txt")
+    assert f'project("{project_name}"' in cmake_lists_txt
+    assert "option(BUILD_SHARED_LIBS" not in cmake_lists_txt
+    assert 'option(BUILD_TESTS "Build the project\'s test suite" OFF)' in cmake_lists_txt
+    assert "configure_package_config_file(" not in cmake_lists_txt
+    assert "write_basic_package_version_file(" not in cmake_lists_txt
+    assert "install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/include" not in cmake_lists_txt
+    assert f"add_library({project_name}_headers INTERFACE)" in cmake_lists_txt
+    assert f"add_library({project_name} INTERFACE)" not in cmake_lists_txt
+    assert "add_subdirectory(src_cmake_lists_txt)" in cmake_lists_txt
 
     # conanfile.py
-    conan: str = _read("conanfile.py")
-    # No build_shared_libs option, default, or toolchain variable for an executable.
-    assert "build_shared_libs" not in conan
-    assert f"        self.tool_requires(\"cmake/[>={CMAKE.version}]\")" in conan
-    assert 'toolchain.variables["BUILD_SHARED_LIBS"]' not in conan
+    conanfile_py: str = _read("conanfile.py")
+    assert "build_shared_libs" not in conanfile_py
+    assert f"        self.tool_requires(\"cmake/[>={CMAKE.version}]\")" in conanfile_py
+    assert 'toolchain.variables["BUILD_SHARED_LIBS"]' not in conanfile_py
 
     # src/CMakeLists.txt
-    src: str = _read("src", "CMakeLists.txt")
-    # Executable target-definition arm.
-    assert f"add_executable({project_name})" in src
-    assert f"add_executable({project_namespace}::{project_name} ALIAS {project_name})" in src
-    assert f"add_library({project_name} STATIC)" not in src
-    assert f"add_library({project_name} SHARED)" not in src
-    # main.c source arm (Executable only).
-    assert "${CMAKE_CURRENT_SOURCE_DIR}/main.c" in src
-    # Executable installation arm taken; library export arm skipped.
-    assert f"install(TARGETS {project_name} {project_name}_headers" in src
-    assert "DESTINATION ${CMAKE_INSTALL_BINDIR}" in src
-    assert "include(GenerateExportHeader)" not in src
-    assert "export_shared.h" not in src
-    assert "export_static.h" not in src
-    assert f"install(EXPORT {project_name}_export" not in src
+    src_cmake_lists_txt: str = _read("src_cmake_lists_txt", "CMakeLists.txt")
+    assert f"add_executable({project_name})" in src_cmake_lists_txt
+    assert f"add_executable({project_namespace}::{project_name} ALIAS {project_name})" in src_cmake_lists_txt
+    assert f"add_library({project_name} STATIC)" not in src_cmake_lists_txt
+    assert f"add_library({project_name} SHARED)" not in src_cmake_lists_txt
+    assert "${CMAKE_CURRENT_SOURCE_DIR}/main.c" in src_cmake_lists_txt
+    assert f"install(TARGETS {project_name} {project_name}_headers" in src_cmake_lists_txt
+    assert "DESTINATION ${CMAKE_INSTALL_BINDIR}" in src_cmake_lists_txt
+    assert "include(GenerateExportHeader)" not in src_cmake_lists_txt
+    assert "export_shared.h" not in src_cmake_lists_txt
+    assert "export_static.h" not in src_cmake_lists_txt
+    assert f"install(EXPORT {project_name}_export" not in src_cmake_lists_txt
 
 def test__render__static_library(temp_dir: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     project: Project = _render("Static Library", TEST_NAMES["Static Library"], temp_dir, monkeypatch)
@@ -175,40 +167,38 @@ def test__render__static_library(temp_dir: Path, monkeypatch: pytest.MonkeyPatch
     _assert_common_layout(project)
 
     # CMakeLists.txt
-    root: str = _read("CMakeLists.txt")
-    assert 'option(BUILD_SHARED_LIBS "Build the project as a shared library" OFF)' in root
-    assert 'option(BUILD_SHARED_LIBS "Build the project as a shared library" ON)' not in root
-    assert "configure_package_config_file(" in root
-    assert "write_basic_package_version_file(" in root
-    assert "install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/include" in root
-    assert f"add_library({project_name} INTERFACE)" not in root
-    assert "add_subdirectory(src)" in root
+    cmake_lists_txt: str = _read("CMakeLists.txt")
+    assert 'option(BUILD_SHARED_LIBS "Build the project as a shared library" OFF)' in cmake_lists_txt
+    assert 'option(BUILD_SHARED_LIBS "Build the project as a shared library" ON)' not in cmake_lists_txt
+    assert "configure_package_config_file(" in cmake_lists_txt
+    assert "write_basic_package_version_file(" in cmake_lists_txt
+    assert "install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/include" in cmake_lists_txt
+    assert f"add_library({project_name} INTERFACE)" not in cmake_lists_txt
+    assert "add_subdirectory(src_cmake_lists_txt)" in cmake_lists_txt
 
     # conanfile.py
-    conan: str = _read("conanfile.py")
-    assert '"build_shared_libs": [True, False]' in conan
-    assert '"build_shared_libs": False,' in conan
-    assert '"build_shared_libs": True,' not in conan
-    assert f"        self.tool_requires(\"cmake/[>={CMAKE.version}]\")" in conan
-    assert 'toolchain.variables["BUILD_SHARED_LIBS"]' in conan
+    conanfile_py: str = _read("conanfile.py")
+    assert '"build_shared_libs": [True, False]' in conanfile_py
+    assert '"build_shared_libs": False,' in conanfile_py
+    assert '"build_shared_libs": True,' not in conanfile_py
+    assert f"        self.tool_requires(\"cmake/[>={CMAKE.version}]\")" in conanfile_py
+    assert 'toolchain.variables["BUILD_SHARED_LIBS"]' in conanfile_py
 
     # src/CMakeLists.txt
-    src: str = _read("src", "CMakeLists.txt")
-    assert f"add_library({project_name} STATIC)" in src
-    assert f"add_library({project_name} SHARED)" not in src
-    assert f"add_executable({project_name})" not in src
-    assert "${CMAKE_CURRENT_SOURCE_DIR}/main.c" not in src
-    # Export-configuration arm; both static and shared halves are emitted.
-    assert "include(GenerateExportHeader)" in src
-    assert "set(EXPORT_HEADER_FILE export_shared.h)" in src
-    assert "set(EXPORT_HEADER_FILE export_static.h)" in src
-    assert f"{project_package_name}SharedTargets.cmake" in src
-    assert f"{project_package_name}StaticTargets.cmake" in src
-    assert f"{project_macro_name}_STATIC_DEFINE" in src
-    assert f"generate_export_header({project_name}" in src
-    assert f"install(EXPORT {project_name}_export" in src
-    # Executable install arm not taken.
-    assert "DESTINATION ${CMAKE_INSTALL_BINDIR}" not in src
+    src_cmake_lists_txt: str = _read("src_cmake_lists_txt", "CMakeLists.txt")
+    assert f"add_library({project_name} STATIC)" in src_cmake_lists_txt
+    assert f"add_library({project_name} SHARED)" not in src_cmake_lists_txt
+    assert f"add_executable({project_name})" not in src_cmake_lists_txt
+    assert "${CMAKE_CURRENT_SOURCE_DIR}/main.c" not in src_cmake_lists_txt
+    assert "include(GenerateExportHeader)" in src_cmake_lists_txt
+    assert "set(EXPORT_HEADER_FILE export_shared.h)" in src_cmake_lists_txt
+    assert "set(EXPORT_HEADER_FILE export_static.h)" in src_cmake_lists_txt
+    assert f"{project_package_name}SharedTargets.cmake" in src_cmake_lists_txt
+    assert f"{project_package_name}StaticTargets.cmake" in src_cmake_lists_txt
+    assert f"{project_macro_name}_STATIC_DEFINE" in src_cmake_lists_txt
+    assert f"generate_export_header({project_name}" in src_cmake_lists_txt
+    assert f"install(EXPORT {project_name}_export" in src_cmake_lists_txt
+    assert "DESTINATION ${CMAKE_INSTALL_BINDIR}" not in src_cmake_lists_txt
 
 
 def test__render__shared_library(temp_dir: Path, monkeypatch: pytest.MonkeyPatch) -> None:
@@ -220,38 +210,38 @@ def test__render__shared_library(temp_dir: Path, monkeypatch: pytest.MonkeyPatch
     _assert_common_layout(project)
 
     # CMakeLists.txt
-    root: str = _read("CMakeLists.txt")
-    assert 'option(BUILD_SHARED_LIBS "Build the project as a shared library" ON)' in root
-    assert 'option(BUILD_SHARED_LIBS "Build the project as a shared library" OFF)' not in root
-    assert "configure_package_config_file(" in root
-    assert "write_basic_package_version_file(" in root
-    assert "install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/include" in root
-    assert f"add_library({project_name} INTERFACE)" not in root
-    assert "add_subdirectory(src)" in root
+    cmake_lists_txt: str = _read("CMakeLists.txt")
+    assert 'option(BUILD_SHARED_LIBS "Build the project as a shared library" ON)' in cmake_lists_txt
+    assert 'option(BUILD_SHARED_LIBS "Build the project as a shared library" OFF)' not in cmake_lists_txt
+    assert "configure_package_config_file(" in cmake_lists_txt
+    assert "write_basic_package_version_file(" in cmake_lists_txt
+    assert "install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/include" in cmake_lists_txt
+    assert f"add_library({project_name} INTERFACE)" not in cmake_lists_txt
+    assert "add_subdirectory(src_cmake_lists_txt)" in cmake_lists_txt
 
     # conanfile.py
-    conan: str = _read("conanfile.py")
-    assert '"build_shared_libs": [True, False]' in conan
-    assert '"build_shared_libs": True,' in conan
-    assert '"build_shared_libs": False,' not in conan
-    assert f"        self.tool_requires(\"cmake/[>={CMAKE.version}]\")" in conan
-    assert 'toolchain.variables["BUILD_SHARED_LIBS"]' in conan
+    conanfile_py: str = _read("conanfile.py")
+    assert '"build_shared_libs": [True, False]' in conanfile_py
+    assert '"build_shared_libs": True,' in conanfile_py
+    assert '"build_shared_libs": False,' not in conanfile_py
+    assert f"        self.tool_requires(\"cmake/[>={CMAKE.version}]\")" in conanfile_py
+    assert 'toolchain.variables["BUILD_SHARED_LIBS"]' in conanfile_py
 
     # src/CMakeLists.txt
-    src: str = _read("src", "CMakeLists.txt")
-    assert f"add_library({project_name} SHARED)" in src
-    assert f"add_library({project_name} STATIC)" not in src
-    assert f"add_executable({project_name})" not in src
-    assert "${CMAKE_CURRENT_SOURCE_DIR}/main.c" not in src
-    assert "include(GenerateExportHeader)" in src
-    assert "set(EXPORT_HEADER_FILE export_shared.h)" in src
-    assert "set(EXPORT_HEADER_FILE export_static.h)" in src
-    assert f"{project_package_name}SharedTargets.cmake" in src
-    assert f"{project_package_name}StaticTargets.cmake" in src
-    assert f"{project_macro_name}_STATIC_DEFINE" in src
-    assert f"generate_export_header({project_name}" in src
-    assert f"install(EXPORT {project_name}_export" in src
-    assert "DESTINATION ${CMAKE_INSTALL_BINDIR}" not in src
+    src_cmake_lists_txt: str = _read("src_cmake_lists_txt", "CMakeLists.txt")
+    assert f"add_library({project_name} SHARED)" in src_cmake_lists_txt
+    assert f"add_library({project_name} STATIC)" not in src_cmake_lists_txt
+    assert f"add_executable({project_name})" not in src_cmake_lists_txt
+    assert "${CMAKE_CURRENT_SOURCE_DIR}/main.c" not in src_cmake_lists_txt
+    assert "include(GenerateExportHeader)" in src_cmake_lists_txt
+    assert "set(EXPORT_HEADER_FILE export_shared.h)" in src_cmake_lists_txt
+    assert "set(EXPORT_HEADER_FILE export_static.h)" in src_cmake_lists_txt
+    assert f"{project_package_name}SharedTargets.cmake" in src_cmake_lists_txt
+    assert f"{project_package_name}StaticTargets.cmake" in src_cmake_lists_txt
+    assert f"{project_macro_name}_STATIC_DEFINE" in src_cmake_lists_txt
+    assert f"generate_export_header({project_name}" in src_cmake_lists_txt
+    assert f"install(EXPORT {project_name}_export" in src_cmake_lists_txt
+    assert "DESTINATION ${CMAKE_INSTALL_BINDIR}" not in src_cmake_lists_txt
 
 
 def test__render__interface_library(temp_dir: Path, monkeypatch: pytest.MonkeyPatch) -> None:
@@ -261,36 +251,34 @@ def test__render__interface_library(temp_dir: Path, monkeypatch: pytest.MonkeyPa
 
     _assert_common_layout(project)
 
-    # root CMakeLists.txt
-    root: str = _read("CMakeLists.txt")
-    assert "option(BUILD_SHARED_LIBS" not in root
-    assert "configure_package_config_file(" in root
-    assert "write_basic_package_version_file(" in root
-    assert "install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/include" in root
-    # Interface-target arm taken: target, alias, deps, properties, install.
-    assert f"add_library({project_name} INTERFACE)" in root
-    assert f"add_library({project_namespace}::{project_name} ALIAS {project_name})" in root
-    assert f"target_link_libraries({project_name}" in root
-    assert f"{project_namespace}::{project_name}_headers" in root
-    assert f"install(TARGETS {project_name}" in root
-    # src is not added for a header-only library.
-    assert "add_subdirectory(src)" not in root
+    # CMakeLists.txt
+    cmake_lists_txt: str = _read("CMakeLists.txt")
+    assert "option(BUILD_SHARED_LIBS" not in cmake_lists_txt
+    assert "configure_package_config_file(" in cmake_lists_txt
+    assert "write_basic_package_version_file(" in cmake_lists_txt
+    assert "install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/include" in cmake_lists_txt
+    assert f"add_library({project_name} INTERFACE)" in cmake_lists_txt
+    assert f"add_library({project_namespace}::{project_name} ALIAS {project_name})" in cmake_lists_txt
+    assert f"target_link_libraries({project_name}" in cmake_lists_txt
+    assert f"{project_namespace}::{project_name}_headers" in cmake_lists_txt
+    assert f"install(TARGETS {project_name}" in cmake_lists_txt
+    assert "add_subdirectory(src_cmake_lists_txt)" not in cmake_lists_txt
 
     # conanfile.py
-    conan: str = _read("conanfile.py")
-    assert "build_shared_libs" not in conan
-    assert f"        self.tool_requires(\"cmake/[>={CMAKE.version}]\")" in conan
-    assert 'toolchain.variables["BUILD_SHARED_LIBS"]' not in conan
+    conanfile_py: str = _read("conanfile.py")
+    assert "build_shared_libs" not in conanfile_py
+    assert f"        self.tool_requires(\"cmake/[>={CMAKE.version}]\")" in conanfile_py
+    assert 'toolchain.variables["BUILD_SHARED_LIBS"]' not in conanfile_py
 
     # src/CMakeLists.txt
-    src: str = _read("src", "CMakeLists.txt")
-    assert f"add_executable({project_name})" not in src
-    assert f"add_library({project_name} STATIC)" not in src
-    assert f"add_library({project_name} SHARED)" not in src
-    assert "${CMAKE_CURRENT_SOURCE_DIR}/main.c" not in src
-    assert "include(GenerateExportHeader)" not in src
-    assert "DESTINATION ${CMAKE_INSTALL_BINDIR}" not in src
-    assert f"install(EXPORT {project_name}_export" not in src
+    src_cmake_lists_txt: str = _read("src_cmake_lists_txt", "CMakeLists.txt")
+    assert f"add_executable({project_name})" not in src_cmake_lists_txt
+    assert f"add_library({project_name} STATIC)" not in src_cmake_lists_txt
+    assert f"add_library({project_name} SHARED)" not in src_cmake_lists_txt
+    assert "${CMAKE_CURRENT_SOURCE_DIR}/main.c" not in src_cmake_lists_txt
+    assert "include(GenerateExportHeader)" not in src_cmake_lists_txt
+    assert "DESTINATION ${CMAKE_INSTALL_BINDIR}" not in src_cmake_lists_txt
+    assert f"install(EXPORT {project_name}_export" not in src_cmake_lists_txt
 
 def test__render__tests(temp_dir: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     project: Project = _render("Executable", TEST_NAMES["Executable"], temp_dir, monkeypatch)
