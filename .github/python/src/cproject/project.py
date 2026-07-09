@@ -77,14 +77,14 @@ class Project(object):
         os.rename(filepath, filepath.with_name(filepath.name.removesuffix(".j2")))
 
     def render(self, cmake: CMake) -> None:  # raises NotADirectoryError, ValueError, jinja2.TemplateNotFound
-        # Recursively render every *.j2 under the tree. rglob recurses;
-        # sorted() materializes the listing before _render() renames files.
-        for filepath in sorted(Project.ROOT.rglob("*.j2")):
-            self._render(filepath, cmake)
-
         for path in sorted(Project.ROOT.rglob("*"), key=lambda p: len(p.parts), reverse=True):
             if "{{" not in path.name:
                 continue
             resolved: str = self._env.from_string(path.name).render(project=self, cmake=cmake)
             if resolved and resolved != path.name:
                 path.rename(path.with_name(resolved))
+
+        # Recursively render every *.j2 under the tree. rglob recurses;
+        # sorted() materializes the listing before _render() renames files.
+        for filepath in sorted(Project.ROOT.rglob("*.j2")):
+            self._render(filepath, cmake)
