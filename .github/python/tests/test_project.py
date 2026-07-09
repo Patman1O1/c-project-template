@@ -315,6 +315,7 @@ def test__render__tests(temp_dir: Path, monkeypatch: pytest.MonkeyPatch) -> None
 def test__render__test_package(temp_dir: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     project: Project = _render("Executable", TEST_NAMES["Executable"], temp_dir, monkeypatch)
     project_name: str = project.name
+    project_version: str = project.version
     project_package_name: str = project.package_name
     project_namespace: str = project.namespace
 
@@ -323,6 +324,11 @@ def test__render__test_package(temp_dir: Path, monkeypatch: pytest.MonkeyPatch) 
     assert f"cmake_minimum_required(VERSION {CMAKE.version}" in cmake_lists_txt
     assert f"    set(CMAKE_C_STANDARD {CMAKE.c_std})" in cmake_lists_txt
     assert f"find_package({project_package_name} REQUIRED}}" in cmake_lists_txt
+
+    # test_package/conanfile.py
+    conanfile_py: str = _read("test_package", "conanfile.py")
+    assert f"        self.requires(\"{project_name}/{project_version}\")" in conanfile_py
+    assert f"        self.tool_requires(\"cmake/[>={CMAKE.version}]\")" in conanfile_py
 
     # test_package/src/CMakeLists.txt
     src_cmake_lists_txt: str = _read("test_package", "src", "CMakeLists.txt")
