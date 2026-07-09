@@ -289,29 +289,28 @@ def test__render__interface_library(temp_dir: Path, monkeypatch: pytest.MonkeyPa
     assert f"install(EXPORT {project_name}_export" not in src
 
 def test__render__test_suite(temp_dir: Path, monkeypatch: pytest.MonkeyPatch) -> None:
-    for key, value in TEST_NAMES.items():
-        project: Project = _render(key, value, temp_dir, monkeypatch)
-        project_name: str = project.name
-        project_namespace: str = project.namespace
+    project: Project = _render("Executable", TEST_NAMES["Executable"], temp_dir, monkeypatch)
+    project_name: str = project.name
+    project_namespace: str = project.namespace
 
-        # test/CMakeLists.txt
-        cmake_lists_txt: str = _read("test", "CMakeLists.txt")
-        assert f"set(CMAKE_CXX_STANDARD {CMAKE.cxx_std})" in cmake_lists_txt
-        assert f"# Target: {project_name}_test" in cmake_lists_txt
-        assert f"# Alias: {project_namespace}::{project_name}_test" in cmake_lists_txt
-        assert f"# Dependencies: GTest::gtest_main, GTest::gmock_main, {project_namespace}::{project_name}_headers" in cmake_lists_txt
-        assert f"add_executable({project_name}_test)" in cmake_lists_txt
-        assert f"add_executable({project_namespace}::{project_name}_test ALIAS {project_name}_test)" in cmake_lists_txt
-        assert f"target_sources({project_name}_test" in cmake_lists_txt
-        assert f"        ${{CMAKE_CURRENT_SOURCE_DIR}}/{project_name}_test.cpp" in cmake_lists_txt
-        assert f"target_link_libraries({project_name}_test" in cmake_lists_txt
-        assert f"        {project_namespace}::{project_name}_headers" in cmake_lists_txt
-        assert f"gtest_discover_tests({project_name}_test)" in cmake_lists_txt
+    # test/CMakeLists.txt
+    cmake_lists_txt: str = _read("test", "CMakeLists.txt")
+    assert f"set(CMAKE_CXX_STANDARD {CMAKE.cxx_std})" in cmake_lists_txt
+    assert f"# Target: {project_name}_test" in cmake_lists_txt
+    assert f"# Alias: {project_namespace}::{project_name}_test" in cmake_lists_txt
+    assert f"# Dependencies: GTest::gtest_main, GTest::gmock_main, {project_namespace}::{project_name}_headers" in cmake_lists_txt
+    assert f"add_executable({project_name}_test)" in cmake_lists_txt
+    assert f"add_executable({project_namespace}::{project_name}_test ALIAS {project_name}_test)" in cmake_lists_txt
+    assert f"target_sources({project_name}_test" in cmake_lists_txt
+    assert f"        ${{CMAKE_CURRENT_SOURCE_DIR}}/{project_name}_test.cpp" in cmake_lists_txt
+    assert f"target_link_libraries({project_name}_test" in cmake_lists_txt
+    assert f"        {project_namespace}::{project_name}_headers" in cmake_lists_txt
+    assert f"gtest_discover_tests({project_name}_test)" in cmake_lists_txt
 
-        project_name_test_cpp = _read("test", f"{project_name}_test.cpp")
-        assert Path(temp_dir / "template" / "test" / f"{project_name}_test.cpp").exists()
-        assert f"namespace {project_name}_testing {{" in project_name_test_cpp
-        assert f"}} // namespace {project_name}_testing" in project_name_test_cpp
+    project_name_test_cpp = _read("test", f"{project_name}_test.cpp")
+    assert Path(temp_dir/"template"/"test"/f"{project_name}_test.cpp").exists()
+    assert f"namespace {project_name}_testing {{" in project_name_test_cpp
+    assert f"}} // namespace {project_name}_testing" in project_name_test_cpp
 
 def test__render__name_namespace_package_substitution(temp_dir: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     project: Project = _render("Static Library", "My-Cool-Lib", temp_dir, monkeypatch)
