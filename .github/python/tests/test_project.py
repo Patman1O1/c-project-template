@@ -35,8 +35,8 @@ COMMON_LAYOUT: Final[tuple[str, ...]] = (
     "src/CMakeLists.txt",
     "src/main.c",
     "src/{name}.c",
-    "test/CMakeLists.txt",
-    "test/{name}_test.cpp",
+    "tests/CMakeLists.txt",
+    "tests/{name}_test.cpp",
     "test_package/CMakeLists.txt",
     "test_package/conanfile.py",
     "test_package/src/CMakeLists.txt",
@@ -294,7 +294,7 @@ def test__render__test_suite(temp_dir: Path, monkeypatch: pytest.MonkeyPatch) ->
     project_namespace: str = project.namespace
 
     # test/CMakeLists.txt
-    cmake_lists_txt: str = _read("test", "CMakeLists.txt")
+    cmake_lists_txt: str = _read("tests", "CMakeLists.txt")
     assert f"set(CMAKE_CXX_STANDARD {CMAKE.cxx_std})" in cmake_lists_txt
     assert f"# Target: {project_name}_test" in cmake_lists_txt
     assert f"# Alias: {project_namespace}::{project_name}_test" in cmake_lists_txt
@@ -307,10 +307,27 @@ def test__render__test_suite(temp_dir: Path, monkeypatch: pytest.MonkeyPatch) ->
     assert f"        {project_namespace}::{project_name}_headers" in cmake_lists_txt
     assert f"gtest_discover_tests({project_name}_test)" in cmake_lists_txt
 
-    project_name_test_cpp = _read("test", f"{project_name}_test.cpp")
-    assert Path(temp_dir/"template"/"test"/f"{project_name}_test.cpp").exists()
+    project_name_test_cpp = _read("tests", f"{project_name}_test.cpp")
+    assert Path(temp_dir/"template"/"tests"/f"{project_name}_test.cpp").exists()
     assert f"namespace {project_name}_testing {{" in project_name_test_cpp
     assert f"}} // namespace {project_name}_testing" in project_name_test_cpp
+
+def test__render__test_package(temp_dir: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    project: Project = _render("Executable", TEST_NAMES["Executable"], temp_dir, monkeypatch)
+    project_name: str = project.name
+    project_package_name: str = project.package_name
+    project_namespace: str = project.namespace
+
+    # test_package/CMakeLists.txt
+    cmake_lists_txt: str = _read("test_package", "CMakeLists.txt")
+    assert f"cmake_minimum_required(VERSION {CMAKE.version}" in cmake_lists_txt
+    assert f"    set(CMAKE_C_STANDARD {CMAKE.c_std})" in cmake_lists_txt
+    assert f"find_package({project_package_name} REQUIRED}}" in cmake_lists_txt
+
+    # test_package/src/CMakeLists.txt
+    src_cmake_lists_txt: str = _read("test_package", "src", "CMakeLists.txt")
+    assert f"# Dependencies: {project_namespace}::{project_name}" in src_cmake_lists_txt
+    assert f"        {project_namespace}::{project_name}" in src_cmake_lists_txt
 
 def test__render__name_namespace_package_substitution(temp_dir: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     project: Project = _render("Static Library", "My-Cool-Lib", temp_dir, monkeypatch)
