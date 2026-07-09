@@ -82,15 +82,9 @@ class Project(object):
         for filepath in sorted(Project.ROOT.rglob("*.j2")):
             self._render(filepath, cmake)
 
-        # Rename directories
-        os.rename(Project.ROOT / "include" / "{{ project.namespace }}", Project.ROOT / "include" / self.namespace)
-
-        # Rename files
-        os.rename(Project.ROOT / "cmake" / "{{ project.package_name }}Config.cmake.in",
-                  Project.ROOT / "cmake" / f"{self.package_name}Config.cmake.in")
-        os.rename(Project.ROOT / "include" / self.namespace / "{{ project.name }}.h",
-                  Project.ROOT / "include" / self.namespace / f"{self.name}.h")
-        os.rename(Project.ROOT / "src" / "{{ project.name }}.c",
-                  Project.ROOT / "src" / f"{self.name}.c")
-        os.rename(Project.ROOT / "test" / "{{ project.name }}_test.cpp",
-                  Project.ROOT / "test" / f"{self.name}_test.cpp")
+        for path in sorted(Project.ROOT.rglob("*"), key=lambda p: len(p.parts), reverse=True):
+            if "{{" not in path.name:
+                continue
+            resolved: str = self._env.from_string(path.name).render(project=self, cmake=cmake)
+            if resolved and resolved != path.name:
+                path.rename(path.with_name(resolved))
