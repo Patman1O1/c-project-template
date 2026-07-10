@@ -22,22 +22,22 @@ add_library({{ project.name }} SHARED)
 
 # Target alias
 add_library({{ project.namespace }}::{{ project.name }} ALIAS {{ project.name }})
-{%- endif %}
+{% endif %}
 
 # Target sources
 target_sources({{ project.name }}
     PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}/{{ project.name }}.c
-        {% if project.type == "Executable" %}
-        ${CMAKE_CURRENT_SOURCE_DIR}/main.c
-        {%- endif %}
 )
 
+{% if project.type == "Static Library" or project.type == "Shared Library" %}
 # Target dependencies
 target_link_libraries({{ project.name }}
     PUBLIC
         {{ project.namespace }}::{{ project.name }}_headers
 )
+{% endif %}
+
 {% if project.type == "Executable" %}
 # Target installation
 if(NOT CMAKE_SKIP_INSTALL_RULES)
