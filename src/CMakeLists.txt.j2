@@ -43,7 +43,7 @@ target_link_libraries({{ project.name }}
 if(NOT CMAKE_SKIP_INSTALL_RULES)
     include(GNUInstallDirs)
 
-    install(TARGETS {{ project.name }} {{ project.name }}_headers
+    install(TARGETS {{ project.name }}
             RUNTIME COMPONENT {{ project.name }}
             DESTINATION ${CMAKE_INSTALL_BINDIR}
     )
@@ -94,6 +94,7 @@ generate_export_header({{ project.name }}
 target_include_directories({{ project.name }}
     PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/include>
+        $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
 )
 
 if(NOT CMAKE_SKIP_INSTALL_RULES)
