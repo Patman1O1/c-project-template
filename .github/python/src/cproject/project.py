@@ -1,7 +1,6 @@
 # Builtin Imports
-from typing import Final
 from pathlib import Path
-import os
+import shutil
 
 # Pip Imports
 from jinja2 import Template, Environment, FileSystemLoader
@@ -70,6 +69,13 @@ class Project(object):
         self._env.filters["to_pascal_case"] = to_pascal_case
 
     def render(self, cmake: CMake) -> None:  # raises ValueError, jinja2.TemplateNotFound
+        # Remove irrelevant directories based on the project type
+        if self.type == "Executable":
+            shutil.rmtree(Project.ROOT/"include")
+            shutil.rmtree(Project.ROOT/"test_package")
+        elif self.type == "Interface Library":
+            shutil.rmtree(Project.ROOT/"src")
+
         entries: list[Path] = sorted(Project.ROOT.rglob("*"), key=lambda p: len(p.parts), reverse=True)
 
         for path in entries:
