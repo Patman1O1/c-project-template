@@ -35,6 +35,10 @@ def main(project_name: str,
 
         # Render the project
         project.render(CMake(version="4.3.0", c_std=23, cxx_std=23))
+        if project_type == "Executable":
+            os.remove(Project.ROOT/"include")
+        elif project_type == "Interface Library":
+            os.remove(Project.ROOT/"src")
         return 0
     except Exception as e:
         traceback.print_exception(e)
