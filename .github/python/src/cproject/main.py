@@ -32,15 +32,16 @@ def main(project_name: str,
                                    project_version,
                                    project_description)
 
-        # Remove irrelevant directories based on the project type
-        if project_type == "Executable":
-            shutil.rmtree(Project.ROOT/"include")
-            shutil.rmtree(Project.ROOT/"test_package")
-        elif project_type == "Interface Library":
-            shutil.rmtree(Project.ROOT/"src")
-
         # Render the project
         project.render(CMake(version="4.3.0", c_std=23, cxx_std=23))
+
+        # Remove irrelevant directories based on the project type
+        if project_type == "Executable":
+            shutil.rmtree(Project.ROOT / "include")
+            shutil.rmtree(Project.ROOT / "test_package")
+        elif project_type == "Interface Library":
+            shutil.rmtree(Project.ROOT / "src")
+
         return 0
     except Exception as e:
         traceback.print_exception(e)
