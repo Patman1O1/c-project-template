@@ -5,7 +5,7 @@
 int main(void) {
     return 0;
 }
-{%- elif project.type == "Static Library" or project.type == "Shared Library" -%}
+{% elif project.type == "Static Library" or project.type == "Shared Library" %}
 // Local Includes
 #include "{{ project.namespace }}/{{ project.name }}.h"
-{%- endif -%}
+{% endif %}
