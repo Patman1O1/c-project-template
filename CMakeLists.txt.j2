@@ -90,6 +90,7 @@ if(NOT CMAKE_SKIP_INSTALL_RULES)
 endif()
 {% endif %}
 
+{% if project.type != "Executable" %}
 #-----------------------------------------------------------------------------------------------------------------------
 # Target: {{ project.name }}_headers
 # Alias: {{ project.namespace }}::{{ project.name }}_headers
@@ -107,6 +108,7 @@ target_include_directories({{ project.name }}_headers
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
         $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
 )
+{% endif %}
 
 {% if project.type == "Interface Library" %}
 #-----------------------------------------------------------------------------------------------------------------------
