@@ -1,8 +1,7 @@
 # Builtin Imports
-from pathlib import Path
 import sys
-import os
 import traceback
+import shutil
 
 # Pip Imports
 import click
@@ -36,9 +35,9 @@ def main(project_name: str,
         # Render the project
         project.render(CMake(version="4.3.0", c_std=23, cxx_std=23))
         if project_type == "Executable":
-            os.removedirs(Project.ROOT/"include")
+            shutil.rmtree(Project.ROOT/"include")
         elif project_type == "Interface Library":
-            os.removedirs(Project.ROOT/"src")
+            shutil.rmtree(Project.ROOT/"src")
         return 0
     except Exception as e:
         traceback.print_exception(e)
