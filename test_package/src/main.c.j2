@@ -1,4 +1,6 @@
+{% if project.type != "Executable" %}
 #include <{{ project.namespace }}/{{ project.name }}.h>
+{% endif %}
 
 int main(void) {
     return 0;
