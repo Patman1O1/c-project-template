@@ -1,11 +1,11 @@
 {%- if project.type == "Executable" -%}
-    // ISO Includes
-    #include <stddef.h>
+// ISO Includes
+#include <stddef.h>
 
-    int main(void) {
-        return 0;
-    }
+int main(void) {
+    return 0;
+}
 {%- elif project.type == "Static Library" or project.type == "Shared Library" -%}
-    // Local Includes
-    #include "{{ project.namespace }}/{{ project.name }}.h"
+// Local Includes
+#include "{{ project.namespace }}/{{ project.name }}.h"
 {%- endif -%}
