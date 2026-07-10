@@ -16,7 +16,11 @@ enable_testing()
 # Target: {{ project.name }}_test
 # Alias: {{ project.namespace }}::{{ project.name }}_test
 # Type: Executable
+{% if project.type != "Executable" %}
 # Dependencies: GTest::gtest_main, GTest::gmock_main, {{ project.namespace }}::{{ project.name }}_headers
+{% else %}
+# Dependencies: GTest::gtest_main, GTest::gmock_main
+{% endif %}
 #-----------------------------------------------------------------------------------------------------------------------
 # Target definition
 add_executable({{ project.name }}_test)
@@ -27,13 +31,18 @@ add_executable({{ project.namespace }}::{{ project.name }}_test ALIAS {{ project
 # Target sources
 target_sources({{ project.name }}_test
     PRIVATE
+{% if project.type == "Static Library" or project.type == "Shared Library" %}
+        ${CMAKE_SOURCE_DIR}/src/{{ project.name }}.c
+{% endif %}
         ${CMAKE_CURRENT_SOURCE_DIR}/{{ project.name }}_test.cpp
 )
 
 # Target dependencies
 target_link_libraries({{ project.name }}_test
     PRIVATE
+{% if project.type != "Executable" %}
         {{ project.namespace }}::{{ project.name }}_headers
+{% endif %}
         GTest::gtest_main
         GTest::gmock_main
 )
