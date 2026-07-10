@@ -2,6 +2,11 @@
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
 
+{% if project.type != "Executable" %}
+// Local Includes
+#include <{{ project.namespace }}/{{ project.name }}.h>
+{% endif %}
+
 namespace {{ project.name }}_testing {
 
 } // namespace {{ project.name }}_testing
