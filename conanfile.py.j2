@@ -20,9 +20,9 @@ class {{ project.package_name }}(ConanFile):
     }
 
     default_options = {
-        {% if project.type == "Static Library" -%}
+        {% if project.type == "Static Library" %}
         "build_shared_libs": False,
-        {% elif project.type == "Shared Library" -%}
+        {% elif project.type == "Shared Library" %}
         "build_shared_libs": True,
         {% endif %}
         "build_tests": False
