@@ -28,7 +28,7 @@ add_library({{ project.namespace }}::{{ project.name }} ALIAS {{ project.name }}
 target_sources({{ project.name }}
     PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}/{{ project.name }}.c
-        {%- if project.type == "Executable" %}
+        {% if project.type == "Executable" %}
         ${CMAKE_CURRENT_SOURCE_DIR}/main.c
         {%- endif %}
 )
