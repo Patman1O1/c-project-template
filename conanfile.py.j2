@@ -13,18 +13,18 @@ class {{ project.package_name }}(ConanFile):
     exports_sources = ("CMakeLists.txt", "cmake/*", "src/*")
 
     options = {
-        {%- if project.type == "Static Library" or project.type == "Shared Library" %}
+        {%- if project.type == "Static Library" or project.type == "Shared Library" -%}
         "build_shared_libs": [True, False],
-        {%- endif %}
+        {%- endif -%}
         "build_tests": [True, False]
     }
 
     default_options = {
-        {%- if project.type == "Static Library" %}
+        {%- if project.type == "Static Library" -%}
         "build_shared_libs": False,
-        {%- elif project.type == "Shared Library" %}
+        {%- elif project.type == "Shared Library" -%}
         "build_shared_libs": True,
-        {%- endif %}
+        {%- endif -%}
         "build_tests": False
     }
 
