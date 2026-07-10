@@ -53,9 +53,8 @@ endif()
 include(GenerateExportHeader)
 
 if(BUILD_SHARED_LIBS)
-    # Export file names for a shared build
+    # Export file name for a shared build
     set(EXPORT_HEADER_FILE export_shared.h)
-    set(EXPORT_TARGET_FILE {{ project.package_name }}SharedTargets.cmake)
 
     # Primary target properties
     set_target_properties({{ project.name }} PROPERTIES
@@ -65,10 +64,15 @@ if(BUILD_SHARED_LIBS)
             C_VISIBILITY_PRESET hidden
             VISIBILITY_INLINES_HIDDEN ON
     )
+
+    # Define compile definitions
+    target_compile_definitions({{ project.name }}
+            PUBLIC
+                $<$<NOT:$<BOOL:${BUILD_SHARED_LIBS}>>:{{ project.name|to_screaming_case }}_STATIC_DEFINE>
+    )
 else()
-    # Export file names for a static build
+    # Export file name for a static build
     set(EXPORT_HEADER_FILE export_static.h)
-    set(EXPORT_TARGET_FILE {{ project.package_name }}StaticTargets.cmake)
 
     # Primary target properties
     set_target_properties({{ project.name }} PROPERTIES
@@ -87,7 +91,7 @@ endif()
 
 # Generate the export header into the build tree
 generate_export_header({{ project.name }}
-        EXPORT_FILE_NAME ${CMAKE_CURRENT_BINARY_DIR}/include/{{ project.name }}/${EXPORT_HEADER_FILE}
+        EXPORT_FILE_NAME include/{{ project.name }}/${EXPORT_HEADER_FILE}
 )
 
 # Make the generated export header visible to this target and its consumers
@@ -100,8 +104,8 @@ target_include_directories({{ project.name }}
 if(NOT CMAKE_SKIP_INSTALL_RULES)
     include(GNUInstallDirs)
 
-    # Install the library target and register it in the export set
-    install(TARGETS {{ project.name }} {{ project.name }}_headers EXPORT {{ project.name }}_export
+    # Install the library target (Conan/CMakeDeps provides the config + targets files)
+    install(TARGETS {{ project.name }} {{ project.name }}_headers
             RUNTIME COMPONENT {{ project.name }}
             LIBRARY COMPONENT {{ project.name }}
             NAMELINK_COMPONENT {{ project.name }}
@@ -109,15 +113,8 @@ if(NOT CMAKE_SKIP_INSTALL_RULES)
             INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
 
     # Install the generated export header
-    install(FILES ${CMAKE_BINARY_DIR}/include/{{ project.name }}/${EXPORT_HEADER_FILE}
+    install(FILES ${CMAKE_CURRENT_BINARY_DIR}/include/{{ project.name }}/${EXPORT_HEADER_FILE}
             COMPONENT {{ project.name }}
             DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/{{ project.name }})
-
-    # Install the export set so downstream find_package() can import the target
-    install(EXPORT {{ project.name }}_export
-            COMPONENT {{ project.name }}
-            FILE ${EXPORT_TARGET_FILE}
-            DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/{{ project.name }}
-            NAMESPACE {{ project.namespace }}::)
 endif()
 {% endif %}
